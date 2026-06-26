@@ -85,7 +85,7 @@
 
       "url": "https://glasskid.vercel.app",
 
-      "image": "https://glasskid.vercel.app/images/glasskid.jpg",
+      "image": ["https://glasskid.vercel.app/images/glasskid.jpg", "https://glasskid.vercel.app/images/glasskid-dark.png", "https://glasskid.vercel.app/images/glasskid-glass.png"],
 
       "jobTitle": [
         "Fullstack Web Developer",
@@ -192,8 +192,7 @@
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         viewBox="0 0 24 24">
-                        <path
-                            d="M9.75 17L15 12l-5.25-5">
+                        <path d="M9.75 17L15 12l-5.25-5">
                         </path>
 
                     </svg>
@@ -283,7 +282,7 @@
 
         <div class="lg:col-span-7 relative space-y-6">
             <div
-                class="absolute -top-16 left-0 text-7xl md:text-8xl font-black text-gray-800/10 tracking-wider uppercase select-none pointer-events-none">
+                class="absolute -top-16 left-0 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
                 About
             </div>
 
@@ -334,7 +333,7 @@
     <section id="skills" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto relative">
         <div class="text-center relative mb-16">
             <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-gray-800/10 tracking-wider uppercase select-none pointer-events-none">
+                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
                 Skills
             </div>
             <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">My Skills</h2>
@@ -411,12 +410,13 @@
     <section id="projects" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto">
         <div class="text-center relative mb-16">
             <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-gray-800/10 tracking-wider uppercase select-none pointer-events-none">
-                Projects
+                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl text-white/10 tracking-wider uppercase select-none pointer-events-none">
+                Project
             </div>
             <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">Our Projects</h2>
             <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed">
-                Far far away, behind the word mountains, far from the countries Vokalia and Consonantia
+                This is the journey through my coding life, where creativity meets functionality. Each project is a
+                testament to my dedication to crafting exceptional digital experiences that leave a lasting impact.
             </p>
         </div>
 
@@ -462,11 +462,11 @@
             </div>
 
             <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
-                <img src="/images/grocify.png" alt="Grocify ecommerce website project by GLASSKID"
+                <img src="/images/grocify.png" alt="grocify image"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
                     class="absolute inset-0 bg-black/80 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span class="text-purple text-xs uppercase tracking-widest font-semibold mb-1">Grocify</span>
+                    <span class="text-purple text-xs uppercase tracking-widest font-semibold mb-1">Net Ninja Book</span>
                     <h3 class="text-xl font-bold text-white mb-3">Online Delivering Platform For Wide Range Of Fresh
                         Product</h3>
                     <a href="https://gk-grocify.netlify.app/" target="_blank"
@@ -480,6 +480,67 @@
                     </a>
                 </div>
             </div>
+
+            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+                <img src="/images/bento grid.jpg" alt="bento grid image"
+                    class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
+                <div
+                    class="absolute inset-0 bg-black/80 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-purple text-xs uppercase tracking-widest font-semibold mb-1">Bento Grid</span>
+                    <h3 class="text-xl font-bold text-white mb-3">A Bento Grid is a modular user interface design style
+                        that structures content into asymmetric, rectangular.</h3>
+                    <a href="https://bento-grid-gk.vercel.app/" target="_blank"
+                        class="inline-flex items-center text-xs uppercase tracking-wider font-git text-white hover:text-purple transition">
+                        View Project
+                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+                <img src="/images/w3 img.png" alt="w3 school image"
+                    class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
+                <div
+                    class="absolute inset-0 bg-black/80 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-purple text-xs uppercase tracking-widest font-semibold mb-1">W3 school
+                        project</span>
+                    <h3 class="text-xl font-bold text-white mb-3">W3 school project for learning web design</h3>
+                    <a href="https://wthree-school.vercel.app/" target="_blank"
+                        class="inline-flex items-center text-xs uppercase tracking-wider font-git text-white hover:text-purple transition">
+                        View Project
+                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+                <img src="/images/net-book.png" alt="net ninja book"
+                    class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
+                <div
+                    class="absolute inset-0 bg-black/80 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-purple text-xs uppercase tracking-widest font-semibold mb-1">Net Ninja Book</span>
+                    <h3 class="text-xl font-bold text-white mb-3"> "Net Ninja Pro - The Book" typically refers to a
+                        popular front-end practice project using HTML, CSS, and Bootstrap 5</h3>
+                    <a href="https://net-ninja-gk.vercel.app/" target="_blank"
+                        class="inline-flex items-center text-xs uppercase tracking-wider font-git text-white hover:text-purple transition">
+                        View Project
+                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -488,7 +549,7 @@
     <section id="contact" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto relative">
         <div class="text-center relative mb-16">
             <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-gray-800/10 tracking-wider uppercase select-none pointer-events-none">
+                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
                 Contact
             </div>
             <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">Contact Me</h2>
