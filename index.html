@@ -73,6 +73,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
         rel="stylesheet">
 
+    <link rel="stylesheet" href="style.css">
 
     <script type="application/ld+json">
     {
@@ -90,8 +91,8 @@
 
       "image": [
         "https://glasskid.vercel.app/images/glasskid.jpg", 
-        "https://glasskid.vercel.app/images/glasskid-dark.png", 
-        "https://glasskid.vercel.app/images/glasskid-glass.png"
+        "https://glasskid.vercel.app/images/glasskid-portfolio.png", 
+        "https://glasskid.vercel.app/images/prince-cute.jpg"
       ],
 
       "jobTitle": [
@@ -131,8 +132,20 @@
 <body
     class="bg-darkBg text-white font-sans antialiased selection:bg-purple selection:text-black scroll-smooth overflow-x-hidden">
 
-    <nav aria-label="Main Navigation"
-        class="flex justify-between items-center w-full relative top-0 left-0 z-50 px-10 py-6">
+    <!-- Preloader -->
+    <div id="preloader" aria-hidden="true">
+        <div class="preloader-mark">GLASSKID</div>
+        <div class="preloader-bar">
+            <div class="preloader-bar-fill" id="preloaderFill"></div>
+        </div>
+    </div>
+
+    <!-- Custom cursor (desktop only, disabled automatically on touch / reduced motion) -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
+    <nav aria-label="Main Navigation" id="siteNav"
+        class="site-nav flex justify-between items-center w-full top-0 left-0 z-50 px-10 py-6">
         <div class="text-2xl font-black tracking-widest text-white uppercase">
             GLASSKID
         </div>
@@ -161,7 +174,7 @@
         </div>
 
         <!-- MOBILE NAVBAR -->
-        <nav id="navLinks"
+        <nav id="navLinks" aria-label="Mobile Navigation"
             class="fixed bottom-4 left-1/2 -translate-x-1/2 md:hidden z-50 w-full flex justify-center px-2">
             <div
                 class="flex items-center justify-center gap-3 bg-black/90 border border-purple/30 backdrop-blur-lg px-3 py-3 rounded-full shadow-2xl max-w-[95vw] overflow-x-auto">
@@ -178,6 +191,7 @@
                     </svg>
 
                     Home
+                    <span class="nav-dot"></span>
                 </a>
 
                 <!-- ABOUT -->
@@ -191,6 +205,7 @@
                     </svg>
 
                     About
+                    <span class="nav-dot"></span>
                 </a>
 
                 <!-- SKILLS -->
@@ -205,6 +220,7 @@
                     </svg>
 
                     Skills
+                    <span class="nav-dot"></span>
                 </a>
 
                 <!-- PROJECTS -->
@@ -220,6 +236,7 @@
                     </svg>
 
                     Projects
+                    <span class="nav-dot"></span>
                 </a>
 
                 <!-- CONTACT -->
@@ -233,13 +250,15 @@
                     </svg>
 
                     Contact
+                    <span class="nav-dot"></span>
                 </a>
 
             </div>
 
         </nav>
 
-        <button id="menuBtn" class="md:hidden text-white focus:outline-none" aria-label="Open menu">
+        <button id="menuBtn" class="md:hidden text-white focus:outline-none" aria-label="Toggle mobile navigation"
+            aria-controls="navLinks" aria-expanded="true">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
                 </path>
@@ -247,32 +266,36 @@
         </button>
 
     </nav>
-    <header class="min-h-screen flex flex-col justify-between px-6 md:px-16 lg:px-24 py-6 overflow-hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center my-auto pt-12 lg:pt-0">
+
+    <header class="min-h-screen flex flex-col justify-between px-6 md:px-16 lg:px-24 py-6 overflow-hidden relative">
+        <div class="spotlight-layer" id="heroSpotlight" aria-hidden="true"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center my-auto pt-12 lg:pt-0 relative z-10">
             <div class="space-y-4 max-w-xl">
                 <span class="text-purple tracking-widest text-xs uppercase font-bold block">Hello!</span>
-                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
+                <h1 id="heroHeading" class="text-5xl md:text-6xl font-extrabold leading-tight">
                     I'm <span class="text-purple">GLASSKID</span>
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-300 font-medium tracking-wide pt-2">
-                    Fullstack Web Developer
+                <p class="text-xl md:text-2xl text-gray-300 font-medium tracking-wide pt-2 min-h-[2em]">
+                    <span id="typedRole">Fullstack Web Developer</span>
                 </p>
                 <div class="flex flex-wrap gap-4 pt-6">
                     <a href="#contact"
-                        class="bg-purple focus:outline-none text-white font-semibold text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-white hover:text-black transition duration-300 shadow-lg shadow-purple/20">
+                        class="magnetic-btn bg-purple focus:outline-none text-white font-semibold text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-white hover:text-black transition duration-300 shadow-lg shadow-purple/20">
                         Hire Me
                     </a>
                     <a href="#projects"
-                        class="border focus:outline-none border-purple text-white font-semibold text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-purple hover:text-white transition duration-300">
+                        class="magnetic-btn border focus:outline-none border-purple text-white font-semibold text-xs uppercase tracking-widest px-8 py-4 rounded-full hover:bg-purple hover:text-white transition duration-300">
                         My Works
                     </a>
                 </div>
             </div>
 
             <div class="flex justify-center lg:justify-end items-end self-end h-full">
-                <img src="/images/prince-cute.jpg"
+                <img id="heroImg" src="/images/glasskid-glass.png"
                     alt="GLASSKID portrait photo, fullstack web developer from Lagos, Nigeria"
-                    class="w-full max-w-md lg:max-w-lg object-cover pointer-events-none" loading="eager">
+                    class="hero-photo-float w-full max-w-md lg:max-w-lg object-cover pointer-events-none"
+                    loading="eager">
             </div>
         </div>
     </header>
@@ -280,27 +303,27 @@
     <hr class="border-gray-900">
 
     <section id="about" class="py-24 px-6 md:px-16 lg:px-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div class="lg:col-span-5 flex justify-center">
+        <div class="lg:col-span-5 flex justify-center" data-reveal="left">
             <div class="max-w-sm lg:max-w-none w-full">
-                <img src="/images/glasskid-portfolio.png" alt="GLASSKID portfolio image" loading="lazy"
+                <img src="/images/glasskid-dark.png" alt="GLASSKID portfolio image" loading="lazy"
                     class="w-full object-cover rounded-sm shadow-2xl">
             </div>
         </div>
 
         <div class="lg:col-span-7 relative space-y-6">
-            <div
-                class="absolute -top-16 left-0 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
+            <div class="absolute -top-16 left-0 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none"
+                data-scramble>
                 About
             </div>
 
-            <h2 class="text-4xl font-bold tracking-tight z-10 relative">About Me</h2>
-            <p class="text-gray-400 text-sm leading-relaxed max-w-xl">
+            <h2 class="text-4xl font-bold tracking-tight z-10 relative" data-reveal>About Me</h2>
+            <p class="text-gray-400 text-sm leading-relaxed max-w-xl" data-reveal>
                 Real GLASSKID is a creative soul with a love for web development and music. He is a sensitive,
                 expressive
                 person who turns emotion into art, code, and sound.
             </p>
 
-            <div class="max-w-xl pt-4">
+            <div class="max-w-xl pt-4" data-reveal>
                 <dl class="grid grid-cols-1 sm:grid-cols-3 gap-y-4 text-sm border-b border-gray-900 pb-6">
                     <dt class="font-bold text-white sm:col-span-1">Popular name:</dt>
                     <dd class="text-gray-400 sm:col-span-2">GLASSKID</dd>
@@ -323,12 +346,13 @@
                 </dl>
             </div>
 
-            <div class="pt-4 space-y-6">
+            <div class="pt-4 space-y-6" data-reveal>
                 <p class="text-lg font-medium">
-                    <span class="text-purple text-2xl font-bold mr-1">50</span> Project completed, 3 avaliable for now.
+                    <span class="text-purple text-2xl font-bold mr-1 counter-num" data-counter="50">0</span> Project
+                    completed, 3 avaliable for now.
                 </p>
                 <a href="#projects"
-                    class="inline-block bg-purple focus:outline-none text-black font-bold text-xs uppercase tracking-widest px-8 sm:px-8 py-4 rounded-full hover:bg-white transition duration-300 shadow-md">
+                    class="magnetic-btn inline-block bg-purple focus:outline-none text-black font-bold text-xs uppercase tracking-widest px-8 sm:px-8 py-4 rounded-full hover:bg-white transition duration-300 shadow-md">
                     View Project
                 </a>
             </div>
@@ -339,74 +363,74 @@
 
     <section id="skills" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto relative">
         <div class="text-center relative mb-16">
-            <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none"
+                data-scramble>
                 Skills
             </div>
-            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">My Skills</h2>
-            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed">
+            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4" data-reveal="fade">My Skills</h2>
+            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed" data-reveal="fade">
                 Far far away, behind the word mountains, far from the countries Vokalia and Consonantia
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>HTML</span>
                     <span class="text-gray-400">95%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 95%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="95"></div>
                 </div>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>CSS</span>
                     <span class="text-gray-400">90%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 90%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="90"></div>
                 </div>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>Tailwind CSS</span>
                     <span class="text-gray-400">85%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 85%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="85"></div>
                 </div>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>Bootstrap</span>
                     <span class="text-gray-400">80%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 80%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="80"></div>
                 </div>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>JAVA script</span>
                     <span class="text-gray-400">85%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 85%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="85"></div>
                 </div>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2" data-reveal>
                 <div class="flex justify-between font-bold text-base">
                     <span>REACT</span>
                     <span class="text-gray-400">80%</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-2.5">
-                    <div class="bg-purple h-2.5 rounded-full" style="width: 80%"></div>
+                    <div class="bg-purple h-2.5 rounded-full skill-fill" data-width="80"></div>
                 </div>
             </div>
         </div>
@@ -416,19 +440,20 @@
 
     <section id="projects" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto">
         <div class="text-center relative mb-16">
-            <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl text-white/10 tracking-wider uppercase select-none pointer-events-none">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl text-white/10 tracking-wider uppercase select-none pointer-events-none"
+                data-scramble>
                 Project
             </div>
-            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">Our Projects</h2>
-            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed">
+            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4" data-reveal="fade">Our Projects</h2>
+            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed" data-reveal="fade">
                 This is the journey through my coding life, where creativity meets functionality. Each project is a
                 testament to my dedication to crafting exceptional digital experiences that leave a lasting impact.
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/digitalbank.png" alt="Digital bank landing page project by GLASSKID"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -448,7 +473,8 @@
                 </div>
             </div>
 
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/social-proof.jpg" alt="Social proof section website project by GLASSKID"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -468,7 +494,8 @@
                 </div>
             </div>
 
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/grocify.png" alt="grocify image"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -488,7 +515,8 @@
                 </div>
             </div>
 
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/bento grid.jpg" alt="bento grid image"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -508,7 +536,8 @@
                 </div>
             </div>
 
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/w3 img.png" alt="w3 school image"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -528,7 +557,8 @@
                 </div>
             </div>
 
-            <div class="group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer">
+            <div class="tilt-card group relative overflow-hidden bg-gray-900 rounded-lg aspect-[4/3] cursor-pointer"
+                data-reveal>
                 <img src="/images/net-book.png" alt="net ninja book"
                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110" loading="lazy">
                 <div
@@ -555,18 +585,18 @@
 
     <section id="contact" class="py-24 px-6 md:px-16 lg:px-24 max-w-6xl mx-auto relative">
         <div class="text-center relative mb-16">
-            <div
-                class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl md:text-8xl font-black text-white/10 tracking-wider uppercase select-none pointer-events-none"
+                data-scramble>
                 Contact
             </div>
-            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4">Contact Me</h2>
-            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed">
+            <h2 class="text-4xl font-bold tracking-tight z-10 relative mb-4" data-reveal="fade">Contact Me</h2>
+            <p class="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed" data-reveal="fade">
                 Have a project in mind or just want to say hi? Feel free to reach out!
             </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div class="lg:col-span-5 space-y-6">
+            <div class="lg:col-span-5 space-y-6" data-reveal="left">
                 <div class="bg-cardBg p-6 rounded-xl border border-purple flex items-center space-x-4">
                     <div class="bg-gray-900 p-4 rounded-full text-purple">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -612,8 +642,8 @@
                 </div>
             </div>
 
-            <form class="lg:col-span-7 bg-cardBg p-8 rounded-2xl border border-purple space-y-6"
-                action="https://formspree.io/f/mbdbprea" method="POST">
+            <form id="contactForm" class="lg:col-span-7 bg-cardBg p-8 rounded-2xl border border-purple space-y-6"
+                action="https://formspree.io/f/mbdbprea" method="POST" novalidate data-reveal="right">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Your
@@ -631,19 +661,23 @@
                 <div>
                     <label
                         class="block text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Subject</label>
-                    <input type="text" name="subject" placeholder="Project Discussion"
+                    <input type="text" name="subject" placeholder="Business Inquiry"
                         class="w-full bg-darkBg border border-gray-800 rounded-lg px-4 py-3.5 text-sm text-white focus:outline-none focus:border-purple transition">
                 </div>
                 <div>
                     <label
                         class="block text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Message</label>
-                    <textarea rows="5" name="message" placeholder="Tell me about your project..."
+                    <textarea rows="5" name="message" placeholder="Hi, I would like to discuss a potential collaboration with you..."
                         class="w-full bg-darkBg border border-gray-800 rounded-lg px-4 py-3.5 text-sm text-white focus:outline-none focus:border-purple transition resize-none"></textarea>
                 </div>
+                <div id="formSuccess" class="text-sm text-purple font-medium">
+                    Message sent — thanks for reaching out! I'll get back to you soon.
+                </div>
                 <div>
-                    <button type="submit"
-                        class="bg-purple focus:outline-none text-black font-bold text-xs uppercase tracking-widest px-8 sm:px-8 py-4 rounded-full hover:bg-white transition duration-300 w-full sm:w-auto shadow-md">
-                        Send Message
+                    <button type="submit" id="contactSubmitBtn"
+                        class="magnetic-btn relative bg-purple focus:outline-none text-black font-bold text-xs uppercase tracking-widest px-8 sm:px-8 py-4 rounded-full hover:bg-white transition duration-300 w-full sm:w-auto shadow-md">
+                        <span class="btn-label">Send Message</span>
+                        <span class="btn-spinner" aria-hidden="true"><span></span></span>
                     </button>
                 </div>
             </form>
@@ -667,7 +701,7 @@
 
             <div class="flex items-center space-x-4">
                 <a href="http://wa.me/09136893921"
-                    class="w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
+                    class="magnetic-btn w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
                     aria-label="Whatsapp">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                         <path
@@ -675,15 +709,15 @@
                     </svg>
                 </a>
                 <a href="https://github.com/RealGLASSKID" target="_blank"
-                    class="w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
+                    class="magnetic-btn w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
                     aria-label="GitHub">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.646.64.699 1.026 1.592 1.026 2.683 0 3.842-2.337 4.687-4.565 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
                     </svg>
                 </a>
-                <a href="https://www.linkedin.com/in/glass-kid-9a792a412/?isSelfProfile=true" target="_blank"
-                    class="w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
+                <a href="https://www.linkedin.com/me?trk=p_mwlite_profile_view-secondary_nav.   " target="_blank"
+                    class="magnetic-btn w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
                     aria-label="LinkedIn">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path
@@ -691,7 +725,7 @@
                     </svg>
                 </a>
                 <a href="https://www.instagram.com/real_glasskid/" target="_blank"
-                    class="w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
+                    class="magnetic-btn w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
                     aria-label="Instagram">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path
@@ -699,7 +733,7 @@
                     </svg>
                 </a>
                 <a href="https://web.facebook.com/profile.php?id=61590417605342" target="_blank"
-                    class="w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
+                    class="magnetic-btn w-9 h-9 rounded-full bg-cardBg border border-gray-800 flex items-center justify-center text-gray-400 hover:text-black hover:bg-purple hover:border-purple transition duration-300"
                     aria-label="Facebook">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path
@@ -710,26 +744,14 @@
         </div>
     </footer>
 
-    <script>
-        const menuBtn = document.getElementById("menuBtn");
-        const navLinks = document.getElementById("navLinks");
+    <!-- Scroll to top -->
+    <button id="scrollTopBtn" aria-label="Scroll back to top">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+        </svg>
+    </button>
 
-        // Open / Close navbar
-        menuBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle("hidden");
-        });
-
-        // Prevent clicks inside navbar from closing it
-        navLinks.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
-
-        // Click anywhere else to close navbar
-        document.addEventListener("click", () => {
-            navLinks.classList.add("hidden");
-        });
-    </script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>

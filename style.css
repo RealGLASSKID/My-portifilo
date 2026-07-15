@@ -1,1 +1,514 @@
-@import "tailwindcss"
+@import"tailwindcss";
+
+/* =========================================================
+   GLASSKID PORTFOLIO — CUSTOM STYLES
+   Tailwind handles utility classes. This file only holds:
+   - CSS custom properties
+   - Keyframe animations
+   - Effects that Tailwind's utility set can't express
+   ========================================================= */
+
+:root {
+  --purple: #8B5CF6;
+  --purple-soft: rgba(139, 92, 246, 0.35);
+  --dark-bg: #000000;
+  --card-bg: #111111;
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --nav-h: 88px;
+  --cursor-x: 50vw;
+  --cursor-y: 50vh;
+}
+
+/* -----------------------------------------------------------
+   Base / Scrollbar
+----------------------------------------------------------- */
+html {
+  scroll-padding-top: 96px;
+}
+
+::selection {
+  background: var(--purple);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 999px;
+  border: 2px solid #000;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--purple);
+}
+
+/* -----------------------------------------------------------
+   Preloader
+----------------------------------------------------------- */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: opacity 0.6s var(--ease-premium), visibility 0.6s var(--ease-premium);
+}
+
+#preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-mark {
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  font-size: 1.1rem;
+  color: #fff;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.preloader-bar {
+  width: 160px;
+  height: 2px;
+  background: #1a1a1a;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.preloader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--purple);
+  box-shadow: 0 0 12px var(--purple);
+  transition: width 0.25s ease-out;
+}
+
+/* -----------------------------------------------------------
+   Custom Cursor (desktop / fine-pointer only)
+----------------------------------------------------------- */
+.cursor-enabled,
+.cursor-enabled a,
+.cursor-enabled button {
+  cursor: none;
+}
+
+#cursor-dot,
+#cursor-outline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 210;
+  border-radius: 50%;
+  will-change: transform;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+#cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--purple);
+}
+
+#cursor-outline {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--purple-soft);
+  transition: width 0.25s var(--ease-premium), height 0.25s var(--ease-premium),
+    border-color 0.25s var(--ease-premium), background-color 0.25s var(--ease-premium);
+}
+
+#cursor-outline.cursor-hover {
+  width: 56px;
+  height: 56px;
+  background: rgba(139, 92, 246, 0.08);
+  border-color: var(--purple);
+}
+
+#cursor-outline.cursor-click {
+  width: 26px;
+  height: 26px;
+}
+
+/* -----------------------------------------------------------
+   Mouse Spotlight (hero background)
+----------------------------------------------------------- */
+.spotlight-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    600px circle at var(--cursor-x) var(--cursor-y),
+    rgba(139, 92, 246, 0.12),
+    transparent 65%
+  );
+  transition: background 0.1s linear;
+}
+
+/* -----------------------------------------------------------
+   Sticky nav / hide-show
+----------------------------------------------------------- */
+.site-nav {
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(0px);
+  background-color: transparent;
+  transition: transform 0.45s var(--ease-premium), background-color 0.4s ease,
+    backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+}
+
+.site-nav.nav-scrolled {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 rgba(139, 92, 246, 0.15);
+}
+
+.site-nav.nav-hidden {
+  transform: translateY(-100%);
+}
+
+/* -----------------------------------------------------------
+   Scroll reveal
+----------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-premium), transform 0.8s var(--ease-premium);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal="fade"] {
+  transform: translateY(0) scale(0.97);
+}
+[data-reveal="fade"].is-visible {
+  transform: scale(1);
+}
+
+[data-reveal="left"] {
+  transform: translateX(-40px);
+}
+[data-reveal="left"].is-visible {
+  transform: translateX(0);
+}
+
+[data-reveal="right"] {
+  transform: translateX(40px);
+}
+[data-reveal="right"].is-visible {
+  transform: translateX(0);
+}
+
+/* -----------------------------------------------------------
+   Skill bars
+----------------------------------------------------------- */
+.skill-fill {
+  width: 0%;
+  transition: width 1.4s var(--ease-premium);
+}
+
+/* -----------------------------------------------------------
+   Magnetic buttons + ripple
+----------------------------------------------------------- */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+  transition: transform 0.25s var(--ease-premium);
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  animation: ripple-anim 0.7s var(--ease-premium);
+}
+
+@keyframes ripple-anim {
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* -----------------------------------------------------------
+   Project card tilt
+----------------------------------------------------------- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.35s var(--ease-premium), box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.tilt-card:hover,
+.tilt-card:focus-within {
+  box-shadow: 0 25px 60px -20px rgba(139, 92, 246, 0.45);
+}
+
+/* -----------------------------------------------------------
+   Hero split-text / typing
+----------------------------------------------------------- */
+/* Continuous bouncing wave on GLASSKID */
+#glasskid {
+  display: inline-block;
+}
+
+.glass-letter {
+  display: inline-block;
+  animation: glassBounce 1.8s infinite ease-in-out;
+  animation-delay: var(--delay);
+}
+
+@keyframes glassBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-18px);   /* height of the bounce */
+  }
+}
+
+#typedRole::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--purple);
+  margin-left: 4px;
+  vertical-align: -0.15em;
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero-photo-float {
+  animation: photo-float 5.5s ease-in-out infinite;
+}
+
+@keyframes photo-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+/* -----------------------------------------------------------
+   Counters
+----------------------------------------------------------- */
+.counter-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -----------------------------------------------------------
+   Scroll-to-top button
+----------------------------------------------------------- */
+#scrollTopBtn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 17, 17, 0.9);
+  border: 1px solid var(--purple-soft);
+  color: var(--purple);
+  opacity: 0;
+  transform: translateY(16px) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-premium), transform 0.35s var(--ease-premium),
+    background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#scrollTopBtn.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+#scrollTopBtn:hover {
+  background: var(--purple);
+  color: #000;
+  border-color: var(--purple);
+}
+
+@media (max-width: 768px) {
+  #scrollTopBtn {
+    bottom: 92px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* -----------------------------------------------------------
+   Contact form states
+----------------------------------------------------------- */
+.form-field-error {
+  border-color: #ef4444 !important;
+}
+
+.field-error-msg {
+  color: #f87171;
+  font-size: 0.7rem;
+  margin-top: 0.35rem;
+  min-height: 1em;
+}
+
+.btn-loading .btn-label {
+  opacity: 0;
+}
+
+.btn-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-loading .btn-spinner {
+  opacity: 1;
+}
+
+.btn-spinner span {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#formSuccess {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s var(--ease-premium), opacity 0.4s ease;
+}
+
+#formSuccess.show {
+  max-height: 120px;
+  opacity: 1;
+}
+
+/* -----------------------------------------------------------
+   Mobile bottom nav — active indicator + press feedback
+----------------------------------------------------------- */
+#navLinks a {
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+#navLinks a:active {
+  transform: scale(0.9);
+}
+
+#navLinks a.mobile-active {
+  color: var(--purple);
+}
+
+#navLinks a .nav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--purple);
+  margin-top: 3px;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-premium);
+}
+
+#navLinks a.mobile-active .nav-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Desktop link active underline uses existing classes; add smooth grow */
+nav a.desktop-active {
+  color: var(--purple);
+}
+
+/* -----------------------------------------------------------
+   Mobile nav open/close animation
+   (replaces the old instant "hidden" toggle with a smooth one;
+   behavior/trigger logic is unchanged — same button, same target)
+----------------------------------------------------------- */
+#navLinks {
+  transition: opacity 0.3s var(--ease-premium), transform 0.35s var(--ease-premium),
+    visibility 0.3s var(--ease-premium);
+}
+
+#navLinks.mobile-nav-hidden {
+  opacity: 0;
+  transform: translate(-50%, 24px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   Reduced motion — respect OS preference
+----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .split-word {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hide custom cursor & disable JS-driven effects on touch devices */
+@media (pointer: coarse) {
+  #cursor-dot,
+  #cursor-outline {
+    display: none !important;
+  }
+}
