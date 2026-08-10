@@ -92,14 +92,15 @@ function getPost(slug: string) {
   return POSTS.find((p) => p.slug === slug);
 }
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const post = getPost(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPost(slug);
   if (!post) return { title: "Post not found — GLASSKID" };
   return {
     title: `${post.title} — GLASSKID`,
@@ -107,11 +108,12 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const post = getPost(params.slug);
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = getPost(slug);
   if (!post) notFound();
 
-  const related = POSTS.filter((p) => p.slug !== params.slug).slice(0, 3);
+  const related = POSTS.filter((p) => p.slug !== slug).slice(0, 3);
 
   return (
     <section className="mx-auto max-w-3xl px-6 pb-28 pt-8">

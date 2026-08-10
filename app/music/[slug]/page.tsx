@@ -8,8 +8,9 @@ const TRACKS: Record<string, { title: string; meta: string; tag?: string }> = {
   "never-settle": { title: "Never Settle", meta: "EP • 2023" },
 };
 
-export default function TrackPage({ params }: { params: { slug: string } }) {
-  const track = TRACKS[params.slug] ?? { title: params.slug, meta: "" };
+export default async function TrackPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const track = TRACKS[slug] ?? { title: slug, meta: "" };
 
   return (
     <section className="mx-auto max-w-4xl px-6 pb-28 pt-8">
@@ -44,7 +45,7 @@ export default function TrackPage({ params }: { params: { slug: string } }) {
                 <Play className="size-4" /> Play Track
               </button>
               <Link
-                href={`/music/${params.slug}/lyrics`}
+                href={`/music/${slug}/lyrics`}
                 className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
               >
                 <FileText className="size-4" /> View Lyrics

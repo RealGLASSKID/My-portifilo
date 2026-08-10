@@ -127,7 +127,7 @@ export default function HomePage() {
           <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
             <div className="glass neon-ring relative overflow-hidden rounded-3xl">
               <Image
-                src="/public/images/hero-portrait.png"
+                src="/images/hero-portrait.png"
                 alt="GLASSKID portrait — Prince Dennis"
                 width={1024}
                 height={1280}
