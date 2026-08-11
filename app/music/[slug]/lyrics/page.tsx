@@ -8,12 +8,13 @@ const titles: Record<string, string> = {
   "never-settle": "Never Settle",
 };
 
-export default function LyricsPage({ params }: { params: { slug: string } }) {
-  const title = titles[params.slug] ?? params.slug;
+export default async function LyricsPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const title = titles[slug] ?? slug;
 
   return (
     <section className="mx-auto max-w-6xl px-6 pb-28 pt-8">
-      <Link href={`/music/${params.slug}`} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary">
+      <Link href={`/music/${slug}`} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary">
         <ArrowLeft className="size-4" /> Back to {title}
       </Link>
 

@@ -19,8 +19,6 @@ export default function CustomCursor() {
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
       }
-      document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
-      document.documentElement.style.setProperty("--my", `${e.clientY}px`);
     };
 
     const spawnRipple = (x: number, y: number) => {
@@ -48,6 +46,11 @@ export default function CustomCursor() {
       if (ringRef.current) {
         ringRef.current.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px) translate(-50%, -50%)`;
       }
+      // Batched here (not in onMove) so the full-viewport mask-image on
+      // .grid-glow-layer repaints at most once per animation frame instead
+      // of once per raw mousemove event.
+      document.documentElement.style.setProperty("--mx", `${pos.current.x}px`);
+      document.documentElement.style.setProperty("--my", `${pos.current.y}px`);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
