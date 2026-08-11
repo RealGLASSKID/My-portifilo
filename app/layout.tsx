@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MainWrap } from "@/components/MainWrap";
 import { themeInitScript } from "@/components/ThemeToggle";
 import CustomCursor from "@/components/CustomCursor";
 
@@ -73,7 +74,7 @@ export default function RootLayout({
       <body className="relative min-h-dvh font-sans antialiased" suppressHydrationWarning>
         <CustomCursor />
         <Header />
-        <main className="pt-28">{children}</main>
+        <MainWrap>{children}</MainWrap>
         <Footer />
       </body>
     </html>

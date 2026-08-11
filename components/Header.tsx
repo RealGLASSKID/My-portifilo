@@ -41,6 +41,8 @@ export function Header() {
 
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <header className="fixed top-4 left-1/2 z-50 w-[min(1200px,calc(100%-2rem))] -translate-x-1/2">
       <nav className="glass neon-ring flex items-center justify-between rounded-2xl px-4 py-3 md:px-6">
