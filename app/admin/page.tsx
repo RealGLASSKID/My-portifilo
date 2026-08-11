@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminPageHeader } from "./_components/AdminPageHeader";
 import { posts } from "@/lib/blog";
+import { db } from "@/lib/firebase-admin";
 import {
   Activity,
   FileText,
@@ -10,10 +11,8 @@ import {
   Music,
   Flame,
   Link as LinkIcon,
-  Users,
-  Eye,
   MessageSquare,
-  TrendingUp,
+  Images,
   Plus,
   ArrowUpRight,
 } from "lucide-react";
@@ -24,43 +23,94 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const STATS = [
-  { Icon: Eye, label: "Visitors (30d)", value: "12,847", delta: "+18.2%" },
-  { Icon: Users, label: "Unique Users", value: "4,203", delta: "+9.4%" },
-  { Icon: MessageSquare, label: "Inquiries", value: "38", delta: "+5" },
-  { Icon: TrendingUp, label: "Avg. Session", value: "2m 41s", delta: "+12s" },
-];
+export const dynamic = "force-dynamic";
 
-const COLLECTIONS = [
-  { Icon: FolderKanban, name: "Projects", href: "/admin/projects", count: 6, updated: "2h ago" },
-  { Icon: FileText, name: "Blog Posts", href: "/admin/blog", count: posts.length, updated: "yesterday" },
-  { Icon: Music, name: "Music Releases", href: "/admin/music", count: 4, updated: "3d ago" },
-  { Icon: ListChecks, name: "Bucket List", href: "/admin/bucket-list", count: 17, updated: "1w ago" },
-  { Icon: Flame, name: "Streaks", href: "/admin/streaks", count: 4, updated: "today" },
-  { Icon: LinkIcon, name: "Links", href: "/admin/links", count: 18, updated: "2w ago" },
-];
+async function count(collection: string) {
+  try {
+    const snap = await db.collection(collection).count().get();
+    return snap.data().count;
+  } catch {
+    const snap = await db.collection(collection).get();
+    return snap.size;
+  }
+}
 
-const RECENT = [
-  { who: "Contact form", what: "New inquiry from Amara O.", when: "12 min ago" },
-  { who: "Blog", what: `Draft saved: "Shipping fast without shipping bugs"`, when: "1h ago" },
-  { who: "Streaks", what: "Ship every day → day 12 logged", when: "3h ago" },
-  { who: "Projects", what: "Updated cover image for GlassKid FM", when: "yesterday" },
-  { who: "Bucket List", what: `Marked "International client in USD" as done`, when: "2d ago" },
-];
+function timeAgo(ts: number) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
+  if (s < 604800) return `${Math.floor(s / 86400)}d ago`;
+  return new Date(ts).toLocaleDateString();
+}
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const [projectsCount, galleryCount, messagesCount, unreadCount] = await Promise.all([
+    count("projects"),
+    count("gallery"),
+    count("messages"),
+    count("messages").then(async () => {
+      try {
+        const snap = await db.collection("messages").where("read", "==", false).count().get();
+        return snap.data().count;
+      } catch {
+        const snap = await db.collection("messages").where("read", "==", false).get();
+        return snap.size;
+      }
+    }),
+  ]);
+
+  let recentMessages: { name: string; subject: string; createdAt: number }[] = [];
+  try {
+    const snap = await db.collection("messages").orderBy("createdAt", "desc").limit(5).get();
+    recentMessages = snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        name: data.name as string,
+        subject: data.subject as string,
+        createdAt: data.createdAt as number,
+      };
+    });
+  } catch {
+    // empty
+  }
+
+  const STATS = [
+    { Icon: FolderKanban, label: "Projects", value: String(projectsCount), delta: "live" },
+    { Icon: Images, label: "Gallery photos", value: String(galleryCount), delta: "live" },
+    { Icon: MessageSquare, label: "Messages", value: String(messagesCount), delta: `${unreadCount} unread` },
+    { Icon: FileText, label: "Blog posts", value: String(posts.length), delta: "static" },
+  ];
+
+  const COLLECTIONS = [
+    { Icon: FolderKanban, name: "Projects", href: "/admin/projects", count: projectsCount },
+    { Icon: Images, name: "Gallery", href: "/admin/gallery", count: galleryCount },
+    { Icon: FileText, name: "Blog Posts", href: "/admin/blog", count: posts.length },
+    { Icon: MessageSquare, name: "Messages", href: "/admin/messages", count: messagesCount },
+    { Icon: Music, name: "Music Releases", href: "/admin/music", count: "—" },
+    { Icon: ListChecks, name: "Bucket List", href: "/admin/bucket-list", count: "—" },
+    { Icon: Flame, name: "Streaks", href: "/admin/streaks", count: "—" },
+    { Icon: LinkIcon, name: "Links", href: "/admin/links", count: "—" },
+  ];
+
   return (
     <>
       <AdminPageHeader
         eyebrow="Control Room"
         title="Overview"
-        description="Everything that matters, in one place. Numbers below are demo-only until you connect a real backend."
+        description="Live counts from Firestore for projects, gallery and messages."
       >
-        <Link href="/admin/blog" className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold">
-          <Plus className="size-4" /> New Post
-        </Link>
-        <Link href="/admin/projects" className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold">
+        <Link
+          href="/admin/projects"
+          className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
+        >
           <Plus className="size-4" /> New Project
+        </Link>
+        <Link
+          href="/admin/gallery"
+          className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
+        >
+          <Plus className="size-4" /> Add Photo
         </Link>
       </AdminPageHeader>
 
@@ -71,7 +121,9 @@ export default function AdminPage() {
               <span className="icon-tile">
                 <Icon className="size-5" />
               </span>
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">{delta}</span>
+              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                {delta}
+              </span>
             </div>
             <div className="mt-4 text-2xl font-bold">{value}</div>
             <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
@@ -88,17 +140,19 @@ export default function AdminPage() {
             Manage <span className="text-gradient">content</span>
           </h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {COLLECTIONS.map(({ Icon, name, href, count, updated }) => (
-              <Link key={name} href={href} className="glass-card group flex items-center justify-between gap-4 p-5">
+            {COLLECTIONS.map(({ Icon, name, href, count }) => (
+              <Link
+                key={name}
+                href={href}
+                className="glass-card group flex items-center justify-between gap-4 p-5"
+              >
                 <div className="flex items-center gap-3">
                   <span className="icon-tile">
                     <Icon className="size-5" />
                   </span>
                   <div>
                     <div className="text-base font-semibold">{name}</div>
-                    <div className="mt-0.5 text-xs text-muted-foreground">
-                      {count} items · updated {updated}
-                    </div>
+                    <div className="mt-0.5 text-xs text-muted-foreground">{count} items</div>
                   </div>
                 </div>
                 <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
@@ -111,40 +165,32 @@ export default function AdminPage() {
 
         <div>
           <div className="chip mb-3">
-            <span className="size-1.5 rounded-full bg-primary" /> Activity
+            <span className="size-1.5 rounded-full bg-primary" /> Recent messages
           </div>
-          <h2 className="text-xl font-bold md:text-2xl">Recent</h2>
+          <h2 className="text-xl font-bold md:text-2xl">Inbox</h2>
           <div className="glass-card mt-4 divide-y divide-white/5 p-2">
-            {RECENT.map((r, i) => (
-              <div key={i} className="flex items-start gap-3 p-3">
+            {recentMessages.length === 0 && (
+              <div className="p-4 text-center text-sm text-muted-foreground">No messages yet</div>
+            )}
+            {recentMessages.map((r, i) => (
+              <Link
+                key={i}
+                href="/admin/messages"
+                className="flex items-start gap-3 p-3 transition hover:bg-white/5"
+              >
                 <span className="mt-1 grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
                   <Activity className="size-4" />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-xs uppercase tracking-widest text-primary/80">{r.who}</div>
-                  <div className="mt-0.5 truncate text-sm text-foreground">{r.what}</div>
-                  <div className="mt-0.5 text-[11px] text-muted-foreground">{r.when}</div>
+                  <div className="text-xs uppercase tracking-widest text-primary/80">{r.name}</div>
+                  <div className="mt-0.5 truncate text-sm text-foreground">{r.subject}</div>
+                  <div className="mt-0.5 text-[11px] text-muted-foreground">{timeAgo(r.createdAt)}</div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="mt-12 pb-4">
-        <div className="glass-card p-6 md:p-8">
-          <div className="chip mb-3">
-            <span className="size-1.5 rounded-full bg-primary" /> Heads up
-          </div>
-          <h3 className="text-lg font-bold md:text-xl">This is a static admin preview.</h3>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Numbers, activity and messages are placeholder data, and edits in Projects, Bucket List and
-            Streaks only persist for this browser session. When you&apos;re ready for real editing —
-            login, live stats, and CRUD backed by a database — connect a real backend and auth provider
-            and I&apos;ll help wire it up.
-          </p>
-        </div>
-      </div>
-    </>
+    </> 
   );
-}
+} 

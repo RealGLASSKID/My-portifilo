@@ -1,5 +1,5 @@
 "use client";
-
+import { submitContactMessage } from "@/app/admin/messages/actions";
 import { PageHero } from "@/components/PageHero";
 import { Mail, Phone, MapPin, Clock, Send, Calendar, Shield } from "lucide-react";
 import { useState, type ReactNode } from "react";
@@ -23,20 +23,38 @@ export default function ContactPage() {
   const [state, setState] = useState<{ ok?: boolean; err?: Record<string, string> }>({});
   const [values, setValues] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = schema.safeParse(values);
-    if (!parsed.success) {
-      const err: Record<string, string> = {};
-      parsed.error.issues.forEach((i) => {
-        err[String(i.path[0])] = i.message;
-      });
-      setState({ err });
-      return;
-    }
-    setState({ ok: true });
-    setValues({ name: "", email: "", subject: "", message: "" });
-  };
+  const [sending, setSending] = useState(false);
+
+const onSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const parsed = schema.safeParse(values);
+  if (!parsed.success) {
+    const err: Record<string, string> = {};
+    parsed.error.issues.forEach((i) => {
+      err[String(i.path[0])] = i.message;
+    });
+    setState({ err });
+    return;
+  }
+
+  setSending(true);
+  setState({});
+  const result = await submitContactMessage({
+    name: parsed.data.name,
+    email: parsed.data.email,
+    subject: parsed.data.subject,
+    body: parsed.data.message,
+  });
+  setSending(false);
+
+  if (!result.success) {
+    setState({ err: { message: result.error } });
+    return;
+  }
+
+  setState({ ok: true });
+  setValues({ name: "", email: "", subject: "", message: "" });
+};
 
   return (
     <>
@@ -128,7 +146,7 @@ export default function ContactPage() {
             </Field>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <button type="submit" className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold">
+              <button type="submit" className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold" disabled={sending}>
                 <Send className="size-4" /> Send Message
               </button>
               <p className="inline-flex items-center gap-2 text-xs text-muted-foreground">

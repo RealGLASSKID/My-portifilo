@@ -10,52 +10,32 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-    if (!isFinePointer) return; // don't hijack touch devices
+    if (!isFinePointer) return;
 
     document.documentElement.classList.add("custom-cursor-active");
 
     const onMove = (e: MouseEvent) => {
       pos.current = { x: e.clientX, y: e.clientY };
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
       }
     };
 
-    const spawnRipple = (x: number, y: number) => {
-      const el = document.createElement("div");
-      el.className = "cursor-ripple";
-      el.style.left = `${x}px`;
-      el.style.top = `${y}px`;
-      document.body.appendChild(el);
-      el.addEventListener("animationend", () => el.remove());
-    };
+    const onDown = () => ringRef.current?.classList.add("cursor-ring-active");
+    const onUp = () => ringRef.current?.classList.remove("cursor-ring-active");
 
-    const onDown = () => {
-      ringRef.current?.classList.add("cursor-ring-active");
-      spawnRipple(pos.current.x, pos.current.y);
-    };
-    const onUp = () => {
-      ringRef.current?.classList.remove("cursor-ring-active");
-    };
-
-    let raf: number;
+    let raf = 0;
     const loop = () => {
-      // eased trailing follow for the outer ring — creates the "wave" lag effect
-      ring.current.x += (pos.current.x - ring.current.x) * 0.15;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.15;
+      ring.current.x += (pos.current.x - ring.current.x) * 0.18;
+      ring.current.y += (pos.current.y - ring.current.y) * 0.18;
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px) translate(-50%, -50%)`;
+        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
       }
-      // Batched here (not in onMove) so the full-viewport mask-image on
-      // .grid-glow-layer repaints at most once per animation frame instead
-      // of once per raw mousemove event.
-      document.documentElement.style.setProperty("--mx", `${pos.current.x}px`);
-      document.documentElement.style.setProperty("--my", `${pos.current.y}px`);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
 
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
 
@@ -70,7 +50,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div className="grid-glow-layer" />
       <div ref={dotRef} className="cursor-dot" />
       <div ref={ringRef} className="cursor-ring" />
     </>
