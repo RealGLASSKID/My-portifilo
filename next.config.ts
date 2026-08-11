@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
+      // allow any https image URL (for gallery links)
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
 };

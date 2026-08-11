@@ -17,6 +17,7 @@ const NAV = [
 ] as const;
 
 const MORE = [
+  { to: "/gallery", label: "Gallery" },
   { to: "/bucket-list", label: "Bucket List" },
   { to: "/streaks", label: "Streaks" },
   { to: "/products", label: "Products" },

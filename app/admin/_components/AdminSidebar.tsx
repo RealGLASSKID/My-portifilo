@@ -17,6 +17,7 @@ import {
   ChevronsRight,
   ExternalLink,
   X,
+  Images,
 } from "lucide-react";
 
 type NavItem = {
@@ -29,6 +30,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { href: "/admin", label: "Overview", Icon: LayoutDashboard },
   { href: "/admin/projects", label: "Projects", Icon: FolderKanban },
+  { href: "/admin/gallery", label: "Gallery", Icon: Images },
   { href: "/admin/blog", label: "Blog Posts", Icon: FileText },
   { href: "/admin/music", label: "Music", Icon: Music },
   { href: "/admin/bucket-list", label: "Bucket List", Icon: ListChecks },

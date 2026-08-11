@@ -43,6 +43,7 @@ export function Footer() {
             links={[
               { to: "/music", label: "Music" },
               { to: "/blog", label: "Blog" },
+              { to: "/gallery", label: "Gallery" },
               { to: "/testify", label: "Testify" },
               { to: "/links", label: "All Links" },
               { to: "/terms", label: "Terms & Conditions" },
