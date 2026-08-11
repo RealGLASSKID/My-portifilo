@@ -124,6 +124,7 @@ html.light {
     backdrop-filter: blur(14px);
     box-shadow: var(--shadow-card);
     transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+    will-change: transform;
   }
   .glass-card:hover {
     border-color: oklch(0.7 0.28 300 / 0.55);
@@ -263,9 +264,11 @@ html.light {
 @layer utilities {
   .animate-float {
     animation: float-slow 6s ease-in-out infinite;
+    will-change: transform;
   }
   .animate-glow-pulse {
     animation: glow-pulse 4s ease-in-out infinite;
+    will-change: transform, opacity;
   }
   .animate-fade-up {
     animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -273,9 +276,11 @@ html.light {
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradient-shift 6s ease infinite;
+    will-change: background-position;
   }
   .animate-marquee {
     animation: marquee 30s linear infinite;
+    will-change: transform;
   }
 }
 
@@ -364,16 +369,28 @@ html.light {
   }
 }
 
-/* Reactive grid glow — grid lines light up around the cursor */
+/* Reactive grid glow — grid lines light up around the cursor
+   Was a full-viewport div re-masked on every mousemove (very expensive).
+   Now it's a small 480px box that follows the cursor via transform (GPU-only,
+   no repaint), using background-attachment: fixed so the grid pattern still
+   lines up with the page grid exactly as before. Same look, far cheaper. */
 .grid-glow-layer {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 480px;
+  height: 480px;
+  margin-top: -240px;
+  margin-left: -240px;
   z-index: -1;
   pointer-events: none;
   background-image: linear-gradient(to right, oklch(0.75 0.28 300 / 0.9) 1px, transparent 1px),
     linear-gradient(to bottom, oklch(0.75 0.28 300 / 0.9) 1px, transparent 1px);
   background-size: 28px 28px, 28px 28px;
-  -webkit-mask-image: radial-gradient(240px circle at var(--mx, 50vw) var(--my, 50vh), black 0%, transparent 72%);
-  mask-image: radial-gradient(240px circle at var(--mx, 50vw) var(--my, 50vh), black 0%, transparent 72%);
+  background-attachment: fixed;
+  -webkit-mask-image: radial-gradient(240px circle at center, black 0%, transparent 72%);
+  mask-image: radial-gradient(240px circle at center, black 0%, transparent 72%);
   opacity: 0.85;
+  transform: translate3d(var(--mx, 50vw), var(--my, 50vh), 0);
+  will-change: transform;
 }
