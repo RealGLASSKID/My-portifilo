@@ -89,13 +89,16 @@ html.light {
   * {
     border-color: var(--border);
   }
-  body {
+body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
     radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.55 0.28 295 / 0.14), transparent 60%);
+  background-size: 28px 28px, 28px 28px, auto;
 }
   ::selection {
     background: oklch(0.65 0.24 295 / 0.4);
