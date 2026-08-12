@@ -137,7 +137,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
     setSaving(true);
     setError(null);
 
-    const payload = {
+    const basePayload = {
       name: form.name.trim(),
       slug: (form.slug.trim() || slugify(form.name)) as string,
       category: form.category,
@@ -151,8 +151,16 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
     };
 
     const result = form.id
-      ? await updateProject(form.id, payload)
-      : await createProject(payload);
+      ? await updateProject(form.id, basePayload)
+      : await createProject({
+          ...basePayload,
+          problem: "",
+          approach: "",
+          decisions: "",
+          result: "",
+          status: "Live",
+          gallery: [],
+        });
 
     setSaving(false);
 
@@ -202,6 +210,33 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
           className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
         >
           {formOpen ? <X className="size-4" /> : <Plus className="size-4" />} {formOpen ? "Cancel" : "New Project"}
+        </button>
+      </AdminPageHeader>
+
+      <AdminPageHeader
+        eyebrow="Collection"
+        title="Projects"
+        description={`${projects.length} projects · showing ${filtered.length} · synced live with Firestore`}
+      >
+        <button
+          type="button"
+          onClick={async () => {
+            const { seedDefaultProjects } = await import("./actions");
+            const r = await seedDefaultProjects();
+            alert(r.success ? `Added ${r.count} projects` : r.error);
+            router.refresh();
+          }}
+          className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
+        >
+          Seed default projects
+        </button>
+
+        <button
+          onClick={() => (formOpen ? closeForm() : openCreateForm())}
+          className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
+        >
+          {formOpen ? <X className="size-4" /> : <Plus className="size-4" />}{" "}
+          {formOpen ? "Cancel" : "New Project"}
         </button>
       </AdminPageHeader>
 
@@ -319,9 +354,8 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
             <button
               key={c}
               onClick={() => setActive(c)}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                active === c ? "btn-glow" : "btn-ghost-glass"
-              }`}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${active === c ? "btn-glow" : "btn-ghost-glass"
+                }`}
             >
               {c}
             </button>
@@ -360,9 +394,8 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
               <button
                 onClick={() => toggleFeatured(p)}
                 title={p.featured ? "Unfeature" : "Feature"}
-                className={`grid size-9 place-items-center rounded-lg border transition ${
-                  p.featured ? "border-primary/40 text-primary" : "border-white/10 text-muted-foreground hover:text-primary"
-                }`}
+                className={`grid size-9 place-items-center rounded-lg border transition ${p.featured ? "border-primary/40 text-primary" : "border-white/10 text-muted-foreground hover:text-primary"
+                  }`}
               >
                 <Star className="size-4" fill={p.featured ? "currentColor" : "none"} />
               </button>
