@@ -7,10 +7,10 @@ import { Search, Plus, Play, Pencil, Trash2 } from "lucide-react";
 type Release = { title: string; type: "Single" | "EP" | "Album"; year: string; streams: string; tag?: "NEW" };
 
 const INITIAL: Release[] = [
-  { title: "Broken Dreams", type: "Single", year: "2024", streams: "18.2K", tag: "NEW" },
+  { title: "Adopted", type: "Single", year: "2024", streams: "18.2K", tag: "NEW" },
   { title: "Lagos Nights", type: "EP", year: "2024", streams: "42.7K" },
-  { title: "Pieces of Pain", type: "Single", year: "2023", streams: "9.4K" },
-  { title: "Never Settle", type: "EP", year: "2023", streams: "31.1K" },
+  { title: "Survive", type: "Single", year: "2023", streams: "9.4K" },
+  { title: "Freezing", type: "EP", year: "2023", streams: "31.1K" },
 ];
 
 export default function AdminMusicPage() {

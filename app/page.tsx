@@ -67,9 +67,9 @@ const SKILLS = [
   { name: "TypeScript", value: 90 },];
 
 const MUSIC = [
-  { title: "Forever", meta: "GLASSKID • 3:45" },
-  { title: "Fallen Angel", meta: "GLASSKID • 3:12" },
-  { title: "Dreams", meta: "GLASSKID • 4:08" },
+  { title: "Survive", meta: "GLASSKID • 3:45" },
+  { title: "Adopted Angel", meta: "GLASSKID • 3:12" },
+  { title: "Freezing", meta: "GLASSKID • 4:08" },
 ];
 
 const SOCIALS = [Github, Linkedin, Instagram, Twitter, Youtube];

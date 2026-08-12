@@ -75,10 +75,10 @@ export async function seedMusicReleases() {
   const existing = await db.collection(COLLECTION).limit(1).get();
   if (!existing.empty) return { success: false as const, error: "Music already exists." };
   const defaults = [
-    { title: "Broken Dreams", slug: "broken-dreams", type: "Single", year: "2024", streams: "18.2K", tag: "NEW", coverUrl: "", audioUrl: "", lyrics: ["Walking through the shadows of what used to be", "Broken dreams still teach me how to fly"], featured: true, published: true },
+    { title: "Adopted", slug: "broken-Freezing", type: "Single", year: "2024", streams: "18.2K", tag: "NEW", coverUrl: "", audioUrl: "", lyrics: ["Walking through the shadows of what used to be", "Adopted still teach me how to fly"], featured: true, published: true },
     { title: "Lagos Nights", slug: "lagos-nights", type: "EP", year: "2024", streams: "42.7K", tag: "", coverUrl: "", audioUrl: "", lyrics: ["City lights and late-night freestyles"], featured: true, published: true },
-    { title: "Pieces of Pain", slug: "pieces-of-pain", type: "Single", year: "2023", streams: "9.4K", tag: "", coverUrl: "", audioUrl: "", lyrics: ["Putting the pieces back together"], featured: false, published: true },
-    { title: "Never Settle", slug: "never-settle", type: "EP", year: "2023", streams: "31.1K", tag: "", coverUrl: "", audioUrl: "", lyrics: ["Ambition over comfort"], featured: false, published: true },
+    { title: "Survive", slug: "pieces-of-pain", type: "Single", year: "2023", streams: "9.4K", tag: "", coverUrl: "", audioUrl: "", lyrics: ["Putting the pieces back together"], featured: false, published: true },
+    { title: "Freezing", slug: "never-settle", type: "EP", year: "2023", streams: "31.1K", tag: "", coverUrl: "", audioUrl: "", lyrics: ["Ambition over comfort"], featured: false, published: true },
   ];
   const now = Date.now();
   const batch = db.batch();

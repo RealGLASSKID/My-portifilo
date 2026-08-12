@@ -15,12 +15,12 @@ export const metadata: Metadata = {
 };
 
 const TIMELINE = [
-  { year: "2019", title: "The Beginning", desc: "Started my coding journey with HTML & CSS. Built my first website." },
-  { year: "2020", title: "Exploring Creativity", desc: "Dive into JavaScript and discovered my love for solving problems." },
-  { year: "2021", title: "Leveling Up", desc: "Learnt React, built more projects and started creating music seriously." },
-  { year: "2022", title: "Going Full Stack", desc: "Mastered backend development, APIs and databases." },
-  { year: "2023", title: "Building & Shipping", desc: "Built real-world projects, collaborated and improved my craft." },
-  { year: "2024+", title: "The Vision", desc: "Building impactful products and music that leave a lasting legacy." },
+  { year: "2023", title: "The Beginning", desc: "Started my coding journey with HTML & CSS. Built my first website." },
+  { year: "2023", title: "Exploring Creativity", desc: "Dive into JavaScript and discovered my love for solving problems." },
+  { year: "2024", title: "Leveling Up", desc: "Learnt React, built more projects and started creating music seriously." },
+  { year: "2024", title: "Going Full Stack", desc: "Mastered backend development, APIs and databases." },
+  { year: "2025", title: "Building & Shipping", desc: "Built real-world projects, collaborated and improved my craft." },
+  { year: "2025+", title: "The Vision", desc: "Building impactful products and music that leave a lasting legacy." },
 ];
 
 const VALUES = [

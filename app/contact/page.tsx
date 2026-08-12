@@ -13,8 +13,8 @@ const schema = z.object({
 });
 
 const CARDS = [
-  { Icon: Mail, title: "Email Me", lines: ["hello@glasskid.dev", "I usually reply within a few hours."] },
-  { Icon: Phone, title: "Call Me", lines: ["+234 813 123 4567", "Mon–Fri, 9AM–6PM WAT"] },
+  { Icon: Mail, title: "Email Me", lines: ["glasskid01@gmail.com", "I usually reply within a few hours."] },
+  { Icon: Phone, title: "Call Me", lines: ["+2349136893921", "Mon–Fri, 9AM–6PM WAT"] },
   { Icon: MapPin, title: "Location", lines: ["Lagos, Nigeria", "Available for remote work worldwide."] },
   { Icon: Clock, title: "Response Time", lines: ["Within 24 hours", "I value your time and always respond fast."] },
 ];

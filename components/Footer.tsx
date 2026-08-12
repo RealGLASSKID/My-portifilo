@@ -55,10 +55,10 @@ export function Footer() {
             <h4 className="mb-4 text-sm font-semibold text-foreground">Let&apos;s Connect</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
-                <Mail className="size-4 text-primary" /> hello@glasskid.dev
+                <Mail className="size-4 text-primary" /> glasskid01@gmail.com
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="size-4 text-primary" /> +234 813 123 4567
+                <Phone className="size-4 text-primary" /> +234 913 689 3921
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="size-4 text-primary" /> Lagos, Nigeria

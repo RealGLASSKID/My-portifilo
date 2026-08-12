@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "Next.js Developer",
     "Artist",
     "Songwriter",
-    "Lagos Nigeria",
+    "Seperate Ways",
   ],
   authors: [{ name: "Prince Dennis" }],
   openGraph: {

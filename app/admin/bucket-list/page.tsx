@@ -16,7 +16,7 @@ const INITIAL: Item[] = [
   { title: "Write 10 technical deep-dives", group: "Dream.", tag: "content", done: false },
   { title: "Release a full-length album", group: "Create.", tag: "music", year: "2026", done: false },
   { title: "Perform live in Lagos", group: "Create.", tag: "music", done: false },
-  { title: "1M streams on a single track", group: "Create.", tag: "music", done: false },
+  { title: "100M streams on a single track", group: "Create.", tag: "music", done: false },
   { title: "Collab with an artist I admire", group: "Create.", tag: "music", done: false },
   { title: "Score a short film", group: "Create.", tag: "music", done: false },
   { title: "Travel to 10+ countries", group: "Live.", tag: "travel", done: false },

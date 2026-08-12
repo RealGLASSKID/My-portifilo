@@ -18,16 +18,16 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const FALLBACK = [
-  { title: "Broken Dreams", meta: "Single • 2024", tag: "NEW", slug: "broken-dreams" },
+  { title: "Adopted", meta: "Single • 2024", tag: "NEW", slug: "broken-Freezing" },
   { title: "Lagos Nights", meta: "EP • 2024", tag: "", slug: "lagos-nights" },
-  { title: "Pieces of Pain", meta: "Single • 2023", tag: "", slug: "pieces-of-pain" },
-  { title: "Never Settle", meta: "EP • 2023", tag: "", slug: "never-settle" },
+  { title: "Survive", meta: "Single • 2023", tag: "", slug: "pieces-of-pain" },
+  { title: "Freezing", meta: "EP • 2023", tag: "", slug: "never-settle" },
 ];
 
 const GENRES = [
   { Icon: Music2, title: "Afrobeats", desc: "Groovy rhythms with African vibes." },
   { Icon: Headphones, title: "Hip Hop", desc: "Real bars. Real stories. Real connection." },
-  { Icon: Heart, title: "R&B", desc: "Melodies that touch the soul." },
+  { Icon: Heart, title: "Pop Rap", desc: "Melodies that touch the soul." },
   { Icon: Star, title: "Pop", desc: "Catchy. Emotional. Timeless." },
 ];
 
@@ -69,7 +69,7 @@ export default async function MusicPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { k: "25+", v: "Songs Released" },
-            { k: "100K+", v: "Streams Worldwide" },
+            { k: "10M+", v: "Streams Worldwide" },
             { k: "10K+", v: "Listeners" },
             { k: "5+", v: "Years Creating" },
           ].map((s) => (
