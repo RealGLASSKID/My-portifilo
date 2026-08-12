@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { ArrowUpRight, Clock } from "lucide-react";
+import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
+import { posts as staticPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog — GLASSKID | Thoughts on code, design & music",
@@ -14,16 +16,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-const POSTS = [
-  { title: "Building scalable React apps in 2026", cat: "Engineering", read: "6 min", date: "Jul 12, 2026" },
-  { title: "How I design in the dark: my aesthetic system", cat: "Design", read: "4 min", date: "Jun 28, 2026" },
-  { title: "From code to melody — my creative workflow", cat: "Creative", read: "5 min", date: "Jun 10, 2026" },
-  { title: "Firebase or Postgres? A pragmatic guide", cat: "Backend", read: "8 min", date: "May 30, 2026" },
-  { title: "Shipping premium UI without a design team", cat: "Design", read: "5 min", date: "May 15, 2026" },
-  { title: "Why I still believe in personal websites", cat: "Essays", read: "3 min", date: "Apr 22, 2026" },
-];
+export const dynamic = "force-dynamic";
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  let POSTS: { title: string; cat: string; read: string; date: string; slug: string }[] = [];
+
+  try {
+    const fromDb = await getPublishedBlogPosts();
+    if (fromDb.length > 0) {
+      POSTS = fromDb.map((p) => ({
+        title: p.title,
+        cat: p.category,
+        read: p.read,
+        date: p.date,
+        slug: p.slug,
+      }));
+    }
+  } catch {
+    // Firebase unavailable
+  }
+
+  if (POSTS.length === 0) {
+    POSTS = staticPosts.map((p) => ({
+      title: p.title,
+      cat: p.category,
+      read: p.read,
+      date: p.date,
+      slug: p.slug,
+    }));
+  }
+
   return (
     <>
       <PageHero
@@ -36,7 +58,7 @@ export default function BlogPage() {
       <section className="mx-auto max-w-6xl px-6 pb-28">
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {POSTS.map((p) => (
-            <article key={p.title} className="glass-card group overflow-hidden p-5">
+            <article key={p.slug} className="glass-card group overflow-hidden p-5">
               <div className="relative mb-5 aspect-[16/9] overflow-hidden rounded-xl border border-white/5">
                 <div
                   className="absolute inset-0"
@@ -53,10 +75,7 @@ export default function BlogPage() {
               </div>
               <h3 className="mt-2 text-lg font-semibold leading-snug">{p.title}</h3>
               <a
-                href={`/blog/${p.title
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, "-")
-                  .replace(/^-|-$/g, "")}`}
+                href={`/blog/${p.slug}`}
                 className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
               >
                 Read post <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />

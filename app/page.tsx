@@ -81,7 +81,7 @@ export default function HomePage() {
       <section className="relative mx-auto max-w-6xl px-6">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div
-            className="absolute left-1/2 top-0 h-[520px] w-[900px] -translate-x-1/2 rounded-full blur-3xl"
+            className="absolute left-1/2 top-0 h-[320px] w-[min(900px,140vw)] -translate-x-1/2 rounded-full blur-3xl md:h-[520px]"
             style={{ background: "var(--gradient-radial-glow)" }}
           />
         </div>

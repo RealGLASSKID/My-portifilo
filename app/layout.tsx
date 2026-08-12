@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -6,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { MainWrap } from "@/components/MainWrap";
 import { themeInitScript } from "@/components/ThemeToggle";
 import CustomCursor from "@/components/CustomCursor";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -76,6 +78,8 @@ export default function RootLayout({
         <Header />
         <MainWrap>{children}</MainWrap>
         <Footer />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

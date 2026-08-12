@@ -45,7 +45,7 @@ function timeAgo(ts: number) {
 }
 
 export default async function AdminPage() {
-  const [projectsCount, galleryCount, messagesCount, unreadCount] = await Promise.all([
+  const [projectsCount, galleryCount, messagesCount, unreadCount, blogCount, musicCount, servicesCount] = await Promise.all([
     count("projects"),
     count("gallery"),
     count("messages"),
@@ -58,6 +58,9 @@ export default async function AdminPage() {
         return snap.size;
       }
     }),
+    count("blog"),
+    count("music"),
+    count("services"),
   ]);
 
   let recentMessages: { name: string; subject: string; createdAt: number }[] = [];
@@ -79,15 +82,15 @@ export default async function AdminPage() {
     { Icon: FolderKanban, label: "Projects", value: String(projectsCount), delta: "live" },
     { Icon: Images, label: "Gallery photos", value: String(galleryCount), delta: "live" },
     { Icon: MessageSquare, label: "Messages", value: String(messagesCount), delta: `${unreadCount} unread` },
-    { Icon: FileText, label: "Blog posts", value: String(posts.length), delta: "static" },
+    { Icon: FileText, label: "Blog posts", value: String(blogCount || posts.length), delta: blogCount ? "live" : "static" },
   ];
 
   const COLLECTIONS = [
     { Icon: FolderKanban, name: "Projects", href: "/admin/projects", count: projectsCount },
     { Icon: Images, name: "Gallery", href: "/admin/gallery", count: galleryCount },
-    { Icon: FileText, name: "Blog Posts", href: "/admin/blog", count: posts.length },
+    { Icon: FileText, name: "Blog Posts", href: "/admin/blog", count: blogCount || posts.length },
     { Icon: MessageSquare, name: "Messages", href: "/admin/messages", count: messagesCount },
-    { Icon: Music, name: "Music Releases", href: "/admin/music", count: "—" },
+    { Icon: Music, name: "Music Releases", href: "/admin/music", count: musicCount },
     { Icon: ListChecks, name: "Bucket List", href: "/admin/bucket-list", count: "—" },
     { Icon: Flame, name: "Streaks", href: "/admin/streaks", count: "—" },
     { Icon: LinkIcon, name: "Links", href: "/admin/links", count: "—" },
@@ -191,6 +194,60 @@ export default async function AdminPage() {
           </div>
         </div>
       </div>
-    </> 
+
+      {/* Web Analytics — Vercel */}
+      <div className="mt-12">
+        <div className="chip mb-3">
+          <span className="size-1.5 rounded-full bg-primary" /> Web Analytics
+        </div>
+        <h2 className="text-xl font-bold md:text-2xl">
+          Traffic &amp; <span className="text-gradient">performance</span>
+        </h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <a
+            href="https://vercel.com/dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-card group flex items-center justify-between gap-4 p-5"
+          >
+            <div>
+              <div className="text-base font-semibold">Vercel Analytics</div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Live page views, visitors and top routes — enabled on your deployment.
+              </p>
+            </div>
+            <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
+              <ArrowUpRight className="size-4" />
+            </span>
+          </a>
+          <a
+            href="https://vercel.com/dashboard"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-card group flex items-center justify-between gap-4 p-5"
+          >
+            <div>
+              <div className="text-base font-semibold">Speed Insights</div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Core Web Vitals and real-user performance from your live site.
+              </p>
+            </div>
+            <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
+              <ArrowUpRight className="size-4" />
+            </span>
+          </a>
+          <div className="glass-card p-5">
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+              <span className="text-base font-semibold">Tracking active</span>
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              @vercel/analytics &amp; Speed Insights are wired into the site layout. Open your Vercel project → Analytics tab for full charts.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </>
   );
 } 

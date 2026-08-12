@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Play, Music2, Headphones, Heart, Star, FileText } from "lucide-react";
+import { getPublishedMusic } from "@/app/admin/music/actions";
 
 export const metadata: Metadata = {
   title: "Music — GLASSKID | Original songs & releases",
@@ -14,11 +15,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/music" },
 };
 
-const RELEASES = [
-  { title: "Broken Dreams", meta: "Single • 2024", tag: "NEW" },
-  { title: "Lagos Nights", meta: "EP • 2024" },
-  { title: "Pieces of Pain", meta: "Single • 2023" },
-  { title: "Never Settle", meta: "EP • 2023" },
+export const dynamic = "force-dynamic";
+
+const FALLBACK = [
+  { title: "Broken Dreams", meta: "Single • 2024", tag: "NEW", slug: "broken-dreams" },
+  { title: "Lagos Nights", meta: "EP • 2024", tag: "", slug: "lagos-nights" },
+  { title: "Pieces of Pain", meta: "Single • 2023", tag: "", slug: "pieces-of-pain" },
+  { title: "Never Settle", meta: "EP • 2023", tag: "", slug: "never-settle" },
 ];
 
 const GENRES = [
@@ -28,7 +31,22 @@ const GENRES = [
   { Icon: Star, title: "Pop", desc: "Catchy. Emotional. Timeless." },
 ];
 
-export default function MusicPage() {
+export default async function MusicPage() {
+  let RELEASES = FALLBACK;
+  try {
+    const fromDb = await getPublishedMusic();
+    if (fromDb.length > 0) {
+      RELEASES = fromDb.map((r) => ({
+        title: r.title,
+        meta: `${r.type} • ${r.year}`,
+        tag: r.tag || "",
+        slug: r.slug,
+      }));
+    }
+  } catch {
+    // fallback
+  }
+
   return (
     <>
       <PageHero
@@ -71,52 +89,46 @@ export default function MusicPage() {
           My Latest <span className="text-gradient">Releases</span>
         </h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {RELEASES.map((r) => {
-            const slug = r.title
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-|-$/g, "");
-            return (
-              <article key={r.title} className="glass-card overflow-hidden p-4">
-                <div className="relative mb-4 aspect-square overflow-hidden rounded-xl border border-white/5">
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg, oklch(0.4 0.22 300 / 0.8), oklch(0.15 0.05 285))" }}
-                  />
-                  <div className="absolute inset-0 grid place-items-center opacity-40">
-                    <Music2 className="size-16" />
-                  </div>
-                  {r.tag && <div className="chip absolute left-3 top-3 !text-[10px]">{r.tag}</div>}
-                  <a
-                    href={`/music/${slug}`}
-                    aria-label={`Play ${r.title}`}
-                    className="btn-glow absolute bottom-3 right-3 grid size-10 place-items-center rounded-full"
-                  >
-                    <Play className="size-4" />
-                  </a>
+          {RELEASES.map((r) => (
+            <article key={r.slug} className="glass-card overflow-hidden p-4">
+              <div className="relative mb-4 aspect-square overflow-hidden rounded-xl border border-white/5">
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(135deg, oklch(0.4 0.22 300 / 0.8), oklch(0.15 0.05 285))" }}
+                />
+                <div className="absolute inset-0 grid place-items-center opacity-40">
+                  <Music2 className="size-16" />
                 </div>
-                <h3 className="text-base font-semibold">{r.title}</h3>
-                <p className="text-xs text-muted-foreground">{r.meta}</p>
-                <a href={`/music/${slug}/lyrics`} className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline">
-                  <FileText className="size-4" /> View lyrics
+                {r.tag ? <div className="chip absolute left-3 top-3 !text-[10px]">{r.tag}</div> : null}
+                <a
+                  href={`/music/${r.slug}`}
+                  aria-label={`Play ${r.title}`}
+                  className="btn-glow absolute bottom-3 right-3 grid size-10 place-items-center rounded-full"
+                >
+                  <Play className="size-4" />
                 </a>
-              </article>
-            );
-          })}
+              </div>
+              <h3 className="text-base font-semibold">{r.title}</h3>
+              <p className="text-xs text-muted-foreground">{r.meta}</p>
+              <a href={`/music/${r.slug}/lyrics`} className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline">
+                <FileText className="size-3.5" /> Lyrics
+              </a>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="mx-auto mt-16 max-w-6xl px-6 pb-28">
         <div className="chip mb-3">
-          <span className="size-1.5 rounded-full bg-primary" /> What I create
+          <span className="size-1.5 rounded-full bg-primary" /> Genres
         </div>
         <h2 className="text-2xl font-bold md:text-3xl">
-          Genres I <span className="text-gradient">Explore</span>
+          Sounds I <span className="text-gradient">Create</span>
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {GENRES.map(({ Icon, title, desc }) => (
-            <div key={title} className="glass-card p-6 text-center">
-              <span className="icon-tile mx-auto mb-4">
+            <div key={title} className="glass-card p-5">
+              <span className="icon-tile mb-4">
                 <Icon className="size-5" />
               </span>
               <h3 className="text-base font-semibold">{title}</h3>

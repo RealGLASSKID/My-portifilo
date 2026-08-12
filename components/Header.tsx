@@ -45,8 +45,8 @@ export function Header() {
   if (pathname?.startsWith("/admin")) return null;
 
   return (
-    <header className="fixed top-4 left-1/2 z-50 w-[min(1200px,calc(100%-2rem))] -translate-x-1/2">
-      <nav className="glass neon-ring flex items-center justify-between rounded-2xl px-4 py-3 md:px-6">
+    <header className="fixed top-4 left-1/2 z-50 w-[min(1200px,calc(100%-1.5rem))] -translate-x-1/2">
+      <nav className="glass neon-ring relative flex items-center justify-between overflow-hidden rounded-2xl px-4 py-3 md:px-6">
         <Link href="/" className="flex items-center gap-1 font-bold tracking-tight">
           <span className="text-lg text-foreground">GLASSKID</span>
           <span className="text-primary text-lg leading-none">.</span>
