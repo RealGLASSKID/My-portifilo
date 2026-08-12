@@ -37,7 +37,7 @@ const GROUPS: Group[] = [
     subtitle: "Music & Art",
     items: [
       { title: "Release a full-length album", tag: "music", year: "2026", desc: "10+ tracks, one cohesive body of work under GLASSKID." },
-      { title: "Perform live in USA", tag: "music", desc: "First headline set. Small room, real crowd." },
+      { title: "Perform live in Lagos", tag: "music", desc: "First headline set. Small room, real crowd." },
       { title: "100M streams on a single track", tag: "music", desc: "One song that finds its people." },
       { title: "Collab with an artist I admire", tag: "music", desc: "One feature that changes the trajectory." },
       { title: "Score a short film", tag: "music", desc: "Original music for someone else's story." },

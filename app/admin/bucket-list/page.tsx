@@ -11,7 +11,7 @@ const INITIAL: Item[] = [
   { title: "Get a remote job", group: "Dream.", tag: "career", year: "2025", done: true },
   { title: "First open-source contribution", group: "Dream.", tag: "career", year: "2025", done: true },
   { title: "International client in USD", group: "Dream.", tag: "career", year: "2025", done: true },
-  { title: "Build my first real website", group: "Dream.", tag: "career", year: "2022", done: true },
+  { title: "Build my first real website", group: "Dream.", tag: "career", year: "2024", done: true },
   { title: "Ship in 20+ technologies", group: "Dream.", tag: "career", done: false },
   { title: "Write 10 technical deep-dives", group: "Dream.", tag: "content", done: false },
   { title: "Release a full-length album", group: "Create.", tag: "music", year: "2026", done: false },

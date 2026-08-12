@@ -2,10 +2,10 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 const titles: Record<string, string> = {
-  "broken-Freezing": "Adopted",
-  "lagos-nights": "Lagos Nights",
-  "pieces-of-pain": "Survive",
-  "never-settle": "Freezing",
+  "broken-dreams": "AdoptedDreams",
+  "lagos-nights": "FreezingNights",
+  "Survive-of-pain": "Survive of Pain",
+  "never-settle": "Seperate Ways",
 };
 
 export default async function LyricsPage({ params }: { params: Promise<{ slug: string }> }) {

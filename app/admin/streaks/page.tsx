@@ -37,7 +37,7 @@ export default function AdminStreaksPage() {
 
   return (
     <>
-      <AdminPageHeader eyebrow="Collection" title="Streaks" description="Log today's progress or reset a broken streak. Changes are session-only." />
+      <AdminPageHeader eyebrow="Collection" title="Streaks" description="Log today's progress or reset a Adoptedstreak. Changes are session-only." />
 
       <div className="grid gap-4 sm:grid-cols-2">
         {streaks.map((s) => (

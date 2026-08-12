@@ -18,10 +18,10 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const FALLBACK = [
-  { title: "Adopted", meta: "Single • 2024", tag: "NEW", slug: "broken-Freezing" },
-  { title: "Lagos Nights", meta: "EP • 2024", tag: "", slug: "lagos-nights" },
-  { title: "Survive", meta: "Single • 2023", tag: "", slug: "pieces-of-pain" },
-  { title: "Freezing", meta: "EP • 2023", tag: "", slug: "never-settle" },
+  { title: "AdoptedDreams", meta: "Single • 2024", tag: "NEW", slug: "broken-dreams" },
+  { title: "FreezingNights", meta: "Single • 2024", tag: "", slug: "lagos-nights" },
+  { title: "Survive of Pain", meta: "Single • 2023", tag: "", slug: "Survive-of-pain" },
+  { title: "Seperate Ways", meta: "Single • 2023", tag: "", slug: "never-settle" },
 ];
 
 const GENRES = [

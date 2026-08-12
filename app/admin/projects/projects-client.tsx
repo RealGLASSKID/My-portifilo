@@ -22,6 +22,13 @@ type FormState = {
   imageUrl: string;
   imagePublicId: string;
   featured: boolean;
+  // Case study fields (detail page)
+  problem: string;
+  approach: string;
+  decisions: string;
+  result: string;
+  status: string;
+  galleryUrls: string; // one URL per line
 };
 
 const EMPTY_FORM: FormState = {
@@ -36,6 +43,12 @@ const EMPTY_FORM: FormState = {
   imageUrl: "",
   imagePublicId: "",
   featured: false,
+  problem: "",
+  approach: "",
+  decisions: "",
+  result: "",
+  status: "Live",
+  galleryUrls: "",
 };
 
 function slugify(value: string) {
@@ -84,12 +97,18 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
       slug: p.slug,
       category: p.category,
       description: p.description,
-      tags: p.tags.join(", "),
-      liveUrl: p.liveUrl ?? "",
-      githubUrl: p.githubUrl ?? "",
-      imageUrl: p.imageUrl,
-      imagePublicId: p.imagePublicId,
+      tags: (p.tags || []).join(", "),
+      liveUrl: p.liveUrl || "",
+      githubUrl: p.githubUrl || "",
+      imageUrl: p.imageUrl || "",
+      imagePublicId: p.imagePublicId || "",
       featured: p.featured,
+      problem: p.problem || "",
+      approach: p.approach || "",
+      decisions: p.decisions || "",
+      result: p.result || "",
+      status: p.status || "Live",
+      galleryUrls: (p.gallery || []).join("\n"),
     });
     setSlugTouched(true); // don't overwrite an existing slug while editing
     setError(null);
@@ -129,11 +148,6 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
       setError("Project name is required");
       return;
     }
-    if (!form.imageUrl) {
-      setError("Upload a project image first");
-      return;
-    }
-
     setSaving(true);
     setError(null);
 
@@ -148,19 +162,20 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
       liveUrl: form.liveUrl.trim(),
       githubUrl: form.githubUrl.trim(),
       featured: form.featured,
+      problem: form.problem.trim(),
+      approach: form.approach.trim(),
+      decisions: form.decisions.trim(),
+      result: form.result.trim(),
+      status: form.status || "Live",
+      gallery: form.galleryUrls
+        .split(/\n+/)
+        .map((u) => u.trim())
+        .filter(Boolean),
     };
 
     const result = form.id
       ? await updateProject(form.id, basePayload)
-      : await createProject({
-          ...basePayload,
-          problem: "",
-          approach: "",
-          decisions: "",
-          result: "",
-          status: "Live",
-          gallery: [],
-        });
+      : await createProject(basePayload);
 
     setSaving(false);
 
@@ -326,6 +341,60 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
             onChange={(e) => setForm((f) => ({ ...f, githubUrl: e.target.value }))}
             className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
           />
+
+          <div className="sm:col-span-2 mt-2 border-t border-white/5 pt-4">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Case study (shown on project detail page)
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <select
+                value={form.status}
+                onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none sm:col-span-2"
+              >
+                {["Live", "In progress", "Archive"].map((s) => (
+                  <option key={s} value={s} className="bg-background">
+                    {s}
+                  </option>
+                ))}
+              </select>
+              <textarea
+                placeholder="The problem — what challenge did this solve?"
+                value={form.problem}
+                onChange={(e) => setForm((f) => ({ ...f, problem: e.target.value }))}
+                rows={3}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
+              />
+              <textarea
+                placeholder="The approach — how did you tackle it?"
+                value={form.approach}
+                onChange={(e) => setForm((f) => ({ ...f, approach: e.target.value }))}
+                rows={3}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
+              />
+              <textarea
+                placeholder="Key decisions — tech choices and trade-offs"
+                value={form.decisions}
+                onChange={(e) => setForm((f) => ({ ...f, decisions: e.target.value }))}
+                rows={3}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
+              />
+              <textarea
+                placeholder="The result — outcomes and impact"
+                value={form.result}
+                onChange={(e) => setForm((f) => ({ ...f, result: e.target.value }))}
+                rows={3}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
+              />
+              <textarea
+                placeholder="Gallery image URLs (one per line) — shown in the project carousel"
+                value={form.galleryUrls}
+                onChange={(e) => setForm((f) => ({ ...f, galleryUrls: e.target.value }))}
+                rows={3}
+                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
+              />
+            </div>
+          </div>
 
           {error && <p className="text-sm text-destructive sm:col-span-2">{error}</p>}
 

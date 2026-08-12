@@ -2,10 +2,10 @@ import Link from "next/link";
 import { ArrowLeft, Play, FileText, Music2 } from "lucide-react";
 
 const TRACKS: Record<string, { title: string; meta: string; tag?: string }> = {
-  "Adopted": { title: "Adopted", meta: "Single • 2026", tag: "NEW" },
-  "Survive": { title: "Survive", meta: "Single • 2026" },
-  "Seperate Ways": { title: "Seperate Ways", meta: "Single • 2026" },
-  "Freezing": { title: "Freezing", meta: "Single • 2026" },
+  "broken-dreams": { title: "AdoptedDreams", meta: "Single • 2024", tag: "NEW" },
+  "lagos-nights": { title: "FreezingNights", meta: "Single • 2024" },
+  "Survive-of-pain": { title: "Survive of Pain", meta: "Single • 2023" },
+  "never-settle": { title: "Seperate Ways", meta: "Single • 2023" },
 };
 
 export default async function TrackPage({ params }: { params: Promise<{ slug: string }> }) {

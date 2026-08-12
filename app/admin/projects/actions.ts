@@ -166,7 +166,7 @@ const SEED_PROJECTS: ProjectInput[] = [
     slug: "benzene-plus-academy",
     category: "Web Apps",
     description:
-      "Full-stack enrollment platform and CMS for a JAMB, WAEC & NECO tutorial academy in Lagos — built to convert visiting parents into registered students.",
+      "Full-stack enrollment platform and CMS for a JAMB, WAEC & NECO tutorial academy in Lagos built to convert visiting parents into registered students.",
     tags: ["TypeScript", "Next.js", "Tailwind CSS", "Firebase"],
     imageUrl: "",
     imagePublicId: "",

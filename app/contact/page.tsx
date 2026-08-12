@@ -1,4 +1,5 @@
 "use client";
+
 import { submitContactMessage } from "@/app/admin/messages/actions";
 import { PageHero } from "@/components/PageHero";
 import { Mail, Phone, MapPin, Clock, Send, Calendar, Shield } from "lucide-react";
@@ -12,49 +13,54 @@ const schema = z.object({
   message: z.string().min(10, "Tell me a bit more (10+ chars)").max(1000),
 });
 
+const ADDRESS = "Ijegun, Lagos, Nigeria";
+// OpenStreetMap embed centered on Ijegun, Lagos (approx 6.515°N, 3.258°E)
+const MAP_EMBED =
+  "https://www.openstreetmap.org/export/embed.html?bbox=3.230%2C6.490%2C3.290%2C6.545&layer=mapnik&marker=6.515%2C3.258";
+const MAP_LINK = "https://www.openstreetmap.org/?mlat=6.515&mlon=3.258#map=15/6.515/3.258";
+
 const CARDS = [
-  { Icon: Mail, title: "Email Me", lines: ["glasskid01@gmail.com", "I usually reply within a few hours."] },
-  { Icon: Phone, title: "Call Me", lines: ["+2349136893921", "Mon–Fri, 9AM–6PM WAT"] },
-  { Icon: MapPin, title: "Location", lines: ["Lagos, Nigeria", "Available for remote work worldwide."] },
+  { Icon: Mail, title: "Email Me", lines: ["hello@glasskid.dev", "I usually reply within a few hours."] },
+  { Icon: Phone, title: "Call Me", lines: ["+234 913 689 3921 813 123 4567", "Mon–Fri, 9AM–6PM WAT"] },
+  { Icon: MapPin, title: "Location", lines: [ADDRESS, "Available for remote work worldwide."] },
   { Icon: Clock, title: "Response Time", lines: ["Within 24 hours", "I value your time and always respond fast."] },
 ];
 
 export default function ContactPage() {
   const [state, setState] = useState<{ ok?: boolean; err?: Record<string, string> }>({});
   const [values, setValues] = useState({ name: "", email: "", subject: "", message: "" });
-
   const [sending, setSending] = useState(false);
 
-const onSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const parsed = schema.safeParse(values);
-  if (!parsed.success) {
-    const err: Record<string, string> = {};
-    parsed.error.issues.forEach((i) => {
-      err[String(i.path[0])] = i.message;
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = schema.safeParse(values);
+    if (!parsed.success) {
+      const err: Record<string, string> = {};
+      parsed.error.issues.forEach((i) => {
+        err[String(i.path[0])] = i.message;
+      });
+      setState({ err });
+      return;
+    }
+
+    setSending(true);
+    setState({});
+    const result = await submitContactMessage({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      subject: parsed.data.subject,
+      body: parsed.data.message,
     });
-    setState({ err });
-    return;
-  }
+    setSending(false);
 
-  setSending(true);
-  setState({});
-  const result = await submitContactMessage({
-    name: parsed.data.name,
-    email: parsed.data.email,
-    subject: parsed.data.subject,
-    body: parsed.data.message,
-  });
-  setSending(false);
+    if (!result.success) {
+      setState({ err: { message: result.error } });
+      return;
+    }
 
-  if (!result.success) {
-    setState({ err: { message: result.error } });
-    return;
-  }
-
-  setState({ ok: true });
-  setValues({ name: "", email: "", subject: "", message: "" });
-};
+    setState({ ok: true });
+    setValues({ name: "", email: "", subject: "", message: "" });
+  };
 
   return (
     <>
@@ -68,13 +74,13 @@ const onSubmit = async (e: React.FormEvent) => {
           <a href="#form" className="btn-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
             <Send className="size-4" /> Send Message
           </a>
-          <a href="#" className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
-            <Calendar className="size-4" /> Schedule a Call
+          <a href="#map" className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
+            <MapPin className="size-4" /> Find me on the map
           </a>
         </div>
       </PageHero>
 
-      <section className="mx-auto max-w-6xl px-6">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CARDS.map(({ Icon, title, lines }) => (
             <div key={title} className="glass-card p-5">
@@ -96,7 +102,46 @@ const onSubmit = async (e: React.FormEvent) => {
         </div>
       </section>
 
-      <section id="form" className="mx-auto mt-10 max-w-6xl px-6 pb-28">
+      {/* Map — Ijegun, Lagos*/}
+      <section id="map" className="mx-auto mt-12 max-w-6xl px-4 sm:px-6">
+        <div className="chip mb-3">
+          <span className="size-1.5 rounded-full bg-primary" /> Location
+        </div>
+        <h2 className="text-2xl font-bold md:text-3xl">
+          Based in <span className="text-gradient">Lagos</span>
+        </h2>
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+          {ADDRESS}. Available for remote collaborations worldwide and on-site meetings in Lagos.
+        </p>
+
+        <div className="glass-card relative mt-6 overflow-hidden p-0">
+          <div className="relative aspect-[16/10] w-full sm:aspect-[21/9]">
+            <iframe
+              title={`Map — ${ADDRESS}`}
+              src={MAP_EMBED}
+              className="absolute inset-0 h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 px-4 py-3 sm:px-5">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="size-4 shrink-0 text-primary" />
+              <span>{ADDRESS}</span>
+            </div>
+            <a
+              href={MAP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Open in OpenStreetMap →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="form" className="mx-auto mt-12 max-w-6xl px-4 pb-28 sm:px-6">
         <div className="glass-card p-6 md:p-8">
           <div className="chip mb-3">
             <span className="size-1.5 rounded-full bg-primary" /> Send me a message
@@ -104,7 +149,9 @@ const onSubmit = async (e: React.FormEvent) => {
           <h2 className="text-2xl font-bold md:text-3xl">
             Write Your <span className="text-gradient">Message</span>
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">Fill out the form and I&apos;ll get back to you as soon as possible.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Fill out the form and I&apos;ll get back to you as soon as possible.
+          </p>
 
           <form onSubmit={onSubmit} className="mt-6 grid gap-4">
             <div className="grid gap-4 md:grid-cols-2">
@@ -142,12 +189,18 @@ const onSubmit = async (e: React.FormEvent) => {
                 placeholder="Tell me about your project…"
                 className="input resize-none"
               />
-              <div className="mt-1 text-right text-[11px] text-muted-foreground">{values.message.length} / 1000</div>
+              <div className="mt-1 text-right text-[11px] text-muted-foreground">
+                {values.message.length} / 1000
+              </div>
             </Field>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <button type="submit" className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold" disabled={sending}>
-                <Send className="size-4" /> Send Message
+              <button
+                type="submit"
+                className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-60"
+                disabled={sending}
+              >
+                <Send className="size-4" /> {sending ? "Sending…" : "Send Message"}
               </button>
               <p className="inline-flex items-center gap-2 text-xs text-muted-foreground">
                 <Shield className="size-4 text-primary" /> Your information is safe and will never be shared.

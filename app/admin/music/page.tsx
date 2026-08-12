@@ -4,13 +4,13 @@ import { useMemo, useState } from "react";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { Search, Plus, Play, Pencil, Trash2 } from "lucide-react";
 
-type Release = { title: string; type: "Single" | "EP" | "Album"; year: string; streams: string; tag?: "NEW" };
+type Release = { title: string; type: "Single" | "Single" | "Album"; year: string; streams: string; tag?: "NEW" };
 
 const INITIAL: Release[] = [
-  { title: "Adopted", type: "Single", year: "2024", streams: "18.2K", tag: "NEW" },
-  { title: "Lagos Nights", type: "EP", year: "2024", streams: "42.7K" },
-  { title: "Survive", type: "Single", year: "2023", streams: "9.4K" },
-  { title: "Freezing", type: "EP", year: "2023", streams: "31.1K" },
+  { title: "AdoptedDreams", type: "Single", year: "2024", streams: "18.2K", tag: "NEW" },
+  { title: "Freezing", type: "Single", year: "2024", streams: "42.7K" },
+  { title: "Survive", type: "Single", year: "2026", streams: "9.4K" },
+  { title: "Seperate Ways", type: "Single", year: "2026", streams: "31.1K" },
 ];
 
 export default function AdminMusicPage() {

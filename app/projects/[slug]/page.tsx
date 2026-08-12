@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getProjects } from "@/app/admin/projects/actions";
+import { ImageCarousel } from "@/components/ImageCarousel";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -46,8 +46,14 @@ export default async function ProjectDetailPage({
     { n: "04", title: "The result", body: project.result },
   ].filter((s) => s.body);
 
+  // Main image + gallery → carousel
+  const slides = [
+    ...(project.imageUrl ? [project.imageUrl] : []),
+    ...((project.gallery || []).filter((u) => u && u !== project.imageUrl)),
+  ];
+
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-28 pt-8">
+    <div className="mx-auto max-w-3xl px-4 pb-28 pt-8 sm:px-6">
       <Link
         href="/projects"
         className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-primary"
@@ -56,7 +62,7 @@ export default async function ProjectDetailPage({
       </Link>
 
       <div className="chip mb-4">Case study · {project.slug}</div>
-      <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{project.name}</h1>
+      <h1 className="text-[clamp(1.75rem,4vw,3rem)] font-bold tracking-tight">{project.name}</h1>
       <p className="mt-4 text-lg text-muted-foreground">{project.description}</p>
 
       <div className="mt-6 flex flex-wrap gap-2">
@@ -96,44 +102,19 @@ export default async function ProjectDetailPage({
         </span>
       </div>
 
-      {project.imageUrl ? (
-        <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
-          <Image
-            src={project.imageUrl}
-            alt={project.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 768px"
-            priority
-          />
-        </div>
-      ) : null}
+      <div className="mt-10">
+        <ImageCarousel images={slides} alt={project.name} autoPlayMs={5500} />
+      </div>
 
       <div className="mt-14 space-y-12">
         {sections.map((s) => (
           <section key={s.n}>
             <div className="text-xs font-semibold tracking-widest text-primary">{s.n}</div>
             <h2 className="mt-2 text-2xl font-bold">{s.title}</h2>
-            <p className="mt-3 leading-relaxed text-muted-foreground">{s.body}</p>
+            <p className="mt-3 leading-relaxed text-muted-foreground whitespace-pre-line">{s.body}</p>
           </section>
         ))}
       </div>
-
-      {project.gallery?.length > 0 && (
-        <div className="mt-14">
-          <h2 className="text-2xl font-bold">Gallery</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {project.gallery.map((url, i) => (
-              <div
-                key={i}
-                className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10"
-              >
-                <Image src={url} alt="" fill className="object-cover" sizes="50vw" />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="mt-16">
         <Link

@@ -20,7 +20,7 @@ const PRODUCTS = [
   { Icon: LayoutTemplate, title: "Glass Portfolio Template", price: "$39", tag: "Bestseller", desc: "The exact dark-glass portfolio you're looking at, as a clean React + Tailwind starter." },
   { Icon: FileCode2, title: "SaaS Starter Kit", price: "$79", tag: "New", desc: "Auth, billing, dashboards and emails wired up so you can ship your MVP in a weekend." },
   { Icon: Sparkles, title: "Neon UI Kit", price: "$25", desc: "120+ glassmorphic components, gradients and motion presets ready to paste in." },
-  { Icon: BookOpen, title: "Ship It: Freelance Playbook", price: "$15", desc: "How I price, scope, pitch and deliver client projects from Lagos to anywhere." },
+  { Icon: BookOpen, title: "Ship It: Freelance Playbook", price: "$15", desc: "How I price, scope, pitch and deliver client projects from Freezingto anywhere." },
   { Icon: Music4, title: "Lo-fi Sample Pack Vol. 1", price: "$12", desc: "40 original loops and one-shots recorded in my home studio. Royalty-free." },
   { Icon: Package, title: "Everything Bundle", price: "$129", tag: "Save 30%", desc: "Every template, kit and guide above — plus every future release for a year." },
 ];
