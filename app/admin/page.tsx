@@ -3,6 +3,8 @@ import Link from "next/link";
 import { AdminPageHeader } from "./_components/AdminPageHeader";
 import { posts } from "@/lib/blog";
 import { db } from "@/lib/firebase-admin";
+import { getAnalyticsSummary } from "@/lib/analytics";
+import { AnalyticsCharts } from "./_components/AnalyticsCharts";
 import {
   Activity,
   FileText,
@@ -45,7 +47,7 @@ function timeAgo(ts: number) {
 }
 
 export default async function AdminPage() {
-  const [projectsCount, galleryCount, messagesCount, unreadCount, blogCount, musicCount, servicesCount] = await Promise.all([
+  const [projectsCount, galleryCount, messagesCount, unreadCount, blogCount, musicCount, servicesCount, analytics] = await Promise.all([
     count("projects"),
     count("gallery"),
     count("messages"),
@@ -61,6 +63,14 @@ export default async function AdminPage() {
     count("blog"),
     count("music"),
     count("services"),
+    getAnalyticsSummary(14).catch(() => ({
+      totalViews: 0,
+      totalVisitors: 0,
+      todayViews: 0,
+      todayVisitors: 0,
+      last7Days: [],
+      topPaths: [],
+    })),
   ]);
 
   let recentMessages: { name: string; subject: string; createdAt: number }[] = [];
@@ -195,7 +205,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      {/* Web Analytics — Vercel */}
+      {/* Web Analytics — live charts from site tracking */}
       <div className="mt-12">
         <div className="chip mb-3">
           <span className="size-1.5 rounded-full bg-primary" /> Web Analytics
@@ -203,48 +213,19 @@ export default async function AdminPage() {
         <h2 className="text-xl font-bold md:text-2xl">
           Traffic &amp; <span className="text-gradient">performance</span>
         </h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <p className="mt-1 text-sm text-muted-foreground">
+          Live charts from your portfolio visitors. Vercel Analytics remains available in your Vercel dashboard for extra detail.
+        </p>
+        <AnalyticsCharts summary={analytics} />
+        <div className="mt-4 flex flex-wrap gap-3">
           <a
             href="https://vercel.com/dashboard"
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-card group flex items-center justify-between gap-4 p-5"
+            className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
           >
-            <div>
-              <div className="text-base font-semibold">Vercel Analytics</div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Live page views, visitors and top routes — enabled on your deployment.
-              </p>
-            </div>
-            <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
-              <ArrowUpRight className="size-4" />
-            </span>
+            Open Vercel Analytics <ArrowUpRight className="size-4" />
           </a>
-          <a
-            href="https://vercel.com/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass-card group flex items-center justify-between gap-4 p-5"
-          >
-            <div>
-              <div className="text-base font-semibold">Speed Insights</div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Core Web Vitals and real-user performance from your live site.
-              </p>
-            </div>
-            <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
-              <ArrowUpRight className="size-4" />
-            </span>
-          </a>
-          <div className="glass-card p-5">
-            <div className="flex items-center gap-2">
-              <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-              <span className="text-base font-semibold">Tracking active</span>
-            </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              @vercel/analytics &amp; Speed Insights are wired into the site layout. Open your Vercel project → Analytics tab for full charts.
-            </p>
-          </div>
         </div>
       </div>
 

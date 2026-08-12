@@ -14,7 +14,7 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative mx-auto max-w-6xl px-6 pb-16 pt-8">
+    <section className="relative mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
       <div
         className="pointer-events-none absolute inset-x-0 -top-20 mx-auto h-72 w-[80%] blur-3xl"
         style={{ background: "var(--gradient-radial-glow)" }}
@@ -24,7 +24,7 @@ export function PageHero({
           <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" />
           {eyebrow}
         </span>
-        <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
+        <h1 className="mt-5 text-[clamp(1.75rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight">
           {title} {accent && <span className="text-gradient">{accent}</span>}
         </h1>
         {description && <p className="mt-5 max-w-2xl text-muted-foreground md:text-lg">{description}</p>}

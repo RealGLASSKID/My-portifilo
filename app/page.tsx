@@ -91,10 +91,10 @@ export default function HomePage() {
             <span className="chip">
               <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" /> Hi, I&apos;m
             </span>
-            <h1 className="mt-5 text-6xl font-bold leading-[0.95] tracking-tighter md:text-7xl">
+            <h1 className="mt-5 text-[clamp(2.5rem,6vw,4.25rem)] font-bold leading-[0.95] tracking-tighter">
               <span className="text-gradient animate-gradient">GLASSKID</span>
             </h1>
-            <p className="mt-6 text-xl font-medium text-foreground/90 md:text-2xl">
+            <p className="mt-6 text-[clamp(1.05rem,2.2vw,1.5rem)] font-medium text-foreground/90">
               Full Stack Developer <span className="text-primary">•</span> Multi Instrumentalist
               <span className="text-primary">•</span> Songwriter
               <br />
@@ -131,7 +131,7 @@ export default function HomePage() {
                 alt="GLASSKID portrait — Prince Dennis"
                 width={1024}
                 height={1280}
-                className="h-[520px] w-full object-cover"
+                className="h-[min(32rem,70vw)] w-full object-cover sm:h-[min(32.5rem,55vw)]"
                 priority
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />

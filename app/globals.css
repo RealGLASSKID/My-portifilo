@@ -88,10 +88,15 @@ html.light {
 @layer base {
   * {
     border-color: var(--border);
+    box-sizing: border-box;
   }
   html {
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
+    /* Fluid root so typography scales across laptops without needing zoom */
+    font-size: clamp(14px, 0.35vw + 13px, 16px);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   body {
     background-color: var(--background);
@@ -99,12 +104,17 @@ html.light {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
+    min-height: 100dvh;
     background-image:
       linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
       radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.55 0.28 295 / 0.14), transparent 60%);
-    background-size: 28px 28px, 28px 28px, auto;
+    background-size: 1.75rem 1.75rem, 1.75rem 1.75rem, auto;
+  }
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
   }
   ::selection {
     background: oklch(0.65 0.24 295 / 0.4);

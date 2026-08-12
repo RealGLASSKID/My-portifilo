@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -7,6 +6,8 @@ import { Footer } from "@/components/Footer";
 import { MainWrap } from "@/components/MainWrap";
 import { themeInitScript } from "@/components/ThemeToggle";
 import CustomCursor from "@/components/CustomCursor";
+import PageViewTracker from "@/components/PageViewTracker";
+import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const spaceGrotesk = Space_Grotesk({
@@ -75,6 +76,7 @@ export default function RootLayout({
       </head>
       <body className="relative min-h-dvh font-sans antialiased" suppressHydrationWarning>
         <CustomCursor />
+        <PageViewTracker />
         <Header />
         <MainWrap>{children}</MainWrap>
         <Footer />
