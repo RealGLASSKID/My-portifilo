@@ -56,7 +56,7 @@ const SECTIONS = [
   },
   {
     title: "11. Contact",
-    body: "Questions about these terms? Reach out at hello@glasskid.dev and I'll respond as soon as I can.",
+    body: "Questions about these terms? Reach out at glasskid01@gmail.com and I'll respond as soon as I can.",
   },
 ];
 

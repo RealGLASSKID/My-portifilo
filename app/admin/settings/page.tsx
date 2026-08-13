@@ -7,7 +7,7 @@ import { Check } from "lucide-react";
 export default function AdminSettingsPage() {
   const [saved, setSaved] = useState(false);
   const [name, setName] = useState("Prince Dennis (GLASSKID)");
-  const [email, setEmail] = useState("hello@glasskid.dev");
+  const [email, setEmail] = useState("glasskid01@gmail.com");
   const [bio, setBio] = useState(
     "Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria."
   );

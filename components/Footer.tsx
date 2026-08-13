@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Github, Linkedin, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import { Github, Linkedin, Instagram, Twitter, Facebook, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   const pathname = usePathname();
@@ -20,8 +20,8 @@ export function Footer() {
               Full stack developer, artist &amp; songwriter building digital solutions and creating music that inspires.
             </p>
             <div className="mt-5 flex gap-2">
-              {[Github, Linkedin, Twitter, Instagram, Youtube].map((Icon, i) => (
-                <a key={i} href="#" aria-label="social" className="btn-ghost-glass grid size-9 place-items-center rounded-full">
+              {[Github, Linkedin, Twitter, Instagram, Facebook].map((Icon, i) => (
+                <a key={i} href="https://web.facebook.com/profile.php?id=61590417605342" aria-label="social" className="btn-ghost-glass grid size-9 place-items-center rounded-full">
                   <Icon className="size-4" />
                 </a>
               ))}
@@ -55,10 +55,10 @@ export function Footer() {
             <h4 className="mb-4 text-sm font-semibold text-foreground">Let&apos;s Connect</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
-                <Mail className="size-4 text-primary" /> hello@glasskid.dev
+                <Mail className="size-4 text-primary" /> glasskid01@gmail.com
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="size-4 text-primary" /> +234 913 689 3921 813 123 4567
+                <Phone className="size-4 text-primary" /> +234 913 689 3921 
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="size-4 text-primary" /> Lagos, Nigeria

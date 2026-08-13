@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "Next.js Developer",
     "Artist",
     "Songwriter",
-    "FreezingNigeria",
+    "Lagos Nigeria",
   ],
   authors: [{ name: "Prince Dennis" }],
   openGraph: {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
     siteName: "GLASSKID",
     images: [
-      "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8123adfd-fd42-4d70-979d-7d32e41fdd7b/id-preview-e80490fd--671fc3af-c6b8-453a-976f-b5ab790bc098.lovable.app-1784730682286.png",
+      "https://res-console.cloudinary.com/yhra7eqc/thumbnails/v1/image/upload/v1786615474/aGVyby1wb3J0cmFpdA==/preview",
     ],
   },
   twitter: {
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
-      "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8123adfd-fd42-4d70-979d-7d32e41fdd7b/id-preview-e80490fd--671fc3af-c6b8-453a-976f-b5ab790bc098.lovable.app-1784730682286.png",
+      "https://res-console.cloudinary.com/yhra7eqc/thumbnails/v1/image/upload/v1786615474/aGVyby1wb3J0cmFpdA==/preview",
     ],
   },
   themeColor: "#8B5CF6",

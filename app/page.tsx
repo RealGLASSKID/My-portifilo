@@ -12,7 +12,7 @@ import {
   Linkedin,
   Instagram,
   Twitter,
-  Youtube,
+  Facebook,
   Send,
   Briefcase,
   Headphones,
@@ -72,7 +72,7 @@ const MUSIC = [
   { title: "Dreams", meta: "GLASSKID • 4:08" },
 ];
 
-const SOCIALS = [Github, Linkedin, Instagram, Twitter, Youtube];
+const SOCIALS = [Github, Linkedin, Instagram, Twitter, Facebook];
 
 export default function HomePage() {
   return (

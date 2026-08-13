@@ -50,7 +50,7 @@ const GROUPS: Group[] = [
     items: [
       { title: "Travel to 10+ countries", tag: "travel", desc: "See the world, work from it." },
       { title: "Own my first car", tag: "life", desc: "Nothing crazy — freedom on wheels." },
-      { title: "Buy my mum a house", tag: "family", desc: "The one that started it all deserves the keys.", done: true },
+      { title: "Buy my mum a house", tag: "family", desc: "The one that started it all deserves the keys." },
       { title: "Learn a second language", tag: "growth", desc: "Fluent enough to hold a real conversation." },
       { title: "Read 50 books", tag: "growth", desc: "Fiction, tech, philosophy — mix it up." },
     ],

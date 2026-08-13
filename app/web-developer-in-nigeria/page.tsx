@@ -23,7 +23,7 @@ const jsonLd = {
   description: "Full stack web development, UI/UX design and SaaS engineering for businesses in Nigeria.",
   areaServed: "Nigeria",
   address: { "@type": "PostalAddress", addressLocality: "Lagos", addressCountry: "NG" },
-  email: "hello@glasskid.dev",
+  email: "glasskid01@gmail.com",
 };
 
 const CITIES = ["Lagos", "Abuja", "Port Harcourt", "Ibadan", "Enugu", "Kano", "Benin City", "Remote / Diaspora"];
