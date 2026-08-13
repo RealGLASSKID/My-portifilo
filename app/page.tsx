@@ -67,9 +67,9 @@ const SKILLS = [
   { name: "TypeScript", value: 90 },];
 
 const MUSIC = [
-  { title: "Forever", meta: "GLASSKID • 3:45" },
-  { title: "Fallen Angel", meta: "GLASSKID • 3:12" },
-  { title: "Dreams", meta: "GLASSKID • 4:08" },
+  { title: "Adopted", meta: "GLASSKID • 2:45" },
+  { title: "Seperate Ways", meta: "GLASSKID • 2:32" },
+  { title: "Freezing", meta: "GLASSKID • 2:08" },
 ];
 
 const SOCIALS = [Github, Linkedin, Instagram, Twitter, Facebook];
@@ -184,28 +184,46 @@ export default function HomePage() {
         />
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {PROJECTS.map((p) => (
-            <article key={p.name} className="glass-card group overflow-hidden p-5">
+            <Link
+              key={p.slug}
+              href={`/projects/${p.slug}`}
+              className="glass-card group block overflow-hidden p-5 transition hover:border-primary/30"
+            >
               <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-white/5">
                 <div
                   className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, oklch(0.35 0.15 295 / 0.7), oklch(0.2 0.05 285))" }}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, oklch(0.35 0.15 295 / 0.7), oklch(0.2 0.05 285))",
+                  }}
                 />
                 <div className="absolute inset-0 grid place-items-center">
-                  <div className="text-2xl font-bold tracking-tight text-white/90">{p.name.toUpperCase()}</div>
+                  <div className="text-2xl font-bold tracking-tight text-white/90">
+                    {p.name.toUpperCase()}
+                  </div>
                 </div>
                 <div className="chip absolute right-3 top-3 !text-[10px]">Featured</div>
               </div>
               <div className="text-xs uppercase tracking-widest text-primary/80">{p.tag}</div>
-              <h3 className="mt-1 text-lg font-semibold">{p.name}</h3>
+              <h3 className="mt-1 text-lg font-semibold transition group-hover:text-primary">
+                {p.name}
+              </h3>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {p.stack.map((s) => (
-                  <span key={s} className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-muted-foreground">
+                  <span
+                    key={s}
+                    className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-muted-foreground"
+                  >
                     {s}
                   </span>
                 ))}
               </div>
-            </article>
+              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Case study{" "}
+                <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+              </div>
+            </Link>
           ))}
         </div>
       </section>
