@@ -44,9 +44,7 @@ export const metadata: Metadata = {
     description:
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
     siteName: "GLASSKID",
-    images: [
-      "https://glasskid.vercel.app/images/hero-portrait.png",
-    ],
+
   },
   twitter: {
     card: "summary_large_image",
