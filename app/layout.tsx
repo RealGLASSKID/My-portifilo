@@ -45,7 +45,7 @@ export const metadata: Metadata = {
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
     siteName: "GLASSKID",
     images: [
-      "https://res-console.cloudinary.com/yhra7eqc/thumbnails/v1/image/upload/v1786615474/aGVyby1wb3J0cmFpdA==/preview",
+      "https://res.cloudinary.com/yhra7eqc/image/upload/v1786615474/hero-portrait.png",
     ],
   },
   twitter: {
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
-      "https://res-console.cloudinary.com/yhra7eqc/thumbnails/v1/image/upload/v1786615474/aGVyby1wb3J0cmFpdA==/preview",
+      "https://res.cloudinary.com/yhra7eqc/image/upload/v1786615474/hero-portrait.png",
     ],
   },
   themeColor: "#8B5CF6",
