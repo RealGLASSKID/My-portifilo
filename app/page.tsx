@@ -9,9 +9,7 @@ import {
   Music2,
   Palette,
   Github,
-  Linkedin,
   Instagram,
-  Twitter,
   Facebook,
   Send,
   Briefcase,
@@ -34,7 +32,34 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const TECH = ["Next.js", "React", "Bootstrap", "TypeScript", "Tailwind CSS", "Firebase", "Node.js", "PostgreSQL", "MongoDB" , "React Native" , "JavaScript", "Vercel", "Supabase", "Prisma", "GraphQL", "REST APIs", "Git", "Docker" , "Jest", "Cypress", "Figma", "Adobe XD", "Photoshop", "Illustrator", "After Effects", "Premiere Pro"];
+const TECH = [
+  "Next.js",
+  "React",
+  "Bootstrap",
+  "TypeScript",
+  "Tailwind CSS",
+  "Firebase",
+  "Node.js",
+  "PostgreSQL",
+  "MongoDB",
+  "React Native",
+  "JavaScript",
+  "Vercel",
+  "Supabase",
+  "Prisma",
+  "GraphQL",
+  "REST APIs",
+  "Git",
+  "Docker",
+  "Jest",
+  "Cypress",
+  "Figma",
+  "Adobe XD",
+  "Photoshop",
+  "Illustrator",
+  "After Effects",
+  "Premiere Pro",
+];
 
 const STATS = [
   { k: "3+", v: "Years Coding", Icon: Code2 },
@@ -43,9 +68,27 @@ const STATS = [
 ];
 
 const PROJECTS = [
-  { tag: "Web App", name: "Nexora", desc: "Modern SaaS platform for managing projects, teams and analytics.", stack: ["Next.js", "TS", "Tailwind"] },
-  { tag: "EdTech", name: "Cherry Noble School", desc: "School management system with student, teacher and exam modules.", stack: ["React", "Firebase"] },
-  { tag: "Music Platform", name: "Echoes", desc: "Music streaming platform for emerging artists and music lovers.", stack: ["Next.js", "Node", "TS"] },
+  {
+    slug: "nexora",
+    tag: "Web App",
+    name: "Nexora",
+    desc: "Modern SaaS platform for managing projects, teams and analytics.",
+    stack: ["Next.js", "TS", "Tailwind"],
+  },
+  {
+    slug: "cherry-noble-school",
+    tag: "EdTech",
+    name: "Cherry Noble School",
+    desc: "School management system with student, teacher and exam modules.",
+    stack: ["React", "Firebase"],
+  },
+  {
+    slug: "echoes",
+    tag: "Music Platform",
+    name: "Echoes",
+    desc: "Music streaming platform for emerging artists and music lovers.",
+    stack: ["Next.js", "Node", "TS"],
+  },
 ];
 
 const SERVICES = [
@@ -64,7 +107,8 @@ const SKILLS = [
   { name: "UI/UX Design", value: 75 },
   { name: "React Native", value: 80 },
   { name: "JavaScript", value: 90 },
-  { name: "TypeScript", value: 90 },];
+  { name: "TypeScript", value: 90 },
+];
 
 const MUSIC = [
   { title: "Adopted", meta: "GLASSKID • 2:45" },
@@ -72,7 +116,28 @@ const MUSIC = [
   { title: "Freezing", meta: "GLASSKID • 2:08" },
 ];
 
-const SOCIALS = [Github, Linkedin, Instagram, Twitter, Facebook];
+const SOCIALS = [
+  {
+    name: "GitHub",
+    href: "https://github.com/RealGLASSKID",
+    Icon: Github,
+  },
+  {
+    name: "Facebook",
+    href: "https://web.facebook.com/profile.php?id=61590417605342",
+    Icon: Facebook,
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/Real_GLASSKID/",
+    Icon: Instagram,
+  },
+  {
+    name: "WhatsApp",
+    href: "https://wa.me/2349136893921",
+    Icon: null as null,
+  },
+];
 
 export default function HomePage() {
   return (
@@ -101,23 +166,33 @@ export default function HomePage() {
               <span className="text-muted-foreground">Creative Technologist</span>
             </p>
             <p className="mt-5 max-w-lg text-muted-foreground">
-              I build fast, scalable web applications and create music that tells stories.
-              Turning ideas into digital experiences from Lagos, Nigeria.
+              I build fast, scalable web applications and create music that tells stories. Turning ideas into
+              digital experiences from Lagos, Nigeria.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/projects" className="btn-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
+              <Link
+                href="/projects"
+                className="btn-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
+              >
                 View Projects <ArrowRight className="size-4" />
               </Link>
-              <Link href="/contact" className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
+              <Link
+                href="/contact"
+                className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
+              >
                 Hire Me <Send className="size-4" />
               </Link>
             </div>
 
             <div className="mt-6 flex gap-2">
               {SOCIALS.map((Icon, i) => (
-                <a key={i} href="#" aria-label="social" className="btn-ghost-glass grid size-10 place-items-center rounded-full">
-                  <Icon className="size-4" />
+                <a
+                  key={i}
+                  href="#"
+                  aria-label="social"
+                  className="btn-ghost-glass grid size-10 place-items-center rounded-full"
+                >
                 </a>
               ))}
             </div>
@@ -177,7 +252,10 @@ export default function HomePage() {
           title="Selected"
           accent="work"
           action={
-            <Link href="/projects" className="group inline-flex items-center gap-1 text-sm text-primary hover:underline">
+            <Link
+              href="/projects"
+              className="group inline-flex items-center gap-1 text-sm text-primary hover:underline"
+            >
               View all <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
             </Link>
           }
@@ -205,9 +283,7 @@ export default function HomePage() {
                 <div className="chip absolute right-3 top-3 !text-[10px]">Featured</div>
               </div>
               <div className="text-xs uppercase tracking-widest text-primary/80">{p.tag}</div>
-              <h3 className="mt-1 text-lg font-semibold transition group-hover:text-primary">
-                {p.name}
-              </h3>
+              <h3 className="mt-1 text-lg font-semibold transition group-hover:text-primary">{p.name}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {p.stack.map((s) => (
@@ -220,8 +296,7 @@ export default function HomePage() {
                 ))}
               </div>
               <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                Case study{" "}
-                <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+                Case study <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
               </div>
             </Link>
           ))}
@@ -258,7 +333,7 @@ export default function HomePage() {
             </div>
             <ul className="grid gap-4 sm:grid-cols-2">
               {SKILLS.map((s, i) => (
-                  <li key={`${s.name}-${i}`}>
+                <li key={`${s.name}-${i}`}>
                   <div className="mb-1 flex items-center justify-between text-sm">
                     <span className="text-foreground/90">{s.name}</span>
                     <span className="text-muted-foreground">{s.value}%</span>
@@ -266,7 +341,11 @@ export default function HomePage() {
                   <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
                     <div
                       className="h-full rounded-full"
-                      style={{ width: `${s.value}%`, background: "var(--gradient-brand)", boxShadow: "0 0 12px var(--neon)" }}
+                      style={{
+                        width: `${s.value}%`,
+                        background: "var(--gradient-brand)",
+                        boxShadow: "0 0 12px var(--neon)",
+                      }}
                     />
                   </div>
                 </li>
@@ -296,7 +375,10 @@ export default function HomePage() {
                     <div className="font-medium">{m.title}</div>
                     <div className="text-xs text-muted-foreground">{m.meta}</div>
                   </div>
-                  <button aria-label={`Play ${m.title}`} className="btn-glow grid size-10 place-items-center rounded-full">
+                  <button
+                    aria-label={`Play ${m.title}`}
+                    className="btn-glow grid size-10 place-items-center rounded-full"
+                  >
                     <Play className="size-4" />
                   </button>
                 </li>
@@ -325,7 +407,10 @@ export default function HomePage() {
                 Available for freelance projects, collaborations and full-time opportunities.
               </p>
             </div>
-            <Link href="/contact" className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold">
+            <Link
+              href="/contact"
+              className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+            >
               Get in touch <ArrowRight className="size-4" />
             </Link>
           </div>
