@@ -20,14 +20,14 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL("https://glasskid.vercel.app"),
   title: {
-    default: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
-    template: "%s — GLASSKID",
+    default: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    template: "%s — THEREALGLASSKID",
   },
   description:
-    "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript, Vue, React Native and AI integrations.",
+    "THEREALGLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript, Vue, React Native and AI integrations.",
   keywords: [
-    "Real GLASSKID",
-    "GLASSKID",
+    "therealglasskid",
+    "THEREALGLASSKID",
     "Prince Dennis",
     "Full Stack Web Developer",
     "React Developer",
@@ -40,17 +40,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://glasskid.vercel.app/",
-    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
     description:
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
-    siteName: "GLASSKID",
+    siteName: "THEREALGLASSKID",
 
   },
   twitter: {
     card: "summary_large_image",
-    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
     description:
-      "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
+      "THEREALGLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
       "https://glasskid.vercel.app/images/hero-portrait.png",
     ],

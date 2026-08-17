@@ -3,10 +3,10 @@ import { PageHero } from "@/components/PageHero";
 import { Code2, Heart, Rocket, Target, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — GLASSKID | Prince Dennis",
-  description: "The mind behind the code and the music — the story of Prince Dennis, aka GLASSKID.",
+  title: "About — THEREALGLASSKID | Prince Dennis",
+  description: "The mind behind the code and the music — the story of Prince Dennis, aka THEREALGLASSKID.",
   openGraph: {
-    title: "About GLASSKID (Prince Dennis)",
+    title: "About THEREALGLASSKID (Prince Dennis)",
     description: "Full stack developer, artist and songwriter from Lagos, Nigeria.",
     type: "profile",
     url: "/about",

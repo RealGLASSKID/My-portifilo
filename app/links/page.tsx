@@ -4,11 +4,11 @@ import { PageHero } from "@/components/PageHero";
 import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "All Links — GLASSKID",
-  description: "Every page, product and profile — one tidy index of the GLASSKID universe.",
+  title: "All Links — THEREALGLASSKID",
+  description: "Every page, product and profile — one tidy index of the THEREALGLASSKID universe.",
   openGraph: {
-    title: "All Links — GLASSKID",
-    description: "Complete list of pages and permalinks across GLASSKID.",
+    title: "All Links — THEREALGLASSKID",
+    description: "Complete list of pages and permalinks across THEREALGLASSKID.",
     type: "website",
   },
   alternates: { canonical: "/links" },
@@ -90,7 +90,7 @@ export default function LinksPage() {
         eyebrow="Index"
         title="All"
         accent="Links."
-        description="Complete list of pages, products and profiles across the GLASSKID universe. Bookmark what you love."
+        description="Complete list of pages, products and profiles across the THEREALGLASSKID universe. Bookmark what you love."
       />
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="space-y-12">

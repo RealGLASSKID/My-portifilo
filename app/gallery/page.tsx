@@ -5,8 +5,8 @@ import { getGalleryItems } from "@/app/admin/gallery/actions";
 import { MapPin, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Gallery — GLASSKID",
-  description: "Photos and moments from GLASSKID.",
+  title: "Gallery — THEREALGLASSKID",
+  description: "Photos and moments from THEREALGLASSKID.",
 };
 
 export const dynamic = "force-dynamic";

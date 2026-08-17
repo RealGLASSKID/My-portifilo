@@ -5,7 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { Star, Quote, Send } from "lucide-react";
 
 const EXISTING = [
-  { name: "Amara O.", role: "Founder, Nexora", text: "GLASSKID shipped our MVP in three weeks and it looked better than our Figma. Rare combination of speed and taste." },
+  { name: "Amara O.", role: "Founder, Nexora", text: "THEREALGLASSKID shipped our MVP in three weeks and it looked better than our Figma. Rare combination of speed and taste." },
   { name: "Tobi A.", role: "Product Lead, Grocify", text: "Communication was flawless. He treated the product like it was his own and pushed back where it mattered." },
   { name: "Chidera N.", role: "Indie Artist", text: "He built my music site and produced a record with me the same month. Genuinely two talents in one person." },
 ];

@@ -5,11 +5,11 @@ import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
 import { posts as staticPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog — GLASSKID | Thoughts on code, design & music",
-  description: "Notes, tutorials and stories from GLASSKID on code, design, creativity and music.",
+  title: "Blog — THEREALGLASSKID | Thoughts on code, design & music",
+  description: "Notes, tutorials and stories from THEREALGLASSKID on code, design, creativity and music.",
   openGraph: {
-    title: "Blog — GLASSKID",
-    description: "Notes and stories from GLASSKID.",
+    title: "Blog — THEREALGLASSKID",
+    description: "Notes and stories from THEREALGLASSKID.",
     type: "website",
     url: "/blog",
   },

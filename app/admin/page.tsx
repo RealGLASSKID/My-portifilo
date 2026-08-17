@@ -1,234 +1,91 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { AdminPageHeader } from "./_components/AdminPageHeader";
-import { posts } from "@/lib/blog";
-import { db } from "@/lib/firebase-admin";
-import { getAnalyticsSummary } from "@/lib/analytics";
-import { AnalyticsCharts } from "./_components/AnalyticsCharts";
-import {
-  Activity,
-  FileText,
-  FolderKanban,
-  ListChecks,
-  Music,
-  Flame,
-  Link as LinkIcon,
-  MessageSquare,
-  Images,
-  Plus,
-  ArrowUpRight,
-} from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Admin — GLASSKID",
-  description: "Private control room.",
-  robots: { index: false, follow: false },
-};
+import { useMemo, useState } from "react";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { Search, Check } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+type Item = { title: string; group: string; tag: string; year?: string; done: boolean };
 
-async function count(collection: string) {
-  try {
-    const snap = await db.collection(collection).count().get();
-    return snap.data().count;
-  } catch {
-    const snap = await db.collection(collection).get();
-    return snap.size;
-  }
-}
+const INITIAL: Item[] = [
+  { title: "Launch a SaaS product", group: "Dream.", tag: "career", year: "2026", done: false },
+  { title: "Get a remote job", group: "Dream.", tag: "career", year: "2025", done: true },
+  { title: "First open-source contribution", group: "Dream.", tag: "career", year: "2025", done: true },
+  { title: "International client in USD", group: "Dream.", tag: "career", year: "2025", done: true },
+  { title: "Build my first real website", group: "Dream.", tag: "career", year: "2024", done: true },
+  { title: "Ship in 20+ technologies", group: "Dream.", tag: "career", done: false },
+  { title: "Write 10 technical deep-dives", group: "Dream.", tag: "content", done: false },
+  { title: "Release a full-length album", group: "Create.", tag: "music", year: "2026", done: false },
+  { title: "Perform live in Lagos", group: "Create.", tag: "music", done: false },
+  { title: "100M streams on a single track", group: "Create.", tag: "music", done: false },
+  { title: "Collab with an artist I admire", group: "Create.", tag: "music", done: false },
+  { title: "Score a short film", group: "Create.", tag: "music", done: false },
+  { title: "Travel to 10+ countries", group: "Live.", tag: "travel", done: false },
+  { title: "Own my first car", group: "Live.", tag: "life", done: false },
+  { title: "Buy my mum a house", group: "Live.", tag: "family", done: true },
+  { title: "Learn a second language", group: "Live.", tag: "growth", done: false },
+  { title: "Read 50 books", group: "Live.", tag: "growth", done: false },
+];
 
-function timeAgo(ts: number) {
-  const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return "just now";
-  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  if (s < 604800) return `${Math.floor(s / 86400)}d ago`;
-  return new Date(ts).toLocaleDateString();
-}
+export default function AdminBucketListPage() {
+  const [items, setItems] = useState<Item[]>(INITIAL);
+  const [q, setQ] = useState("");
 
-export default async function AdminPage() {
-  const [projectsCount, galleryCount, messagesCount, unreadCount, blogCount, musicCount, servicesCount, analytics] = await Promise.all([
-    count("projects"),
-    count("gallery"),
-    count("messages"),
-    count("messages").then(async () => {
-      try {
-        const snap = await db.collection("messages").where("read", "==", false).count().get();
-        return snap.data().count;
-      } catch {
-        const snap = await db.collection("messages").where("read", "==", false).get();
-        return snap.size;
-      }
-    }),
-    count("blog"),
-    count("music"),
-    count("services"),
-    getAnalyticsSummary(14).catch(() => ({
-      totalViews: 0,
-      totalVisitors: 0,
-      todayViews: 0,
-      todayVisitors: 0,
-      last7Days: [],
-      topPaths: [],
-    })),
-  ]);
+  const filtered = useMemo(() => items.filter((i) => i.title.toLowerCase().includes(q.toLowerCase())), [items, q]);
+  const doneCount = items.filter((i) => i.done).length;
+  const pct = Math.round((doneCount / items.length) * 100);
 
-  let recentMessages: { name: string; subject: string; createdAt: number }[] = [];
-  try {
-    const snap = await db.collection("messages").orderBy("createdAt", "desc").limit(5).get();
-    recentMessages = snap.docs.map((d) => {
-      const data = d.data();
-      return {
-        name: data.name as string,
-        subject: data.subject as string,
-        createdAt: data.createdAt as number,
-      };
-    });
-  } catch {
-    // empty
-  }
-
-  const STATS = [
-    { Icon: FolderKanban, label: "Projects", value: String(projectsCount), delta: "live" },
-    { Icon: Images, label: "Gallery photos", value: String(galleryCount), delta: "live" },
-    { Icon: MessageSquare, label: "Messages", value: String(messagesCount), delta: `${unreadCount} unread` },
-    { Icon: FileText, label: "Blog posts", value: String(blogCount || posts.length), delta: blogCount ? "live" : "static" },
-  ];
-
-  const COLLECTIONS = [
-    { Icon: FolderKanban, name: "Projects", href: "/admin/projects", count: projectsCount },
-    { Icon: Images, name: "Gallery", href: "/admin/gallery", count: galleryCount },
-    { Icon: FileText, name: "Blog Posts", href: "/admin/blog", count: blogCount || posts.length },
-    { Icon: MessageSquare, name: "Messages", href: "/admin/messages", count: messagesCount },
-    { Icon: Music, name: "Music Releases", href: "/admin/music", count: musicCount },
-    { Icon: ListChecks, name: "Bucket List", href: "/admin/bucket-list", count: "—" },
-    { Icon: Flame, name: "Streaks", href: "/admin/streaks", count: "—" },
-    { Icon: LinkIcon, name: "Links", href: "/admin/links", count: "—" },
-  ];
+  const toggle = (title: string) =>
+    setItems((prev) => prev.map((i) => (i.title === title ? { ...i, done: !i.done } : i)));
 
   return (
     <>
-      <AdminPageHeader
-        eyebrow="Control Room"
-        title="Overview"
-        description="Live counts from Firestore for projects, gallery and messages."
-      >
-        <Link
-          href="/admin/projects"
-          className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          <Plus className="size-4" /> New Project
-        </Link>
-        <Link
-          href="/admin/gallery"
-          className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          <Plus className="size-4" /> Add Photo
-        </Link>
-      </AdminPageHeader>
+      <AdminPageHeader eyebrow="Collection" title="Bucket List" description={`${doneCount} of ${items.length} goals completed. Tap an item to toggle it.`} />
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {STATS.map(({ Icon, label, value, delta }) => (
-          <div key={label} className="glass-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="icon-tile">
-                <Icon className="size-5" />
-              </span>
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                {delta}
-              </span>
-            </div>
-            <div className="mt-4 text-2xl font-bold">{value}</div>
-            <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-12 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="chip mb-3">
-            <span className="size-1.5 rounded-full bg-primary" /> Collections
-          </div>
-          <h2 className="text-xl font-bold md:text-2xl">
-            Manage <span className="text-gradient">content</span>
-          </h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {COLLECTIONS.map(({ Icon, name, href, count }) => (
-              <Link
-                key={name}
-                href={href}
-                className="glass-card group flex items-center justify-between gap-4 p-5"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="icon-tile">
-                    <Icon className="size-5" />
-                  </span>
-                  <div>
-                    <div className="text-base font-semibold">{name}</div>
-                    <div className="mt-0.5 text-xs text-muted-foreground">{count} items</div>
-                  </div>
-                </div>
-                <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/10 text-muted-foreground transition group-hover:border-primary/40 group-hover:text-primary">
-                  <ArrowUpRight className="size-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
+      <div className="glass-card p-5">
+        <div className="mb-2 flex items-center justify-between text-sm">
+          <span className="font-semibold">Overall progress</span>
+          <span className="text-muted-foreground">{pct}%</span>
         </div>
-
-        <div>
-          <div className="chip mb-3">
-            <span className="size-1.5 rounded-full bg-primary" /> Recent messages
-          </div>
-          <h2 className="text-xl font-bold md:text-2xl">Inbox</h2>
-          <div className="glass-card mt-4 divide-y divide-white/5 p-2">
-            {recentMessages.length === 0 && (
-              <div className="p-4 text-center text-sm text-muted-foreground">No messages yet</div>
-            )}
-            {recentMessages.map((r, i) => (
-              <Link
-                key={i}
-                href="/admin/messages"
-                className="flex items-start gap-3 p-3 transition hover:bg-white/5"
-              >
-                <span className="mt-1 grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                  <Activity className="size-4" />
-                </span>
-                <div className="min-w-0">
-                  <div className="text-xs uppercase tracking-widest text-primary/80">{r.name}</div>
-                  <div className="mt-0.5 truncate text-sm text-foreground">{r.subject}</div>
-                  <div className="mt-0.5 text-[11px] text-muted-foreground">{timeAgo(r.createdAt)}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
+        <div className="h-2 overflow-hidden rounded-full bg-white/5">
+          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "var(--gradient-brand)", boxShadow: "0 0 12px var(--neon)" }} />
         </div>
       </div>
 
-      {/* Web Analytics — live charts from site tracking */}
-      <div className="mt-12">
-        <div className="chip mb-3">
-          <span className="size-1.5 rounded-full bg-primary" /> Web Analytics
-        </div>
-        <h2 className="text-xl font-bold md:text-2xl">
-          Traffic &amp; <span className="text-gradient">performance</span>
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Live charts from your portfolio visitors. Vercel Analytics remains available in your Vercel dashboard for extra detail.
-        </p>
-        <AnalyticsCharts summary={analytics} />
-        <div className="mt-4 flex flex-wrap gap-3">
-          <a
-            href="https://vercel.com/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
+      <div className="glass-card mt-4 flex items-center gap-2 rounded-xl p-2 px-3">
+        <Search className="size-4 text-muted-foreground" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search goals…"
+          className="w-full bg-transparent py-1.5 text-sm outline-none placeholder:text-muted-foreground"
+        />
+      </div>
+
+      <div className="mt-6 grid gap-2">
+        {filtered.map((i) => (
+          <button
+            key={i.title}
+            onClick={() => toggle(i.title)}
+            className="glass-card flex items-center gap-3 p-4 text-left transition hover:border-primary/40"
           >
-            Open Vercel Analytics <ArrowUpRight className="size-4" />
-          </a>
-        </div>
+            <span
+              className={`grid size-6 shrink-0 place-items-center rounded-full border transition ${
+                i.done ? "border-primary bg-primary text-white" : "border-white/20 text-transparent"
+              }`}
+            >
+              <Check className="size-3.5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className={`truncate text-sm font-medium ${i.done ? "text-muted-foreground line-through" : ""}`}>{i.title}</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">
+                {i.group} · {i.tag}
+                {i.year ? ` · ${i.year}` : ""}
+              </div>
+            </div>
+          </button>
+        ))}
+        {filtered.length === 0 && <div className="glass-card p-10 text-center text-sm text-muted-foreground">No goals match &quot;{q}&quot;.</div>}
       </div>
-
     </>
   );
-} 
+}

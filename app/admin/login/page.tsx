@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
             Admin <span className="text-gradient">Access</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to the GLASSKID control room
+            Sign in to the THEREALGLASSKID control room
           </p>
         </div>
 

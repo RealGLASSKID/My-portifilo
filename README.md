@@ -1,4 +1,4 @@
-# GLASSKID Nexus — Portfolio Website
+# THEREALGLASSKID Nexus — Portfolio Website
 
 A modern dark glassmorphism portfolio built with **Next.js 15**, **React 19**, **TypeScript**, and **Tailwind CSS**.
 
@@ -60,5 +60,5 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Author
 
-**Real GLASSKID** (Prince Dennis)  
+**therealglasskid** (Prince Dennis)  
 Full Stack Developer • Artist • Songwriter — Lagos, Nigeria

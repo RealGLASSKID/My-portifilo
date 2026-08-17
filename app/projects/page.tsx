@@ -5,8 +5,8 @@ import { getProjects } from "@/app/admin/projects/actions";
 import { ProjectsPublicClient } from "./public-client";
 
 export const metadata: Metadata = {
-  title: "Projects — GLASSKID",
-  description: "Web apps, platforms and experiments built by GLASSKID.",
+  title: "Projects — THEREALGLASSKID",
+  description: "Web apps, platforms and experiments built by THEREALGLASSKID.",
 };
 
 export const dynamic = "force-dynamic";
