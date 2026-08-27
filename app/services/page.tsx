@@ -7,9 +7,9 @@ import {
 import { getPublishedServices } from "@/app/admin/services/actions";
 
 export const metadata: Metadata = {
-  title: "Services — THEREALGLASSKID | What I can build for you",
+  title: "Services — GLASSKID | What I can build for you",
   description: "End-to-end product development: web apps, SaaS, UI/UX, APIs, performance and consultation.",
-  openGraph: { title: "Services — THEREALGLASSKID", description: "What THEREALGLASSKID can build for you.", type: "website", url: "/services" },
+  openGraph: { title: "Services — GLASSKID", description: "What GLASSKID can build for you.", type: "website", url: "/services" },
   alternates: { canonical: "/services" },
 };
 

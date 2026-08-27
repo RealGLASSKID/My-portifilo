@@ -7,7 +7,7 @@ import { Github, Instagram, Facebook, Mail, MapPin, Phone } from "lucide-react";
 const SOCIALS = [
   {
     name: "GitHub",
-    href: "https://github.com/therealglasskid",
+    href: "https://github.com/RealGLASSKID",
     Icon: Github,
   },
   {
@@ -17,7 +17,7 @@ const SOCIALS = [
   },
   {
     name: "Instagram",
-    href: "https://www.instagram.com/therealglasskid/",
+    href: "https://www.instagram.com/Real_GLASSKID/",
     Icon: Instagram,
   },
   {
@@ -37,7 +37,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-5">
           <div className="md:col-span-2">
             <div className="flex items-center gap-1 text-2xl font-bold">
-              THEREALGLASSKID<span className="text-primary">.</span>
+              GLASSKID<span className="text-primary">.</span>
             </div>
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
               Full stack developer, artist &amp; songwriter building digital solutions and creating music that inspires.
@@ -104,9 +104,9 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/5 pt-6 text-xs text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} THEREALGLASSKID. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} GLASSKID. All rights reserved.</p>
           <p>
-            Built with <span className="text-primary">♥</span> by THEREALGLASSKID.
+            Built with <span className="text-primary">♥</span> by GLASSKID.
           </p>
         </div>
       </div>

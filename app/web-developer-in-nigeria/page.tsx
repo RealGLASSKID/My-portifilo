@@ -4,11 +4,11 @@ import { Check, MapPin, Rocket, ShieldCheck, Timer, ArrowRight } from "lucide-re
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Web Developer in Nigeria | Hire THEREALGLASSKID (Lagos)",
+  title: "Web Developer in Nigeria | Hire GLASSKID (Lagos)",
   description:
-    "Looking for a reliable web developer in Nigeria? THEREALGLASSKID builds fast, modern websites and web apps for businesses in Lagos, Abuja, Port Harcourt and beyond.",
+    "Looking for a reliable web developer in Nigeria? GLASSKID builds fast, modern websites and web apps for businesses in Lagos, Abuja, Port Harcourt and beyond.",
   openGraph: {
-    title: "Web Developer in Nigeria | Hire THEREALGLASSKID",
+    title: "Web Developer in Nigeria | Hire GLASSKID",
     description: "Fast, modern websites and web apps built for Nigerian businesses by a Lagos-based full stack developer.",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  name: "THEREALGLASSKID — Web Developer in Nigeria",
+  name: "GLASSKID — Web Developer in Nigeria",
   description: "Full stack web development, UI/UX design and SaaS engineering for businesses in Nigeria.",
   areaServed: "Nigeria",
   address: { "@type": "PostalAddress", addressLocality: "Lagos", addressCountry: "NG" },
@@ -57,7 +57,7 @@ export default function NigeriaPage() {
         eyebrow="Hire me"
         title="Web Developer"
         accent="in Nigeria."
-        description="I'm Prince Dennis (THEREALGLASSKID) — a Lagos-based full stack developer building fast, modern websites and web apps for Nigerian businesses and founders."
+        description="I'm Prince Dennis (GLASSKID) — a Lagos-based full stack developer building fast, modern websites and web apps for Nigerian businesses and founders."
       >
         <div className="flex flex-wrap gap-3">
           <Link href="/contact" className="btn-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">

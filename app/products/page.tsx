@@ -4,12 +4,12 @@ import { PageHero } from "@/components/PageHero";
 import { Package, ArrowUpRight, Sparkles, FileCode2, BookOpen, LayoutTemplate, Music4 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Products — THEREALGLASSKID | Templates, kits & digital goods",
+  title: "Products — GLASSKID | Templates, kits & digital goods",
   description:
-    "Digital products by THEREALGLASSKID — portfolio templates, UI kits, starter code and creative resources for developers and founders.",
+    "Digital products by GLASSKID — portfolio templates, UI kits, starter code and creative resources for developers and founders.",
   openGraph: {
-    title: "Products — THEREALGLASSKID",
-    description: "Templates, UI kits and digital products built by THEREALGLASSKID.",
+    title: "Products — GLASSKID",
+    description: "Templates, UI kits and digital products built by GLASSKID.",
     type: "website",
   },
   twitter: { card: "summary_large_image" },

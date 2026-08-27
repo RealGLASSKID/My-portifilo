@@ -71,7 +71,7 @@ export function AdminSidebar({
       <div className="flex shrink-0 items-center gap-2 px-4 py-5">
         <Link href="/" className="flex items-center gap-1 font-bold tracking-tight">
           <span className={`text-lg text-foreground transition-all ${collapsed ? "hidden" : "inline"}`}>
-            THEREALGLASSKID
+            GLASSKID
           </span>
           <span className="text-primary text-lg leading-none">.</span>
         </Link>

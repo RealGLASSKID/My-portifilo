@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — THEREALGLASSKID",
-  description: "The terms and conditions that govern the use of the THEREALGLASSKID website and services.",
+  title: "Terms & Conditions — GLASSKID",
+  description: "The terms and conditions that govern the use of the GLASSKID website and services.",
   openGraph: {
-    title: "Terms & Conditions — THEREALGLASSKID",
-    description: "Terms governing use of the THEREALGLASSKID website and services.",
+    title: "Terms & Conditions — GLASSKID",
+    description: "Terms governing use of the GLASSKID website and services.",
     type: "website",
   },
   twitter: { card: "summary_large_image" },
@@ -24,7 +24,7 @@ const SECTIONS = [
   },
   {
     title: "3. Intellectual property",
-    body: "All content on this site — including code samples, written articles, designs, music, artwork and the THEREALGLASSKID name — belongs to Prince Dennis unless stated otherwise. Reproducing or redistributing it commercially without written permission is not allowed.",
+    body: "All content on this site — including code samples, written articles, designs, music, artwork and the GLASSKID name — belongs to Prince Dennis unless stated otherwise. Reproducing or redistributing it commercially without written permission is not allowed.",
   },
   {
     title: "4. Client work & projects",

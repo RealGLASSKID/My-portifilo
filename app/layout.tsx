@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
@@ -20,14 +20,14 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL("https://glasskid.vercel.app"),
   title: {
-    default: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
-    template: "%s — THEREALGLASSKID",
+    default: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    template: "%s — GLASSKID",
   },
   description:
-    "THEREALGLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript, Vue, React Native and AI integrations.",
+    "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript, Vue, React Native and AI integrations.",
   keywords: [
-    "therealglasskid",
-    "THEREALGLASSKID",
+    "glasskid",
+    "GLASSKID",
     "Prince Dennis",
     "Full Stack Web Developer",
     "React Developer",
@@ -40,25 +40,28 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://glasskid.vercel.app/",
-    title: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
     description:
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
-    siteName: "THEREALGLASSKID",
+    siteName: "GLASSKID",
 
   },
   twitter: {
     card: "summary_large_image",
-    title: "THEREALGLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
     description:
-      "THEREALGLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
+      "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
       "https://glasskid.vercel.app/images/hero-portrait.png",
     ],
   },
-  themeColor: "#8B5CF6",
   icons: {
     icon: "https://glasskid.vercel.app/images/GK-icon.svg",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#8B5CF6",
 };
 
 export default function RootLayout({

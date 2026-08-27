@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
-  title: "Streaks — THEREALGLASSKID",
+  title: "Streaks — GLASSKID",
   description: "Habits I'm tracking publicly. Every day counts.",
   openGraph: {
-    title: "My Streaks — THEREALGLASSKID",
+    title: "My Streaks — GLASSKID",
     description: "Public accountability for the habits that matter.",
     type: "website",
   },

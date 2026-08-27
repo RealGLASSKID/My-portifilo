@@ -32,7 +32,7 @@ export function AdminTopbar({ onOpenMobile }: { onOpenMobile: () => void }) {
           <div className="grid size-7 place-items-center rounded-lg bg-primary/20 text-xs font-bold text-primary">
             G
           </div>
-          <span className="hidden text-sm font-medium sm:inline">THEREALGLASSKID</span>
+          <span className="hidden text-sm font-medium sm:inline">GLASSKID</span>
         </div>
       </div>
     </header>

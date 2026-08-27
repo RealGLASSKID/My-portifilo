@@ -55,7 +55,7 @@ export function Header() {
       {/* overflow-visible so More dropdown is not clipped */}
       <nav className="glass neon-ring relative flex items-center justify-between rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3 md:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-0.5 font-bold tracking-tight">
-          <span className="text-base text-foreground sm:text-lg">THEREALGLASSKID</span>
+          <span className="text-base text-foreground sm:text-lg">GLASSKID</span>
           <span className="text-primary text-base leading-none sm:text-lg">.</span>
         </Link>
 

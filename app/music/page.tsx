@@ -4,11 +4,11 @@ import { Play, Music2, Headphones, Heart, Star, FileText } from "lucide-react";
 import { getPublishedMusic } from "@/app/admin/music/actions";
 
 export const metadata: Metadata = {
-  title: "Music — THEREALGLASSKID | Original songs & releases",
-  description: "Music is not what I do — it's who I am. Original songs and releases by THEREALGLASSKID.",
+  title: "Music — GLASSKID | Original songs & releases",
+  description: "Music is not what I do — it's who I am. Original songs and releases by GLASSKID.",
   openGraph: {
-    title: "Music — THEREALGLASSKID",
-    description: "Original songs and releases by THEREALGLASSKID.",
+    title: "Music — GLASSKID",
+    description: "Original songs and releases by GLASSKID.",
     type: "website",
     url: "/music",
   },
