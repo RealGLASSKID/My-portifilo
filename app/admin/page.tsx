@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { AdminPageHeader } from "./_components/AdminPageHeader";
 import { Search, Check } from "lucide-react";
 
 type Item = { title: string; group: string; tag: string; year?: string; done: boolean };
