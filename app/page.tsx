@@ -1,94 +1,427 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Code2,
+  Sparkles,
+  Music2,
+  Palette,
+  Github,
+  Instagram,
+  Facebook,
+  Send,
+  Briefcase,
+  Headphones,
+  Play,
+} from "lucide-react";
+import type { ReactNode } from "react";
 
-import { useState } from "react";
-import { PageHero } from "@/components/PageHero";
-import { Star, Quote, Send } from "lucide-react";
+export const metadata: Metadata = {
+  title: "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript • Lagos, Nigeria",
+  description:
+    "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript and Tailwind.",
+  openGraph: {
+    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript",
+    description:
+      "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript and Tailwind.",
+    type: "website",
+    url: "/",
+  },
+  alternates: { canonical: "/" },
+};
 
-const EXISTING = [
-  { name: "Amara O.", role: "Founder, Nexora", text: "GLASSKID shipped our MVP in three weeks and it looked better than our Figma. Rare combination of speed and taste." },
-  { name: "Tobi A.", role: "Product Lead, Grocify", text: "Communication was flawless. He treated the product like it was his own and pushed back where it mattered." },
-  { name: "Chidera N.", role: "Indie Artist", text: "He built my music site and produced a record with me the same month. Genuinely two talents in one person." },
+const TECH = [
+  "Next.js",
+  "React",
+  "Bootstrap",
+  "TypeScript",
+  "Tailwind CSS",
+  "Firebase",
+  "Node.js",
+  "PostgreSQL",
+  "MongoDB",
+  "React Native",
+  "JavaScript",
+  "Vercel",
+  "Supabase",
+  "Prisma",
+  "GraphQL",
+  "REST APIs",
+  "Git",
+  "Docker",
+  "Jest",
+  "Cypress",
+  "Figma",
+  "Adobe XD",
+  "Photoshop",
+  "Illustrator",
+  "After Effects",
+  "Premiere Pro",
 ];
 
-export default function TestifyPage() {
-  const [rating, setRating] = useState(5);
-  const [sent, setSent] = useState(false);
+const STATS = [
+  { k: "3+", v: "Years Coding", Icon: Code2 },
+  { k: "20+", v: "Projects Completed", Icon: Briefcase },
+  { k: "15+", v: "Songs Released", Icon: Headphones },
+];
 
+const PROJECTS = [
+  {
+    slug: "nexora",
+    tag: "Web App",
+    name: "Nexora",
+    desc: "Modern SaaS platform for managing projects, teams and analytics.",
+    stack: ["Next.js", "TS", "Tailwind"],
+  },
+  {
+    slug: "cherry-noble-school",
+    tag: "EdTech",
+    name: "Cherry Noble School",
+    desc: "School management system with student, teacher and exam modules.",
+    stack: ["React", "Firebase"],
+  },
+  {
+    slug: "echoes",
+    tag: "Music Platform",
+    name: "Echoes",
+    desc: "Music streaming platform for emerging artists and music lovers.",
+    stack: ["Next.js", "Node", "TS"],
+  },
+];
+
+const SERVICES = [
+  { Icon: Code2, title: "Web Development", desc: "Building fast, scalable and responsive web applications." },
+  { Icon: Sparkles, title: "Frontend Development", desc: "Creating beautiful, interactive and accessible user interfaces." },
+  { Icon: Palette, title: "UI/UX Design", desc: "Designing intuitive and engaging digital experiences." },
+  { Icon: Music2, title: "Music & Composition", desc: "Creating original songs and producing professional music." },
+];
+
+const SKILLS = [
+  { name: "JavaScript / TypeScript", value: 95 },
+  { name: "React / Next.js", value: 90 },
+  { name: "Tailwind CSS", value: 90 },
+  { name: "Next.js", value: 85 },
+  { name: "React Native", value: 80 },
+  { name: "UI/UX Design", value: 75 },
+  { name: "React Native", value: 80 },
+  { name: "JavaScript", value: 90 },
+  { name: "TypeScript", value: 90 },
+];
+
+const MUSIC = [
+  { title: "Adopted", meta: "GLASSKID • 2:45" },
+  { title: "Seperate Ways", meta: "GLASSKID • 2:32" },
+  { title: "Freezing", meta: "GLASSKID • 2:08" },
+];
+
+const SOCIALS = [
+  {
+    name: "GitHub",
+    href: "https://github.com/RealGLASSKID",
+    Icon: Github,
+  },
+  {
+    name: "Facebook",
+    href: "https://web.facebook.com/profile.php?id=61590417605342",
+    Icon: Facebook,
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/Real_GLASSKID/",
+    Icon: Instagram,
+  },
+  {
+    name: "WhatsApp",
+    href: "https://wa.me/2349136893921",
+    Icon: null as null,
+  },
+];
+
+export default function HomePage() {
   return (
     <>
-      <PageHero
-        eyebrow="Testimonials"
-        title="Worked with me?"
-        accent="Testify."
-        description="Your words help other people trust the work. Drop an honest testimonial — it takes less than a minute."
-      />
+      {/* HERO */}
+      <section className="relative mx-auto max-w-6xl px-6">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div
+            className="absolute left-1/2 top-0 h-[320px] w-[min(900px,140vw)] -translate-x-1/2 rounded-full blur-3xl md:h-[520px]"
+            style={{ background: "var(--gradient-radial-glow)" }}
+          />
+        </div>
 
-      <section className="mx-auto max-w-6xl px-6 pb-28">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <form
-            className="glass-card p-6 md:p-8"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-            }}
-          >
-            <h2 className="text-xl font-semibold">Share your experience</h2>
-            <p className="mt-1 text-sm text-muted-foreground">All testimonials are reviewed before publishing.</p>
+        <div className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr]">
+          <div className="animate-fade-up">
+            <span className="chip">
+              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" /> Hi, I&apos;m
+            </span>
+            <h1 className="mt-5 text-[clamp(2.5rem,6vw,4.25rem)] font-bold leading-[0.95] tracking-tighter">
+              <span className="text-gradient animate-gradient">GLASSKID</span>
+            </h1>
+            <p className="mt-6 text-[clamp(1.05rem,2.2vw,1.5rem)] font-medium text-foreground/90">
+              Full Stack Developer <span className="text-primary">•</span> Multi Instrumentalist
+              <span className="text-primary">•</span> Songwriter
+              <br />
+              <span className="text-muted-foreground">Creative Technologist</span>
+            </p>
+            <p className="mt-5 max-w-lg text-muted-foreground">
+              I build fast, scalable web applications and create music that tells stories. Turning ideas into
+              digital experiences from Lagos, Nigeria.
+            </p>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label="Full name" placeholder="Jane Doe" />
-              <Field label="Role / Company" placeholder="Founder, Acme" />
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/projects"
+                className="btn-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
+              >
+                View Projects <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
+              >
+                Hire Me <Send className="size-4" />
+              </Link>
             </div>
-            <div className="mt-4">
-              <Field label="Email" type="email" placeholder="jane@acme.com" />
+
+            <div className="mt-6 flex gap-2">
+              {SOCIALS.map(({ name, href, Icon }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="btn-ghost-glass grid size-10 place-items-center rounded-full"
+                >
+                  {Icon ? (
+                    <Icon className="size-4" />
+                  ) : (
+                    <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden>
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.85 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Portrait card */}
+          <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
+            <div className="glass neon-ring relative overflow-hidden rounded-3xl">
+              <Image
+                src="/images/hero-portrait.png"
+                alt="GLASSKID portrait — Prince Dennis"
+                width={1024}
+                height={1280}
+                className="h-[min(32rem,70vw)] w-full object-cover sm:h-[min(32.5rem,55vw)]"
+                priority
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
             </div>
 
-            <div className="mt-5">
-              <label className="mb-2 block text-sm font-medium">Rating</label>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    aria-label={`${n} star`}
-                    onClick={() => setRating(n)}
-                    className="rounded-md p-1 transition hover:scale-110"
+            <div className="absolute -right-4 top-8 hidden flex-col gap-3 md:flex">
+              {STATS.map(({ k, v, Icon }, i) => (
+                <div
+                  key={v}
+                  className="glass-card animate-float flex items-center gap-3 px-4 py-3"
+                  style={{ animationDelay: `${i * 0.3}s` }}
+                >
+                  <span className="icon-tile !size-10">
+                    <Icon className="size-4" />
+                  </span>
+                  <div>
+                    <div className="text-lg font-bold leading-none">{k}</div>
+                    <div className="text-xs text-muted-foreground">{v}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Tech marquee */}
+        <div className="glass mt-14 overflow-hidden rounded-2xl px-4 py-4">
+          <div className="animate-marquee flex items-center gap-8 whitespace-nowrap">
+            {[...TECH, ...TECH].map((t, i) => (
+              <span key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" />
+                <span className="font-semibold text-foreground/80">{t}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED PROJECTS */}
+      <section className="mx-auto mt-28 max-w-6xl px-6">
+        <SectionHeader
+          eyebrow="Featured Projects"
+          title="Selected"
+          accent="work"
+          action={
+            <Link
+              href="/projects"
+              className="group inline-flex items-center gap-1 text-sm text-primary hover:underline"
+            >
+              View all <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+            </Link>
+          }
+        />
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {PROJECTS.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/projects/${p.slug}`}
+              className="glass-card group block overflow-hidden p-5 transition hover:border-primary/30"
+            >
+              <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-white/5">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, oklch(0.35 0.15 295 / 0.7), oklch(0.2 0.05 285))",
+                  }}
+                />
+                <div className="absolute inset-0 grid place-items-center">
+                  <div className="text-2xl font-bold tracking-tight text-white/90">
+                    {p.name.toUpperCase()}
+                  </div>
+                </div>
+                <div className="chip absolute right-3 top-3 !text-[10px]">Featured</div>
+              </div>
+              <div className="text-xs uppercase tracking-widest text-primary/80">{p.tag}</div>
+              <h3 className="mt-1 text-lg font-semibold transition group-hover:text-primary">{p.name}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {p.stack.map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-muted-foreground"
                   >
-                    <Star className={`size-6 ${n <= rating ? "fill-primary text-primary" : "text-muted-foreground"}`} />
-                  </button>
+                    {s}
+                  </span>
                 ))}
               </div>
-            </div>
+              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Case study <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-            <div className="mt-5">
-              <label className="mb-2 block text-sm font-medium">Your testimonial</label>
-              <textarea
-                rows={5}
-                required
-                placeholder="What was it like working together?"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/60"
-              />
+      {/* WHAT I DO */}
+      <section className="mx-auto mt-28 max-w-6xl px-6">
+        <SectionHeader eyebrow="What I Do" title="Services I" accent="provide" />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICES.map(({ Icon, title, desc }) => (
+            <div key={title} className="glass-card p-5">
+              <span className="icon-tile mb-4">
+                <Icon className="size-5" />
+              </span>
+              <h3 className="text-base font-semibold">{title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <button type="submit" className="btn-glow mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold">
-              {sent ? "Thank you!" : "Submit testimonial"} <Send className="size-4" />
-            </button>
-            {sent && <p className="mt-3 text-sm text-primary">Received — I&apos;ll review and publish it shortly.</p>}
-          </form>
-
-          <div className="space-y-4">
-            <div className="chip">
-              <span className="size-1.5 rounded-full bg-primary" /> Recent words
+      {/* SKILLS + MUSIC */}
+      <section className="mx-auto mt-28 max-w-6xl px-6">
+        <div className="grid gap-5 lg:grid-cols-2">
+          <div className="glass-card p-6">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <div className="chip mb-2">
+                  <span className="size-1.5 rounded-full bg-primary" /> My Skills
+                </div>
+                <h3 className="text-xl font-semibold">Toolbox &amp; expertise</h3>
+              </div>
             </div>
-            {EXISTING.map((t) => (
-              <figure key={t.name} className="glass-card p-6">
-                <Quote className="size-5 text-primary" />
-                <blockquote className="mt-3 text-sm text-muted-foreground">{t.text}</blockquote>
-                <figcaption className="mt-4 text-sm font-semibold">
-                  {t.name} <span className="font-normal text-muted-foreground">— {t.role}</span>
-                </figcaption>
-              </figure>
-            ))}
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {SKILLS.map((s, i) => (
+                <li key={`${s.name}-${i}`}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-foreground/90">{s.name}</span>
+                    <span className="text-muted-foreground">{s.value}%</span>
+                  </div>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${s.value}%`,
+                        background: "var(--gradient-brand)",
+                        boxShadow: "0 0 12px var(--neon)",
+                      }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="glass-card p-6">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <div className="chip mb-2">
+                  <span className="size-1.5 rounded-full bg-primary" /> Latest Music
+                </div>
+                <h3 className="text-xl font-semibold">Now playing</h3>
+              </div>
+              <Link href="/music" className="text-sm text-primary hover:underline">
+                View all
+              </Link>
+            </div>
+            <ul className="divide-y divide-white/5">
+              {MUSIC.map((m, i) => (
+                <li key={m.title} className="flex items-center gap-4 py-3">
+                  <span className="grid size-11 place-items-center rounded-xl bg-white/5 text-sm font-semibold text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex-1">
+                    <div className="font-medium">{m.title}</div>
+                    <div className="text-xs text-muted-foreground">{m.meta}</div>
+                  </div>
+                  <button
+                    aria-label={`Play ${m.title}`}
+                    className="btn-glow grid size-10 place-items-center rounded-full"
+                  >
+                    <Play className="size-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto mt-28 max-w-6xl px-6 pb-28">
+        <div className="glass-card relative overflow-hidden p-8 md:p-12">
+          <div
+            className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
+            style={{ background: "var(--gradient-radial-glow)" }}
+          />
+          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+            <div>
+              <div className="chip mb-3">
+                <span className="size-1.5 rounded-full bg-primary" /> Let&apos;s work together
+              </div>
+              <h3 className="text-3xl font-bold md:text-4xl">
+                Have a project in mind? <span className="text-gradient">Let&apos;s build it.</span>
+              </h3>
+              <p className="mt-2 max-w-lg text-muted-foreground">
+                Available for freelance projects, collaborations and full-time opportunities.
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+            >
+              Get in touch <ArrowRight className="size-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -96,16 +429,28 @@ export default function TestifyPage() {
   );
 }
 
-function Field({ label, type = "text", placeholder }: { label: string; type?: string; placeholder?: string }) {
+function SectionHeader({
+  eyebrow,
+  title,
+  accent,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  accent?: string;
+  action?: ReactNode;
+}) {
   return (
-    <div>
-      <label className="mb-2 block text-sm font-medium">{label}</label>
-      <input
-        type={type}
-        required
-        placeholder={placeholder}
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/60"
-      />
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <div className="chip mb-3">
+          <span className="size-1.5 rounded-full bg-primary" /> {eyebrow}
+        </div>
+        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          {title} {accent && <span className="text-gradient">{accent}</span>}
+        </h2>
+      </div>
+      {action}
     </div>
   );
 }
