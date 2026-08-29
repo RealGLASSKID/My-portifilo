@@ -9,6 +9,10 @@ const COLLECTION = "messages";
 const MessageSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
+  phone: z
+    .string()
+    .min(7, "Enter a valid phone number")
+    .regex(/^[0-9+()\-\s]+$/, "Enter a valid phone number"),
   subject: z.string().min(3),
   body: z.string().min(10).max(1000),
 });

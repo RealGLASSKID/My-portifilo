@@ -62,7 +62,7 @@ export default async function BlogPage() {
               <div className="relative mb-5 aspect-[16/9] overflow-hidden rounded-xl border border-white/5">
                 <div
                   className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, oklch(0.35 0.2 300 / 0.7), oklch(0.15 0.05 285))" }}
+                  style={{ background: "linear-gradient(135deg, rgba(79, 0, 144, 0.7), rgb(10, 7, 31))" }}
                 />
                 <div className="chip absolute right-3 top-3 !text-[10px]">{p.cat}</div>
               </div>

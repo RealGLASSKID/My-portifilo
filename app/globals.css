@@ -2,48 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-/* THEREALGLASSKID design system — dark, purple neon, glassmorphism (converted from Tailwind v4) */
+/* GLASSKID design system — dark, purple neon, glassmorphism (converted from Tailwind v4) */
 
 :root {
   --radius: 1rem;
 
   /* Core dark palette */
-  --background: oklch(0.13 0.02 285);
-  --foreground: oklch(0.98 0.005 285);
+  --background: rgb(7, 6, 15);
+  --foreground: rgb(248, 248, 252);
 
-  --card: oklch(0.17 0.025 285);
-  --card-foreground: oklch(0.98 0.005 285);
-  --popover: oklch(0.17 0.025 285);
-  --popover-foreground: oklch(0.98 0.005 285);
+  --card: rgb(14, 14, 26);
+  --card-foreground: rgb(248, 248, 252);
+  --popover: rgb(14, 14, 26);
+  --popover-foreground: rgb(248, 248, 252);
 
-  --primary: oklch(0.65 0.24 295); /* neon purple */
-  --primary-foreground: oklch(0.99 0.003 285);
-  --secondary: oklch(0.22 0.03 285);
-  --secondary-foreground: oklch(0.98 0.005 285);
-  --muted: oklch(0.2 0.025 285);
-  --muted-foreground: oklch(0.68 0.02 285);
-  --accent: oklch(0.55 0.28 300);
-  --accent-foreground: oklch(0.99 0.003 285);
-  --destructive: oklch(0.63 0.24 25);
-  --destructive-foreground: oklch(0.99 0.003 285);
+  --primary: rgb(158, 98, 255); /* neon purple */
+  --primary-foreground: rgb(251, 251, 254);
+  --secondary: rgb(25, 25, 40);
+  --secondary-foreground: rgb(248, 248, 252);
+  --muted: rgb(21, 20, 33);
+  --muted-foreground: rgb(151, 151, 165);
+  --accent: rgb(144, 27, 247);
+  --accent-foreground: rgb(251, 251, 254);
+  --destructive: rgb(249, 36, 52);
+  --destructive-foreground: rgb(251, 251, 254);
 
-  --border: oklch(0.28 0.04 290 / 0.6);
-  --input: oklch(0.25 0.035 290 / 0.6);
-  --ring: oklch(0.65 0.24 295);
+  --border: rgba(40, 37, 59, 0.6);
+  --input: rgba(33, 31, 49, 0.6);
+  --ring: rgb(158, 98, 255);
 
-  --neon: oklch(0.7 0.28 300);
-  --neon-soft: oklch(0.55 0.24 295 / 0.35);
+  --neon: rgb(189, 95, 255);
+  --neon-soft: rgba(130, 63, 235, 0.35);
 
   /* Reusable design tokens */
-  --gradient-brand: linear-gradient(135deg, oklch(0.72 0.25 305), oklch(0.55 0.28 285));
-  --gradient-text: linear-gradient(90deg, oklch(0.85 0.15 305), oklch(0.65 0.28 290));
-  --gradient-radial-glow: radial-gradient(ellipse at center, oklch(0.55 0.28 295 / 0.35), transparent 60%);
-  --shadow-glow: 0 0 40px oklch(0.6 0.28 295 / 0.35), 0 0 80px oklch(0.6 0.28 295 / 0.15);
-  --shadow-glow-strong: 0 0 60px oklch(0.65 0.3 295 / 0.55), 0 0 120px oklch(0.65 0.3 295 / 0.25);
-  --shadow-card: 0 1px 0 oklch(1 0 0 / 0.04) inset, 0 20px 60px -20px oklch(0 0 0 / 0.7);
-  --glass-border: 1px solid oklch(1 0 0 / 0.08);
-  --glass-bg: linear-gradient(180deg, oklch(1 0 0 / 0.04), oklch(1 0 0 / 0.01));
-  --grid-line: oklch(1 0 0 / 0.07);
+  --gradient-brand: linear-gradient(135deg, rgb(202, 109, 255), rgb(111, 53, 255));
+  --gradient-text: linear-gradient(90deg, rgb(229, 179, 255), rgb(150, 88, 255));
+  --gradient-radial-glow: radial-gradient(ellipse at center, rgba(134, 37, 254, 0.35), transparent 60%);
+  --shadow-glow: 0 0 40px rgba(148, 62, 255, 0.35), 0 0 80px rgba(148, 62, 255, 0.15);
+  --shadow-glow-strong: 0 0 60px rgba(165, 72, 255, 0.55), 0 0 120px rgba(165, 72, 255, 0.25);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  --grid-line: rgba(255, 255, 255, 0.07);
 }
 
 .dark {
@@ -54,35 +54,35 @@
 html.light {
   color-scheme: light;
 
-  --background: oklch(0.97 0.008 285);
-  --foreground: oklch(0.18 0.02 285);
+  --background: rgb(244, 244, 250);
+  --foreground: rgb(17, 16, 26);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 285);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 285);
+  --card: rgb(255, 255, 255);
+  --card-foreground: rgb(17, 16, 26);
+  --popover: rgb(255, 255, 255);
+  --popover-foreground: rgb(17, 16, 26);
 
-  --primary: oklch(0.55 0.24 295);
-  --primary-foreground: oklch(0.99 0.003 285);
-  --secondary: oklch(0.93 0.015 285);
-  --secondary-foreground: oklch(0.2 0.02 285);
-  --muted: oklch(0.93 0.012 285);
-  --muted-foreground: oklch(0.45 0.03 285);
-  --accent: oklch(0.55 0.26 300);
-  --accent-foreground: oklch(0.99 0.003 285);
+  --primary: rgb(130, 63, 235);
+  --primary-foreground: rgb(251, 251, 254);
+  --secondary: rgb(230, 231, 242);
+  --secondary-foreground: rgb(21, 21, 31);
+  --muted: rgb(231, 231, 240);
+  --muted-foreground: rgb(83, 83, 102);
+  --accent: rgb(142, 45, 238);
+  --accent-foreground: rgb(251, 251, 254);
 
-  --border: oklch(0.45 0.06 290 / 0.22);
-  --input: oklch(0.45 0.06 290 / 0.22);
-  --ring: oklch(0.55 0.24 295);
+  --border: rgba(85, 80, 117, 0.22);
+  --input: rgba(85, 80, 117, 0.22);
+  --ring: rgb(130, 63, 235);
 
-  --neon: oklch(0.58 0.26 300);
-  --neon-soft: oklch(0.6 0.22 295 / 0.28);
+  --neon: rgb(150, 59, 249);
+  --neon-soft: rgba(142, 88, 242, 0.28);
 
-  --shadow-card: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 20px 50px -25px oklch(0.3 0.1 290 / 0.35);
-  --glass-border: 1px solid oklch(0.4 0.08 290 / 0.14);
-  --glass-bg: linear-gradient(180deg, oklch(1 0 0 / 0.75), oklch(1 0 0 / 0.55));
-  --grid-line: oklch(0.45 0.08 290 / 0.16);
-  --grid-fade: oklch(0.97 0.008 285 / 0);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 20px 50px -25px rgba(47, 33, 91, 0.35);
+  --glass-border: 1px solid rgba(71, 63, 112, 0.14);
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.55));
+  --grid-line: rgba(85, 77, 127, 0.16);
+  --grid-fade: rgba(244, 244, 250, 0.0);
 }
 
 @layer base {
@@ -109,7 +109,7 @@ html.light {
     background-image:
       linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
-      radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.55 0.28 295 / 0.14), transparent 60%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(134, 37, 254, 0.14), transparent 60%);
     background-size: 1.75rem 1.75rem, 1.75rem 1.75rem, auto;
   }
   img, video, canvas, svg {
@@ -117,7 +117,7 @@ html.light {
     height: auto;
   }
   ::selection {
-    background: oklch(0.65 0.24 295 / 0.4);
+    background: rgba(158, 98, 255, 0.4);
     color: white;
   }
 }
@@ -132,8 +132,8 @@ html.light {
   }
 
   .glass-card {
-    background: linear-gradient(180deg, oklch(1 0 0 / 0.045), oklch(1 0 0 / 0.015));
-    border: 1px solid oklch(1 0 0 / 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius);
     backdrop-filter: blur(14px);
     box-shadow: var(--shadow-card);
@@ -141,7 +141,7 @@ html.light {
     will-change: transform;
   }
   .glass-card:hover {
-  border-color: oklch(0.7 0.28 300 / 0.55);
+  border-color: rgba(189, 95, 255, 0.55);
   box-shadow: var(--shadow-glow);
   /* remove: transform: translateY(-2px); */
 }
@@ -167,15 +167,15 @@ html.light {
   }
 
   .btn-ghost-glass {
-    background: oklch(1 0 0 / 0.04);
-    border: 1px solid oklch(1 0 0 / 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--foreground);
     backdrop-filter: blur(10px);
     transition: background 0.3s ease, border-color 0.3s ease;
   }
   .btn-ghost-glass:hover {
-    background: oklch(1 0 0 / 0.08);
-    border-color: oklch(0.7 0.28 300 / 0.5);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(189, 95, 255, 0.5);
   }
 
   .chip {
@@ -184,9 +184,9 @@ html.light {
     gap: 0.5rem;
     padding: 0.35rem 0.85rem;
     border-radius: 9999px;
-    background: oklch(0.65 0.24 295 / 0.12);
-    border: 1px solid oklch(0.65 0.24 295 / 0.35);
-    color: oklch(0.85 0.15 300);
+    background: rgba(158, 98, 255, 0.12);
+    border: 1px solid rgba(158, 98, 255, 0.35);
+    color: rgb(221, 182, 255);
     font-size: 0.75rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -200,10 +200,10 @@ html.light {
     width: 3rem;
     height: 3rem;
     border-radius: 0.9rem;
-    background: oklch(0.65 0.24 295 / 0.12);
-    border: 1px solid oklch(0.65 0.24 295 / 0.35);
-    color: oklch(0.85 0.15 300);
-    box-shadow: 0 0 24px oklch(0.6 0.28 295 / 0.25) inset;
+    background: rgba(158, 98, 255, 0.12);
+    border: 1px solid rgba(158, 98, 255, 0.35);
+    color: rgb(221, 182, 255);
+    box-shadow: 0 0 24px rgba(148, 62, 255, 0.25) inset;
   }
 
   .neon-ring {
@@ -215,7 +215,7 @@ html.light {
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, oklch(0.75 0.28 305 / 0.7), transparent 40%, oklch(0.55 0.28 285 / 0.7));
+    background: linear-gradient(135deg, rgba(216, 108, 255, 0.7), transparent 40%, rgba(111, 53, 255, 0.7));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -304,7 +304,7 @@ html.light {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.3 0.03 290);
+  background: rgb(45, 43, 60);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -340,8 +340,8 @@ html.light {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
-  border: 1.5px solid oklch(0.7 0.28 300 / 0.55);
-  box-shadow: 0 0 24px oklch(0.6 0.28 295 / 0.2);
+  border: 1.5px solid rgba(189, 95, 255, 0.55);
+  box-shadow: 0 0 24px rgba(148, 62, 255, 0.2);
   pointer-events: none;
   z-index: 9998;
   transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
@@ -352,7 +352,7 @@ html.light {
   width: 26px;
   height: 26px;
   border-color: var(--primary);
-  background: oklch(0.65 0.24 295 / 0.15);
+  background: rgba(158, 98, 255, 0.15);
 }
 
 .cursor-ripple {
@@ -362,7 +362,7 @@ html.light {
   width: 10px;
   height: 10px;
   border-radius: 9999px;
-  border: 1px solid oklch(0.7 0.28 300 / 0.8);
+  border: 1px solid rgba(189, 95, 255, 0.8);
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 9997;
@@ -397,8 +397,8 @@ html.light {
   margin-left: -240px;
   z-index: -1;
   pointer-events: none;
-  background-image: linear-gradient(to right, oklch(0.75 0.28 300 / 0.9) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(0.75 0.28 300 / 0.9) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(205, 113, 255, 0.9) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(205, 113, 255, 0.9) 1px, transparent 1px);
   background-size: 28px 28px, 28px 28px;
   background-attachment: fixed;
   -webkit-mask-image: radial-gradient(240px circle at center, black 0%, transparent 72%);

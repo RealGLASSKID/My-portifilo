@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md animate-fade-up">
         {/* Logo / Brand */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-primary/15 text-primary shadow-[0_0_40px_oklch(0.65_0.24_295_/_0.35)]">
+          <div className="mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-primary/15 text-primary shadow-[0_0_40px_rgba(158, 98, 255, 0.35)]">
             <Shield className="size-7" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
@@ -187,8 +187,8 @@ export default function AdminLoginPage() {
       <style>{`
         .input {
           width: 100%;
-          background: oklch(1 0 0 / 0.04);
-          border: 1px solid oklch(1 0 0 / 0.1);
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 0.75rem;
           padding: 0.75rem 1rem;
           color: var(--foreground);
@@ -199,7 +199,7 @@ export default function AdminLoginPage() {
         .input::placeholder { color: var(--muted-foreground); }
         .input:focus {
           border-color: var(--primary);
-          box-shadow: 0 0 0 4px oklch(0.65 0.24 295 / 0.15);
+          box-shadow: 0 0 0 4px rgba(158, 98, 255, 0.15);
         }
       `}</style>
     </div>

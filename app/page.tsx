@@ -281,7 +281,7 @@ export default function HomePage() {
                   className="absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(135deg, oklch(0.35 0.15 295 / 0.7), oklch(0.2 0.05 285))",
+                      "linear-gradient(135deg, rgba(67, 31, 126, 0.7), rgb(20, 18, 43))",
                   }}
                 />
                 <div className="absolute inset-0 grid place-items-center">

@@ -9,6 +9,10 @@ import { z } from "zod";
 const schema = z.object({
   name: z.string().min(2, "Please enter your name"),
   email: z.string().email("Please enter a valid email"),
+  phone: z
+    .string()
+    .min(7, "Please enter a valid phone number")
+    .regex(/^[0-9+()\-\s]+$/, "Please enter a valid phone number"),
   subject: z.string().min(3, "Add a short subject"),
   message: z.string().min(10, "Tell me a bit more (10+ chars)").max(1000),
 });
@@ -28,7 +32,7 @@ const CARDS = [
 
 export default function ContactPage() {
   const [state, setState] = useState<{ ok?: boolean; err?: Record<string, string> }>({});
-  const [values, setValues] = useState({ name: "", email: "", subject: "", message: "" });
+  const [values, setValues] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -48,6 +52,7 @@ export default function ContactPage() {
     const result = await submitContactMessage({
       name: parsed.data.name,
       email: parsed.data.email,
+      phone: parsed.data.phone,
       subject: parsed.data.subject,
       body: parsed.data.message,
     });
@@ -59,7 +64,7 @@ export default function ContactPage() {
     }
 
     setState({ ok: true });
-    setValues({ name: "", email: "", subject: "", message: "" });
+    setValues({ name: "", email: "", phone: "", subject: "", message: "" });
   };
 
   return (
@@ -172,6 +177,15 @@ export default function ContactPage() {
                 />
               </Field>
             </div>
+            <Field label="Your Phone Number" error={state.err?.phone}>
+              <input
+                type="tel"
+                value={values.phone}
+                onChange={(e) => setValues((v) => ({ ...v, phone: e.target.value }))}
+                placeholder="+234 800 000 0000"
+                className="input"
+              />
+            </Field>
             <Field label="Subject" error={state.err?.subject}>
               <input
                 value={values.subject}
@@ -219,8 +233,8 @@ export default function ContactPage() {
       <style>{`
         .input {
           width: 100%;
-          background: oklch(1 0 0 / 0.04);
-          border: 1px solid oklch(1 0 0 / 0.1);
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 0.75rem;
           padding: 0.75rem 1rem;
           color: var(--foreground);
@@ -229,7 +243,7 @@ export default function ContactPage() {
           transition: border-color .25s ease, box-shadow .25s ease;
         }
         .input::placeholder { color: var(--muted-foreground); }
-        .input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px oklch(0.65 0.24 295 / 0.15); }
+        .input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(158, 98, 255, 0.15); }
       `}</style>
     </>
   );

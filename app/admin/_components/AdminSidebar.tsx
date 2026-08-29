@@ -86,7 +86,7 @@ export function AdminSidebar({
             title={collapsed ? label : undefined}
             className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
               isActive(href)
-                ? "bg-primary/15 text-primary shadow-[0_0_0_1px_oklch(0.65_0.24_295_/_0.35)_inset]"
+                ? "bg-primary/15 text-primary shadow-[0_0_0_1px_rgba(158, 98, 255, 0.35)_inset]"
                 : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
             }`}
           >

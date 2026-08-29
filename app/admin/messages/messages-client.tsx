@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
-import { Mail, MailOpen, Reply, Trash2 } from "lucide-react";
+import { Mail, MailOpen, Phone, Reply, Trash2 } from "lucide-react";
 import { markMessageRead, deleteMessage, type Message } from "./actions";
 
 function timeAgo(ts: number) {
@@ -92,13 +92,32 @@ export function MessagesClient({ initialMessages }: { initialMessages: Message[]
               <div className="animate-fade-up border-t border-white/5 bg-white/[0.02] p-4 pl-16">
                 <p className="text-sm text-foreground/90">{m.body}</p>
                 <p className="mt-2 text-xs text-muted-foreground">{m.email}</p>
-                <div className="mt-4 flex gap-2">
+                <p className="mt-0.5 text-xs text-muted-foreground">{m.phone}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
                   <a
                     href={`mailto:${m.email}?subject=${encodeURIComponent("Re: " + m.subject)}`}
                     className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold"
                   >
                     <Reply className="size-3.5" /> Reply
                   </a>
+                  {m.phone && (
+                    <a
+                      href={`tel:${m.phone.replace(/[^0-9+]/g, "")}`}
+                      className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold"
+                    >
+                      <Phone className="size-3.5" /> Call
+                    </a>
+                  )}
+                  {m.phone && (
+                    <a
+                      href={`https://wa.me/${m.phone.replace(/[^0-9]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold"
+                    >
+                      WhatsApp
+                    </a>
+                  )}
                   <button
                     onClick={() => remove(m.id)}
                     className="btn-ghost-glass inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold hover:text-destructive"

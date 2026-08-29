@@ -46,7 +46,7 @@ export function ImageCarousel({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, oklch(0.35 0.18 295 / 0.7), oklch(0.18 0.05 285))",
+              "linear-gradient(135deg, rgba(70, 13, 139, 0.7), rgb(16, 13, 38))",
           }}
         />
       </div>

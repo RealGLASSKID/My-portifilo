@@ -23,7 +23,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/5">
             <div
               className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg, oklch(0.4 0.22 300 / 0.8), oklch(0.15 0.05 285))" }}
+              style={{ background: "linear-gradient(135deg, rgba(94, 0, 169, 0.8), rgb(10, 7, 31))" }}
             />
             <div className="absolute inset-0 grid place-items-center opacity-40">
               <Music2 className="size-20" />
