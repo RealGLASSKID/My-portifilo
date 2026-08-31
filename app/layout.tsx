@@ -135,6 +135,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+        <meta name="google-site-verification" content="OBdEh9gvEkK9PUDhmT5kuD1kpjLytVPI_k5kIlb-Af8" />
       </head>
       <body className="relative min-h-dvh font-sans antialiased" suppressHydrationWarning>
         <CustomCursor />
