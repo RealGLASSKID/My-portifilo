@@ -9,7 +9,7 @@ const COLLECTION = "music";
 const MusicSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
-  type: z.enum(["Single", "Single", "Album"]).default("Single"),
+  type: z.enum(["Single", "Album"]).default("Single"),
   year: z.string().min(4),
   streams: z.string().default("0"),
   tag: z.string().optional().default(""),
