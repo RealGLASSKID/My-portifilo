@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { Code2, Heart, Rocket, Target, Sparkles } from "lucide-react";
+import { Code2, Heart, Rocket, Target, Sparkles, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About — GLASSKID | Prince Dennis",
@@ -38,7 +39,15 @@ export default function AboutPage() {
         title="The mind behind the"
         accent="code & the music."
         description="I'm a full stack developer, artist and songwriter from Lagos, Nigeria. I build digital experiences that solve real problems and create music that speaks to the soul."
-      />
+      >
+        <Link
+          href="/about/story"
+          className="btn-glow group inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
+        >
+          Want to know GLASSKID deeply?
+          <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Link>
+      </PageHero>
 
       <section className="mx-auto max-w-6xl px-6">
         <div className="glass-card p-6 md:p-10">

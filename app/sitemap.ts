@@ -8,6 +8,7 @@ const BASE_URL = "https://glasskid.vercel.app";
 const STATIC_ROUTES = [
   { path: "", priority: 1, freq: "weekly" as const },
   { path: "/about", priority: 0.8, freq: "monthly" as const },
+  { path: "/about/story", priority: 0.7, freq: "monthly" as const },
   { path: "/projects", priority: 0.9, freq: "weekly" as const },
   { path: "/services", priority: 0.7, freq: "monthly" as const },
   { path: "/music", priority: 0.8, freq: "weekly" as const },

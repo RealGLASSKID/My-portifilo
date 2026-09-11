@@ -17,6 +17,12 @@ import {
   Play,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { getProjects, type Project } from "@/app/admin/projects/actions";
+import { getPublishedMusic, type MusicRelease } from "@/app/admin/music/actions";
+
+// Always render with fresh data — projects/music are added and edited live
+// through /admin, so this page can never be statically cached.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript • Lagos, Nigeria",
@@ -67,7 +73,9 @@ const STATS = [
   { k: "15+", v: "Songs Released", Icon: Headphones },
 ];
 
-const PROJECTS = [
+// Used only if there's nothing in the database yet, so the section is never empty.
+type ProjectCard = { slug: string; tag: string; name: string; desc: string; stack: string[]; imageUrl?: string };
+const FALLBACK_PROJECTS: ProjectCard[] = [
   {
     slug: "nexora",
     tag: "Web App",
@@ -110,10 +118,11 @@ const SKILLS = [
   { name: "TypeScript", value: 90 },
 ];
 
-const MUSIC = [
-  { title: "Adopted", meta: "GLASSKID • 2:45" },
-  { title: "Seperate Ways", meta: "GLASSKID • 2:32" },
-  { title: "Freezing", meta: "GLASSKID • 2:08" },
+// Used only if there's nothing in the database yet, so the section is never empty.
+const FALLBACK_MUSIC = [
+  { slug: "adopted-dreams", title: "Adopted", meta: "GLASSKID • Single" },
+  { slug: "seperate-ways", title: "Seperate Ways", meta: "GLASSKID • Single" },
+  { slug: "freezing-nights", title: "Freezing", meta: "GLASSKID • Single" },
 ];
 
 const SOCIALS = [
@@ -139,7 +148,37 @@ const SOCIALS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [dbProjects, dbMusic] = await Promise.all([
+    getProjects().catch(() => [] as Project[]),
+    getPublishedMusic().catch(() => [] as MusicRelease[]),
+  ]);
+
+  // Prefer projects/tracks marked "featured" in the admin dashboard; if none
+  // are marked, just show the most recent ones instead of an empty section.
+  const featuredProjects = dbProjects.filter((p) => p.featured);
+  const projectsToShow: ProjectCard[] = (featuredProjects.length > 0 ? featuredProjects : dbProjects)
+    .slice(0, 3)
+    .map((p) => ({
+      slug: p.slug,
+      tag: p.category,
+      name: p.name,
+      desc: p.description,
+      stack: p.tags,
+      imageUrl: p.imageUrl,
+    }));
+  const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
+
+  const featuredMusic = dbMusic.filter((m) => m.featured);
+  const musicToShow = (featuredMusic.length > 0 ? featuredMusic : dbMusic)
+    .slice(0, 3)
+    .map((m) => ({
+      slug: m.slug,
+      title: m.title,
+      meta: `GLASSKID • ${m.type}`,
+    }));
+  const MUSIC = musicToShow.length > 0 ? musicToShow : FALLBACK_MUSIC;
+
   return (
     <>
       {/* HERO */}
@@ -277,18 +316,30 @@ export default function HomePage() {
               className="glass-card group block overflow-hidden p-5 transition hover:border-primary/30"
             >
               <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-white/5">
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(67, 31, 126, 0.7), rgb(20, 18, 43))",
-                  }}
-                />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="text-2xl font-bold tracking-tight text-white/90">
-                    {p.name.toUpperCase()}
-                  </div>
-                </div>
+                {p.imageUrl ? (
+                  <Image
+                    src={p.imageUrl}
+                    alt={p.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                ) : (
+                  <>
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(67, 31, 126, 0.7), rgb(20, 18, 43))",
+                      }}
+                    />
+                    <div className="absolute inset-0 grid place-items-center">
+                      <div className="text-2xl font-bold tracking-tight text-white/90">
+                        {p.name.toUpperCase()}
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className="chip absolute right-3 top-3 !text-[10px]">Featured</div>
               </div>
               <div className="text-xs uppercase tracking-widest text-primary/80">{p.tag}</div>
@@ -376,20 +427,25 @@ export default function HomePage() {
             </div>
             <ul className="divide-y divide-white/5">
               {MUSIC.map((m, i) => (
-                <li key={m.title} className="flex items-center gap-4 py-3">
-                  <span className="grid size-11 place-items-center rounded-xl bg-white/5 text-sm font-semibold text-muted-foreground">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="flex-1">
-                    <div className="font-medium">{m.title}</div>
-                    <div className="text-xs text-muted-foreground">{m.meta}</div>
-                  </div>
-                  <button
-                    aria-label={`Play ${m.title}`}
-                    className="btn-glow grid size-10 place-items-center rounded-full"
+                <li key={m.slug}>
+                  <Link
+                    href={`/music/${m.slug}`}
+                    className="group flex items-center gap-4 py-3 transition hover:opacity-90"
                   >
-                    <Play className="size-4" />
-                  </button>
+                    <span className="grid size-11 place-items-center rounded-xl bg-white/5 text-sm font-semibold text-muted-foreground">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex-1">
+                      <div className="font-medium transition group-hover:text-primary">{m.title}</div>
+                      <div className="text-xs text-muted-foreground">{m.meta}</div>
+                    </div>
+                    <span
+                      aria-hidden
+                      className="btn-glow grid size-10 place-items-center rounded-full transition group-hover:scale-105"
+                    >
+                      <Play className="size-4" />
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
