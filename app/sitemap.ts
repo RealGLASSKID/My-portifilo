@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getProjects } from "@/app/admin/projects/actions";
 import { getPublishedMusic } from "@/app/admin/music/actions";
+import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
 import { getAllSlugs } from "@/lib/blog";
 
 const BASE_URL = "https://glasskid.vercel.app";
@@ -22,11 +23,12 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, music] = await Promise.all([
+  const [projects, music, blogPosts] = await Promise.all([
     getProjects().catch(() => []),
     getPublishedMusic().catch(() => []),
+    getPublishedBlogPosts().catch(() => []),
   ]);
-  const blogSlugs = getAllSlugs();
+  const blogSlugs = blogPosts.length > 0 ? blogPosts.map((p) => p.slug) : getAllSlugs();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
     url: `${BASE_URL}${r.path}`,

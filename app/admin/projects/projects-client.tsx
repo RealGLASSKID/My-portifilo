@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
-import { Search, Plus, Pencil, Trash2, Star, X, UploadCloud, Loader2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Star, X, UploadCloud, Loader2, ImageIcon } from "lucide-react";
 import { createProject, updateProject, deleteProject, type Project } from "./actions";
 
 const CATS = ["All", "Web Apps", "Mobile Apps", "E-Commerce", "SaaS", "Music", "UI/UX", "Open Source"] as const;
@@ -220,32 +220,20 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
         title="Projects"
         description={`${projects.length} projects · showing ${filtered.length} · synced live with Firestore`}
       >
-        <button
-          onClick={() => (formOpen ? closeForm() : openCreateForm())}
-          className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          {formOpen ? <X className="size-4" /> : <Plus className="size-4" />} {formOpen ? "Cancel" : "New Project"}
-        </button>
-      </AdminPageHeader>
-
-      <AdminPageHeader
-        eyebrow="Collection"
-        title="Projects"
-        description={`${projects.length} projects · showing ${filtered.length} · synced live with Firestore`}
-      >
-        <button
-          type="button"
-          onClick={async () => {
-            const { seedDefaultProjects } = await import("./actions");
-            const r = await seedDefaultProjects();
-            alert(r.success ? `Added ${r.count} projects` : r.error);
-            router.refresh();
-          }}
-          className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
-        >
-          Seed default projects
-        </button>
-
+        {projects.length === 0 && (
+          <button
+            type="button"
+            onClick={async () => {
+              const { seedDefaultProjects } = await import("./actions");
+              const r = await seedDefaultProjects();
+              alert(r.success ? `Added ${r.count} projects` : r.error);
+              router.refresh();
+            }}
+            className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
+          >
+            Seed default projects
+          </button>
+        )}
         <button
           onClick={() => (formOpen ? closeForm() : openCreateForm())}
           className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
@@ -436,8 +424,12 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
         {filtered.map((p) => (
           <div key={p.id} className="glass-card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 flex-1 items-center gap-4">
-              <div className="size-14 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/5">
-                <Image src={p.imageUrl} alt="" width={56} height={56} className="size-full object-cover" />
+              <div className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                {p.imageUrl ? (
+                  <Image src={p.imageUrl} alt="" width={56} height={56} className="size-full object-cover" />
+                ) : (
+                  <ImageIcon className="size-5 text-muted-foreground" />
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
