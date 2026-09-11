@@ -16,7 +16,12 @@ const personJsonLd = {
   name: "Prince Dennis",
   alternateName: ["GLASSKID", "RealGlasskid", "RealGLASSKID", "THEREALGLASSKID"],
   url: "https://glasskid.vercel.app",
-  image: "https://glasskid.vercel.app/images/hero-portrait.png",
+  image: [
+    "https://glasskid.vercel.app/images/hero-portrait.webp",
+    "https://glasskid.vercel.app/images/glasskid-1.jpg",
+    "https://glasskid.vercel.app/images/glasskid-2.jpg",
+    "https://glasskid.vercel.app/images/glasskid-3.jpg",
+  ],
   jobTitle: "Full Stack Web Developer",
   description:
     "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
@@ -89,7 +94,32 @@ export const metadata: Metadata = {
     description:
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
     siteName: "GLASSKID",
-
+    images: [
+      {
+        url: "/images/hero-portrait.webp",
+        width: 1200,
+        height: 630,
+        alt: "GLASSKID (Prince Dennis) — Full Stack Web Developer",
+      },
+      {
+        url: "/images/glasskid-1.jpg",
+        width: 1200,
+        height: 1600,
+        alt: "GLASSKID portrait",
+      },
+      {
+        url: "/images/glasskid-2.jpg",
+        width: 1200,
+        height: 1600,
+        alt: "GLASSKID portrait",
+      },
+      {
+        url: "/images/glasskid-3.jpg",
+        width: 1200,
+        height: 1600,
+        alt: "GLASSKID portrait",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -97,9 +127,13 @@ export const metadata: Metadata = {
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
-      "https://glasskid.vercel.app/images/hero-portrait.png",
+      "/images/hero-portrait.webp",
+      "/images/glasskid-1.jpg",
+      "/images/glasskid-2.jpg",
+      "/images/glasskid-3.jpg",
     ],
   },
+
   icons: {
     icon: "https://glasskid.vercel.app/images/GK-icon.svg",
   },
