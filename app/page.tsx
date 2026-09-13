@@ -288,19 +288,19 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Tech marquee */}
-        <div className="glass mt-14 overflow-hidden rounded-2xl px-4 py-4">
-          <div className="animate-marquee flex items-center gap-8 whitespace-nowrap">
-            {[...TECH, ...TECH].map((t, i) => (
-              <span key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" />
-                <span className="font-semibold text-foreground/80">{t}</span>
-              </span>
-            ))}
-          </div>
-        </div>
       </section>
+
+      {/* Tech marquee — intentionally full-bleed, outside the max-w-6xl container */}
+      <div className="glass mt-14 w-full overflow-hidden py-4">
+        <div className="animate-marquee flex items-center gap-8 whitespace-nowrap">
+          {[...TECH, ...TECH].map((t, i) => (
+            <span key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" />
+              <span className="font-semibold text-foreground/80">{t}</span>
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* FEATURED PROJECTS */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
