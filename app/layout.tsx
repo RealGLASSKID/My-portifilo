@@ -16,12 +16,7 @@ const personJsonLd = {
   name: "Prince Dennis",
   alternateName: ["GLASSKID", "RealGlasskid", "RealGLASSKID", "THEREALGLASSKID"],
   url: "https://glasskid.vercel.app",
-  image: [
-    "https://glasskid.vercel.app/images/hero-portrait.webp",
-    "https://glasskid.vercel.app/images/glasskid-1.jpg",
-    "https://glasskid.vercel.app/images/glasskid-2.jpg",
-    "https://glasskid.vercel.app/images/glasskid-3.jpg",
-  ],
+  image: "https://glasskid.vercel.app/images/hero-portrait.png",
   jobTitle: "Full Stack Web Developer",
   description:
     "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
@@ -67,7 +62,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL("https://glasskid.vercel.app"),
   title: {
-    default: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    default: "GLASSKID | Full Stack Developer",
     template: "%s — GLASSKID",
   },
   description:
@@ -90,50 +85,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://glasskid.vercel.app/",
-    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "GLASSKID | Full Stack Developer",
     description:
       "Full stack developer, artist and songwriter from Lagos, Nigeria building fast, modern, scalable web apps and creating music that inspires.",
     siteName: "GLASSKID",
-    images: [
-      {
-        url: "/images/hero-portrait.webp",
-        width: 1200,
-        height: 630,
-        alt: "GLASSKID (Prince Dennis) — Full Stack Web Developer",
-      },
-      {
-        url: "/images/glasskid-1.jpg",
-        width: 1200,
-        height: 1600,
-        alt: "GLASSKID portrait",
-      },
-      {
-        url: "/images/glasskid-2.jpg",
-        width: 1200,
-        height: 1600,
-        alt: "GLASSKID portrait",
-      },
-      {
-        url: "/images/glasskid-3.jpg",
-        width: 1200,
-        height: 1600,
-        alt: "GLASSKID portrait",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Firebase",
+    title: "GLASSKID | Full Stack Developer",
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
     images: [
-      "/images/hero-portrait.webp",
-      "/images/glasskid-1.jpg",
-      "/images/glasskid-2.jpg",
-      "/images/glasskid-3.jpg",
+      "https://glasskid.vercel.app/images/hero-portrait.png",
     ],
   },
-
   icons: {
     icon: "https://glasskid.vercel.app/images/GK-icon.svg",
   },

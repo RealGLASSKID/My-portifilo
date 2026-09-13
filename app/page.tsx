@@ -19,6 +19,8 @@ import {
 import type { ReactNode } from "react";
 import { getProjects, type Project } from "@/app/admin/projects/actions";
 import { getPublishedMusic, type MusicRelease } from "@/app/admin/music/actions";
+import { TypewriterText } from "@/components/TypewriterText";
+import { Reveal } from "@/components/Reveal";
 
 // Always render with fresh data — projects/music are added and edited live
 // through /admin, so this page can never be statically cached.
@@ -199,10 +201,17 @@ export default async function HomePage() {
               <span className="text-gradient animate-gradient">GLASSKID</span>
             </h1>
             <p className="mt-6 text-[clamp(1.05rem,2.2vw,1.5rem)] font-medium text-foreground/90">
-              Full Stack Developer <span className="text-primary">•</span> Multi Instrumentalist
-              <span className="text-primary">•</span> Songwriter
-              <br />
-              <span className="text-muted-foreground">Creative Technologist</span>
+              I am{" "}
+              <TypewriterText
+                className="text-primary"
+                words={[
+                  "a Full Stack Developer",
+                  "a Creative Technologist",
+                  "a Multi Instrumentalist",
+                  "a Songwriter",
+                  "GLASSKID",
+                ]}
+              />
             </p>
             <p className="mt-5 max-w-lg text-muted-foreground">
               I build fast, scalable web applications and create music that tells stories. Turning ideas into
@@ -295,6 +304,7 @@ export default async function HomePage() {
 
       {/* FEATURED PROJECTS */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
+        <Reveal>
         <SectionHeader
           eyebrow="Featured Projects"
           title="Selected"
@@ -361,10 +371,12 @@ export default async function HomePage() {
             </Link>
           ))}
         </div>
+        </Reveal>
       </section>
 
       {/* WHAT I DO */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
+        <Reveal>
         <SectionHeader eyebrow="What I Do" title="Services I" accent="provide" />
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map(({ Icon, title, desc }) => (
@@ -377,10 +389,12 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+        </Reveal>
       </section>
 
       {/* SKILLS + MUSIC */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
+        <Reveal>
         <div className="grid gap-5 lg:grid-cols-2">
           <div className="glass-card p-6">
             <div className="mb-5 flex items-center justify-between">
@@ -451,10 +465,12 @@ export default async function HomePage() {
             </ul>
           </div>
         </div>
+        </Reveal>
       </section>
 
       {/* CTA */}
       <section className="mx-auto mt-28 max-w-6xl px-6 pb-28">
+        <Reveal>
         <div className="glass-card relative overflow-hidden p-8 md:p-12">
           <div
             className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
@@ -480,6 +496,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+        </Reveal>
       </section>
     </>
   );

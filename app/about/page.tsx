@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
+import { SkillsStack } from "@/components/SkillsStack";
+import { Reveal } from "@/components/Reveal";
 import { Code2, Heart, Rocket, Target, Sparkles, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -50,63 +52,71 @@ export default function AboutPage() {
       </PageHero>
 
       <section className="mx-auto max-w-6xl px-6">
-        <div className="glass-card p-6 md:p-10">
-          <div className="chip mb-3">
-            <span className="size-1.5 rounded-full bg-primary" /> My Story
+        <Reveal>
+          <div className="glass-card p-6 md:p-10">
+            <div className="chip mb-3">
+              <span className="size-1.5 rounded-full bg-primary" /> My Story
+            </div>
+            <h2 className="text-2xl font-bold md:text-3xl">My journey so far.</h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
+              {TIMELINE.map((t) => (
+                <div key={t.year} className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <span className="grid size-10 place-items-center rounded-full border border-primary/50 bg-primary/10 text-sm font-bold text-primary">
+                      {t.year.slice(2)}
+                    </span>
+                    <span className="mt-1 w-px flex-1 bg-white/10" />
+                  </div>
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-primary/80">{t.year}</div>
+                    <h3 className="mt-1 text-lg font-semibold">{t.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{t.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className="text-2xl font-bold md:text-3xl">My journey so far.</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            {TIMELINE.map((t) => (
-              <div key={t.year} className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <span className="grid size-10 place-items-center rounded-full border border-primary/50 bg-primary/10 text-sm font-bold text-primary">
-                    {t.year.slice(2)}
-                  </span>
-                  <span className="mt-1 w-px flex-1 bg-white/10" />
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-primary/80">{t.year}</div>
-                  <h3 className="mt-1 text-lg font-semibold">{t.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{t.desc}</p>
-                </div>
+        </Reveal>
+      </section>
+
+      <SkillsStack />
+
+      <section className="mx-auto mt-16 max-w-6xl px-6">
+        <Reveal>
+          <div className="chip mb-3">
+            <span className="size-1.5 rounded-full bg-primary" /> What drives me
+          </div>
+          <h2 className="text-2xl font-bold md:text-3xl">My values.</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {VALUES.map(({ Icon, title, desc }) => (
+              <div key={title} className="glass-card p-5">
+                <span className="icon-tile mb-4">
+                  <Icon className="size-5" />
+                </span>
+                <h3 className="text-base font-semibold">{title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto mt-16 max-w-6xl px-6">
-        <div className="chip mb-3">
-          <span className="size-1.5 rounded-full bg-primary" /> What drives me
-        </div>
-        <h2 className="text-2xl font-bold md:text-3xl">My values.</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {VALUES.map(({ Icon, title, desc }) => (
-            <div key={title} className="glass-card p-5">
-              <span className="icon-tile mb-4">
-                <Icon className="size-5" />
-              </span>
-              <h3 className="text-base font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-            </div>
-          ))}
-        </div>
+        </Reveal>
       </section>
 
       <section className="mx-auto mt-16 max-w-6xl px-6 pb-28">
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {[
-            { k: "20+", v: "Projects Completed" },
-            { k: "15+", v: "Songs Released" },
-            { k: "3+", v: "Years Coding" },
-            { k: "10+", v: "Happy Clients" },
-          ].map((s) => (
-            <div key={s.v} className="glass-card p-5">
-              <div className="text-gradient text-3xl font-bold">{s.k}</div>
-              <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{s.v}</div>
-            </div>
-          ))}
-        </div>
+        <Reveal>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+            {[
+              { k: "20+", v: "Projects Completed" },
+              { k: "15+", v: "Songs Released" },
+              { k: "3+", v: "Years Coding" },
+              { k: "10+", v: "Happy Clients" },
+            ].map((s) => (
+              <div key={s.v} className="glass-card p-5">
+                <div className="text-gradient text-3xl font-bold">{s.k}</div>
+                <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{s.v}</div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </section>
     </>
   );
