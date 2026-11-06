@@ -42,8 +42,7 @@ export async function POST(req: NextRequest) {
         {
           folder: "glasskid-projects",
           resource_type: "image",
-          // auto-optimizes format/quality on delivery (matches the
-          // next-cloudinary CldImage default behavior)
+          
           transformation: [{ fetch_format: "auto", quality: "auto" }],
         },
         (error: UploadApiErrorResponse | undefined, result?: UploadApiResponse) => {
