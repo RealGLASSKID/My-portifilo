@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 const COLLECTION = "blog";
 
@@ -43,7 +44,9 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   return { id: doc.id, ...doc.data() } as BlogPost;
 }
 
-export async function createBlogPost(input: BlogInput) {
+export async function createBlogPost(input: BlogInput, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = BlogSchema.safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid input" };
   const now = Date.now();
@@ -54,7 +57,9 @@ export async function createBlogPost(input: BlogInput) {
   return { success: true as const, id: ref.id };
 }
 
-export async function updateBlogPost(id: string, input: Partial<BlogInput>) {
+export async function updateBlogPost(id: string, input: Partial<BlogInput>, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = BlogSchema.partial().safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid input" };
   await db.collection(COLLECTION).doc(id).update({ ...parsed.data, updatedAt: Date.now() });
@@ -64,14 +69,18 @@ export async function updateBlogPost(id: string, input: Partial<BlogInput>) {
   return { success: true as const };
 }
 
-export async function deleteBlogPost(id: string) {
+export async function deleteBlogPost(id: string, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   await db.collection(COLLECTION).doc(id).delete();
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
   return { success: true as const };
 }
 
-export async function seedBlogPosts() {
+export async function seedBlogPosts(idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const existing = await db.collection(COLLECTION).limit(1).get();
   if (!existing.empty) return { success: false as const, error: "Blog posts already exist." };
   const { posts } = await import("@/lib/blog");

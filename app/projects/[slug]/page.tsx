@@ -103,7 +103,7 @@ export default async function ProjectDetailPage({
       </div>
 
       <div className="mt-10">
-        <ImageCarousel images={slides} alt={project.name} autoPlayMs={5500} />
+        <ImageCarousel images={slides} alt={project.name} autoPlayMs={3000} />
       </div>
 
       <div className="mt-14 space-y-12">

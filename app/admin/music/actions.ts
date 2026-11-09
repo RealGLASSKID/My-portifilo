@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 const COLLECTION = "music";
 
@@ -45,7 +46,9 @@ export async function getMusicBySlug(slug: string): Promise<MusicRelease | null>
   return { id: doc.id, ...doc.data() } as MusicRelease;
 }
 
-export async function createMusicRelease(input: MusicInput) {
+export async function createMusicRelease(input: MusicInput, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = MusicSchema.safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid" };
   const now = Date.now();
@@ -55,7 +58,9 @@ export async function createMusicRelease(input: MusicInput) {
   return { success: true as const, id: ref.id };
 }
 
-export async function updateMusicRelease(id: string, input: Partial<MusicInput>) {
+export async function updateMusicRelease(id: string, input: Partial<MusicInput>, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = MusicSchema.partial().safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid" };
   await db.collection(COLLECTION).doc(id).update({ ...parsed.data, updatedAt: Date.now() });
@@ -64,14 +69,18 @@ export async function updateMusicRelease(id: string, input: Partial<MusicInput>)
   return { success: true as const };
 }
 
-export async function deleteMusicRelease(id: string) {
+export async function deleteMusicRelease(id: string, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   await db.collection(COLLECTION).doc(id).delete();
   revalidatePath("/admin/music");
   revalidatePath("/music");
   return { success: true as const };
 }
 
-export async function seedMusicReleases() {
+export async function seedMusicReleases(idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const existing = await db.collection(COLLECTION).limit(1).get();
   if (!existing.empty) return { success: false as const, error: "Music already exists." };
   const defaults = [

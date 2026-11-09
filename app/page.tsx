@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { getProjects, type Project } from "@/app/admin/projects/actions";
+import { FeaturedProjectsGrid } from "@/components/FeaturedProjectsGrid";
 import { getPublishedMusic, type MusicRelease } from "@/app/admin/music/actions";
 import { TypewriterText } from "@/components/TypewriterText";
 import { Reveal } from "@/components/Reveal";
@@ -76,7 +77,7 @@ const STATS = [
 ];
 
 // Used only if there's nothing in the database yet, so the section is never empty.
-type ProjectCard = { slug: string; tag: string; name: string; desc: string; stack: string[]; imageUrl?: string };
+type ProjectCard = { slug: string; tag: string; name: string; desc: string; stack: string[]; imageUrl?: string; images: string[] };
 const FALLBACK_PROJECTS: ProjectCard[] = [
   {
     slug: "nexora",
@@ -84,6 +85,7 @@ const FALLBACK_PROJECTS: ProjectCard[] = [
     name: "Nexora",
     desc: "Modern SaaS platform for managing projects, teams and analytics.",
     stack: ["Next.js", "TS", "Tailwind"],
+    images: [],
   },
   {
     slug: "cherry-noble-school",
@@ -91,6 +93,7 @@ const FALLBACK_PROJECTS: ProjectCard[] = [
     name: "Cherry Noble School",
     desc: "School management system with student, teacher and exam modules.",
     stack: ["React", "Firebase"],
+    images: [],
   },
   {
     slug: "echoes",
@@ -98,6 +101,7 @@ const FALLBACK_PROJECTS: ProjectCard[] = [
     name: "Echoes",
     desc: "Music streaming platform for emerging artists and music lovers.",
     stack: ["Next.js", "Node", "TS"],
+    images: [],
   },
 ];
 
@@ -168,6 +172,7 @@ export default async function HomePage() {
       desc: p.description,
       stack: p.tags,
       imageUrl: p.imageUrl,
+      images: [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[],
     }));
   const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
 
@@ -318,59 +323,14 @@ export default async function HomePage() {
             </Link>
           }
         />
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {PROJECTS.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/projects/${p.slug}`}
-              className="glass-card group block overflow-hidden p-5 transition hover:border-primary/30"
-            >
-              <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-white/5">
-                {p.imageUrl ? (
-                  <Image
-                    src={p.imageUrl}
-                    alt={p.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                ) : (
-                  <>
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(67, 31, 126, 0.7), rgb(20, 18, 43))",
-                      }}
-                    />
-                    <div className="absolute inset-0 grid place-items-center">
-                      <div className="text-2xl font-bold tracking-tight text-white/90">
-                        {p.name.toUpperCase()}
-                      </div>
-                    </div>
-                  </>
-                )}
-                <div className="chip absolute right-3 top-3 !text-[10px]">Featured</div>
-              </div>
-              <div className="text-xs uppercase tracking-widest text-primary/80">{p.tag}</div>
-              <h3 className="mt-1 text-lg font-semibold transition group-hover:text-primary">{p.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {p.stack.map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-muted-foreground"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                Case study <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
-              </div>
-            </Link>
-          ))}
-        </div>
+        <FeaturedProjectsGrid projects={PROJECTS.map((p) => ({
+          slug: p.slug,
+          tag: p.tag,
+          name: p.name,
+          desc: p.desc,
+          stack: p.stack,
+          images: p.images?.length ? p.images : (p.imageUrl ? [p.imageUrl] : []),
+        }))} />
         </Reveal>
       </section>
 

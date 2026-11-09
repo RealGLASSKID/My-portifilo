@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import type { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 export const runtime = "nodejs";
 
-const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB
+const MAX_FILE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/avif"];
 
 export async function POST(req: NextRequest) {
-  // TODO(auth): once /admin has auth wired up, verify the session/token here
-  // before allowing an upload. Right now this route is reachable by anyone
-  // who finds the URL — do not treat this as production-ready until that's in.
-
   try {
+    const authHeader = req.headers.get("authorization") || "";
+    const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    const auth = await requireAdminOrFail(idToken);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
+    }
+
     const formData = await req.formData();
     const file = formData.get("file");
 
@@ -42,7 +46,6 @@ export async function POST(req: NextRequest) {
         {
           folder: "glasskid-projects",
           resource_type: "image",
-          
           transformation: [{ fetch_format: "auto", quality: "auto" }],
         },
         (error: UploadApiErrorResponse | undefined, result?: UploadApiResponse) => {

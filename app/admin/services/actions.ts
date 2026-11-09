@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 const COLLECTION = "services";
 const ServiceSchema = z.object({
@@ -30,7 +31,9 @@ export async function getPublishedServices(): Promise<Service[]> {
   }
 }
 
-export async function createService(input: ServiceInput) {
+export async function createService(input: ServiceInput, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = ServiceSchema.safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid" };
   const now = Date.now();
@@ -40,7 +43,9 @@ export async function createService(input: ServiceInput) {
   return { success: true as const, id: ref.id };
 }
 
-export async function updateService(id: string, input: Partial<ServiceInput>) {
+export async function updateService(id: string, input: Partial<ServiceInput>, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const parsed = ServiceSchema.partial().safeParse(input);
   if (!parsed.success) return { success: false as const, error: parsed.error.issues[0]?.message ?? "Invalid" };
   await db.collection(COLLECTION).doc(id).update({ ...parsed.data, updatedAt: Date.now() });
@@ -49,14 +54,18 @@ export async function updateService(id: string, input: Partial<ServiceInput>) {
   return { success: true as const };
 }
 
-export async function deleteService(id: string) {
+export async function deleteService(id: string, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   await db.collection(COLLECTION).doc(id).delete();
   revalidatePath("/admin/services");
   revalidatePath("/services");
   return { success: true as const };
 }
 
-export async function seedServices() {
+export async function seedServices(idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   const existing = await db.collection(COLLECTION).limit(1).get();
   if (!existing.empty) return { success: false as const, error: "Services already exist." };
   const defaults = [

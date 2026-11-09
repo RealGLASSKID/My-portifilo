@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
+import { requireAdminOrFail } from "@/lib/require-admin";
 import cloudinary from "@/lib/cloudinary";
 
 const COLLECTION = "gallery";
@@ -42,8 +43,11 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
 }
 
 export async function createGalleryItem(
-  input: GalleryInput
+  input: GalleryInput,
+  idToken?: string | null
 ): Promise<{ success: true; id: string } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
   const parsed = GallerySchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
@@ -63,8 +67,11 @@ export async function createGalleryItem(
 
 export async function updateGalleryItem(
   id: string,
-  input: Partial<GalleryInput>
+  input: Partial<GalleryInput>,
+  idToken?: string | null
 ): Promise<{ success: true } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
   const parsed = GallerySchema.partial().safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
@@ -81,8 +88,11 @@ export async function updateGalleryItem(
 }
 
 export async function deleteGalleryItem(
-  id: string
+  id: string,
+  idToken?: string | null
 ): Promise<{ success: true } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
   const docRef = db.collection(COLLECTION).doc(id);
   const doc = await docRef.get();
 

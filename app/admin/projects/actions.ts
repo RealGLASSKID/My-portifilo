@@ -4,8 +4,21 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
 import cloudinary from "@/lib/cloudinary";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 const COLLECTION = "projects";
+
+/** Accept full URLs or local public paths like /images/projects/foo.png */
+const ImagePathSchema = z
+  .string()
+  .refine(
+    (v) =>
+      v === "" ||
+      v.startsWith("/") ||
+      v.startsWith("http://") ||
+      v.startsWith("https://"),
+    { message: "Image must be a URL or a local path starting with /" }
+  );
 
 const ProjectSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -16,18 +29,18 @@ const ProjectSchema = z.object({
   category: z.string().min(1, "Category is required"),
   description: z.string().min(1, "Description is required"),
   tags: z.array(z.string()).default([]),
-  imageUrl: z.string().url().or(z.literal("")).default(""),
+  imageUrl: ImagePathSchema.default(""),
   imagePublicId: z.string().default(""),
   liveUrl: z.union([z.string().url(), z.literal("")]).optional().default(""),
   githubUrl: z.union([z.string().url(), z.literal("")]).optional().default(""),
   featured: z.boolean().default(false),
-  // Case study (detail page)
   problem: z.string().default(""),
   approach: z.string().default(""),
   decisions: z.string().default(""),
   result: z.string().default(""),
-  status: z.string().default("Live"), // Live | In progress | Archive
-  gallery: z.array(z.string().url()).default([]), // extra image URLs
+  status: z.string().default("Live"),
+  /** All extra images (local paths or remote URLs). Cover is imageUrl. */
+  gallery: z.array(ImagePathSchema).default([]),
 });
 
 export type ProjectInput = z.infer<typeof ProjectSchema>;
@@ -51,8 +64,12 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 }
 
 export async function createProject(
-  input: ProjectInput
+  input: ProjectInput,
+  idToken?: string | null
 ): Promise<{ success: true; id: string } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
+
   const parsed = ProjectSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
@@ -68,13 +85,18 @@ export async function createProject(
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
   revalidatePath(`/projects/${parsed.data.slug}`);
+  revalidatePath("/");
   return { success: true, id: ref.id };
 }
 
 export async function updateProject(
   id: string,
-  input: Partial<ProjectInput>
+  input: Partial<ProjectInput>,
+  idToken?: string | null
 ): Promise<{ success: true } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
+
   const parsed = ProjectSchema.partial().safeParse(input);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
@@ -87,13 +109,18 @@ export async function updateProject(
 
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
+  revalidatePath("/");
   if (parsed.data.slug) revalidatePath(`/projects/${parsed.data.slug}`);
   return { success: true };
 }
 
 export async function deleteProject(
-  id: string
+  id: string,
+  idToken?: string | null
 ): Promise<{ success: true } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
+
   const docRef = db.collection(COLLECTION).doc(id);
   const doc = await docRef.get();
   if (!doc.exists) return { success: false, error: "Project not found" };
@@ -106,11 +133,16 @@ export async function deleteProject(
 
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
+  revalidatePath("/");
   return { success: true };
 }
 
-/** One-time seed — call from admin or a script */
-export async function seedDefaultProjects(): Promise<{ success: true; count: number } | { success: false; error: string }> {
+export async function seedDefaultProjects(
+  idToken?: string | null
+): Promise<{ success: true; count: number } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
+
   const existing = await db.collection(COLLECTION).limit(1).get();
   if (!existing.empty) {
     return { success: false, error: "Projects already exist. Delete them first if you want to re-seed." };
@@ -123,9 +155,6 @@ export async function seedDefaultProjects(): Promise<{ success: true; count: num
     const ref = db.collection(COLLECTION).doc();
     batch.set(ref, {
       ...p,
-      imageUrl: p.imageUrl || "",
-      imagePublicId: "",
-      gallery: p.gallery || [],
       createdAt: now - i * 1000,
       updatedAt: now - i * 1000,
     });
@@ -134,163 +163,116 @@ export async function seedDefaultProjects(): Promise<{ success: true; count: num
   await batch.commit();
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
+  revalidatePath("/");
   return { success: true, count: SEED_PROJECTS.length };
 }
 
 const SEED_PROJECTS: ProjectInput[] = [
   {
-    name: "SiteNix",
-    slug: "sitenix",
-    category: "SaaS",
+    name: "JB-01 Official Website",
+    slug: "jb-01-official-website",
+    category: "Music",
     description:
-      "A visual website builder with AI-assisted content generation, reusable components, and a responsive editing experience for creating and publishing modern websites.",
-    tags: ["TypeScript", "React", "Next.js", "Firebase", "Tailwind CSS", "Zustand", "Groq AI", "Cloudinary"],
-    imageUrl: "",
-    imagePublicId: "",
-    liveUrl: "https://sitenix.app",
-    githubUrl: "",
-    featured: true,
-    status: "Live",
-    problem:
-      "Traditional website builders often trade flexibility for simplicity or overwhelm users with complex editing interfaces. We wanted a visual editor that feels approachable while still giving precise control.",
-    approach:
-      "Built a component-based visual editor where every website is a JSON node tree. Supports reusable components, responsive layouts, live editing, and AI-assisted content generation.",
-    decisions:
-      "JSON node architecture instead of HTML templates for serialization, undo/redo, and dynamic data. Firebase for auth and persistence so effort stayed on the editor experience.",
-    result:
-      "Scalable visual editing platform with reusable components, live previews, AI content, and one-click publishing. Collaborated with David Onyema (dskyle77).",
-    gallery: [],
-  },
-  {
-    name: "Benzene Plus Academy",
-    slug: "benzene-plus-academy",
-    category: "Web Apps",
-    description:
-      "Full-stack enrollment platform and CMS for a JAMB, WAEC & NECO tutorial academy in Lagos built to convert visiting parents into registered students.",
-    tags: ["TypeScript", "Next.js", "Tailwind CSS", "Firebase"],
-    imageUrl: "",
-    imagePublicId: "",
-    liveUrl: "https://benzene-plus-academy.vercel.app/",
-    githubUrl: "",
-    featured: true,
-    status: "Live",
-    problem:
-      "An academy competing for trust needs a credible, high-converting site with proof of results, clear programs, and easy onboarding — plus an internal tool for staff to update records without code.",
-    approach:
-      "Public storefront focused on trust (stats, testimonials, exam breakdowns) plus a secure admin dashboard for blogs and top-scorer metrics.",
-    decisions:
-      "Firebase admin for non-technical staff. Registrations via WhatsApp deep links to reduce friction for Nigerian parents.",
-    result:
-      "Live academy site with self-serve content updates and an active inquiry pipeline. Collaborated with David Onyema (dskyle77).",
-    gallery: [],
-  },
-  {
-    name: "Nexora",
-    slug: "nexora",
-    category: "SaaS",
-    description: "Modern SaaS platform for managing projects, teams and analytics in one place.",
-    tags: ["Next.js", "TypeScript", "Tailwind", "PostgreSQL"],
-    imageUrl: "",
+      "A modern portfolio and interactive experience built for award-winning songwriter JB-01 (The Face of Gangster Records), featuring custom scroll-driven design and responsive glassmorphism UI.",
+    tags: ["Next.js", "Tailwind", "Glassmorphism", "Music"],
+    imageUrl: "/images/projects/jb-01-1.png",
     imagePublicId: "",
     liveUrl: "",
     githubUrl: "",
     featured: true,
     status: "Live",
-    problem: "Teams juggle scattered tools for projects, people, and metrics.",
-    approach: "Unified dashboard with projects, team roles, and analytics widgets.",
-    decisions: "Next.js App Router + typed APIs for speed and maintainability.",
-    result: "Clean SaaS foundation ready for real teams and metrics.",
+    problem: "An award-winning artist needed a premium digital presence that matched the quality of the music.",
+    approach: "Music-first layout with glassmorphism UI and a cinematic feel.",
+    decisions: "Modern Next.js stack focused on performance and visual polish.",
+    result: "A standout official site that positions JB-01 as The Face of Gangster Records.",
     gallery: [],
+  },
+  {
+    name: "Blaze Hair Magic",
+    slug: "blaze-hair-magic",
+    category: "Web Apps",
+    description:
+      "Modern, responsive hair studio website designed to showcase hairstyles, services, transformations, and bookings.",
+    tags: ["Next.js", "Tailwind", "Responsive Design"],
+    imageUrl: "/images/projects/hair-blaze-1.png",
+    imagePublicId: "",
+    liveUrl: "",
+    githubUrl: "",
+    featured: true,
+    status: "Live",
+    problem: "A hair studio needed a clean online presence to show work and convert visitors into clients.",
+    approach: "Service pages, gallery of transformations, and clear calls-to-action for bookings.",
+    decisions: "Mobile-first layout with strong visual hierarchy for styles and before/after.",
+    result: "A polished studio site ready for real customer traffic.",
+    gallery: ["/images/projects/hair-blaze-2.png"],
   },
   {
     name: "Grocify",
     slug: "grocify",
     category: "E-Commerce",
-    description: "E-commerce platform for fresh groceries with real-time inventory and delivery.",
+    description:
+      "E-commerce platform for fresh groceries with real-time inventory awareness and fast delivery messaging.",
     tags: ["React", "Node.js", "MongoDB", "Express"],
-    imageUrl: "",
+    imageUrl: "/images/projects/grocify-1.png",
     imagePublicId: "",
     liveUrl: "",
     githubUrl: "",
     featured: true,
     status: "Live",
-    problem: "Grocery shoppers need fast browse, stock truth, and reliable delivery slots.",
-    approach: "Catalog + cart + inventory-aware checkout with delivery windows.",
-    decisions: "MongoDB for flexible product data; real-time stock checks at checkout.",
+    problem: "Grocery shoppers need fast browse, honest stock, and reliable delivery slots.",
+    approach: "Catalog + cart + inventory-aware checkout with clear delivery promises.",
+    decisions: "Flexible product data and real-time stock checks at checkout.",
     result: "End-to-end grocery flow from browse to delivery booking.",
     gallery: [],
   },
   {
-    name: "Echoes",
-    slug: "echoes",
-    category: "Music",
-    description: "Music streaming platform for emerging artists and music lovers.",
-    tags: ["Next.js", "Firebase", "Tailwind", "Howler.js"],
-    imageUrl: "",
+    name: "Sunchop",
+    slug: "sunchop",
+    category: "Web Apps",
+    description:
+      "Full product experience for Sunchop — multi-screen flows, marketing pages, and app-style UI captured across the product.",
+    tags: ["Next.js", "UI/UX", "Product Design"],
+    imageUrl: "/images/projects/sunchop-1.png",
     imagePublicId: "",
     liveUrl: "",
     githubUrl: "",
     featured: true,
     status: "Live",
-    problem: "Emerging artists lack a simple place to publish and be discovered.",
-    approach: "Stream-focused UI with artist profiles, playlists, and audio playback.",
-    decisions: "Firebase for auth/storage; Howler.js for reliable web audio.",
-    result: "Lightweight streaming experience aimed at independents.",
-    gallery: [],
+    problem: "Needed a cohesive product and marketing presence across multiple screens.",
+    approach: "Designed and built a consistent multi-page experience with clear hierarchy.",
+    decisions: "Screenshot-driven case study so the real product UI is the hero.",
+    result: "A complete visual case study of the Sunchop product.",
+    gallery: [
+      "/images/projects/sunchop-2.png",
+      "/images/projects/sunchop-3.png",
+      "/images/projects/sunchop-4.png",
+      "/images/projects/sunchop-5.png",
+      "/images/projects/sunchop-6.png",
+      "/images/projects/sunchop-7.png",
+    ],
   },
   {
-    name: "StudyFlow",
-    slug: "studyflow",
-    category: "Web Apps",
-    description: "Student productivity and collaboration tool with task management and file sharing.",
-    tags: ["React", "TypeScript", "Firebase"],
-    imageUrl: "",
+    name: "Unik Trends",
+    slug: "unik-trends",
+    category: "E-Commerce",
+    description:
+      "Fashion / trends storefront experience with product-focused layouts and modern e-commerce UI patterns.",
+    tags: ["Next.js", "E-Commerce", "Tailwind"],
+    imageUrl: "/images/projects/unik-trends-1.png",
     imagePublicId: "",
     liveUrl: "",
     githubUrl: "",
-    featured: false,
+    featured: true,
     status: "Live",
-    problem: "Students lose track of tasks and shared files across chats and drives.",
-    approach: "Tasks, groups, and file sharing in one focused workspace.",
-    decisions: "Firebase for realtime sync between study groups.",
-    result: "Simple collab hub for coursework and group projects.",
-    gallery: [],
-  },
-  {
-    name: "Devfolio Template",
-    slug: "devfolio-template",
-    category: "UI/UX",
-    description: "A modern, customizable portfolio template for developers.",
-    tags: ["Next.js", "Tailwind", "MDX"],
-    imageUrl: "",
-    imagePublicId: "",
-    liveUrl: "",
-    githubUrl: "",
-    featured: false,
-    status: "Live",
-    problem: "Developers need a polished portfolio without designing from zero.",
-    approach: "Composable sections, MDX content, and theme-friendly layout.",
-    decisions: "MDX for content speed; Tailwind for easy restyling.",
-    result: "Ready-to-fork portfolio shell for ship-ready personal sites.",
-    gallery: [],
-  },
-  {
-    name: "FinTrack",
-    slug: "fintrack",
-    category: "Web Apps",
-    description: "Personal finance tracker to manage income, expenses and savings.",
-    tags: ["React", "Chart.js", "Node.js"],
-    imageUrl: "",
-    imagePublicId: "",
-    liveUrl: "",
-    githubUrl: "",
-    featured: false,
-    status: "Live",
-    problem: "People lose sight of where money goes each month.",
-    approach: "Income/expense logging with category charts and savings goals.",
-    decisions: "Chart.js for clear visuals; simple API for transactions.",
-    result: "Clear monthly picture of cash flow and goals.",
-    gallery: [],
+    problem: "A trends/fashion brand needed a sharp online storefront that highlights products.",
+    approach: "Product-first pages with clean grids and conversion-focused layout.",
+    decisions: "Visual screenshots as the primary storytelling device for the case study.",
+    result: "A polished storefront presentation ready for real catalog content.",
+    gallery: [
+      "/images/projects/unik-trends-2.png",
+      "/images/projects/unik-trends-3.png",
+      "/images/projects/unik-trends-4.png",
+    ],
   },
   {
     name: "Cherry Noble School",
@@ -299,7 +281,7 @@ const SEED_PROJECTS: ProjectInput[] = [
     description:
       "School website and information platform for Cherry Noble School — programs, admissions, and school life in one place.",
     tags: ["Next.js", "TypeScript", "Tailwind", "Firebase"],
-    imageUrl: "",
+    imageUrl: "/images/projects/cherry-noble-1.png",
     imagePublicId: "",
     liveUrl: "",
     githubUrl: "",
@@ -309,6 +291,49 @@ const SEED_PROJECTS: ProjectInput[] = [
     approach: "Public site for programs and life at school, with contact/admissions pathways.",
     decisions: "Content-first structure so staff can keep pages current.",
     result: "Professional school presence focused on clarity for parents.",
+    gallery: [
+      "/images/projects/cherry-noble-2.png",
+      "/images/projects/cherry-noble-3.png",
+      "/images/projects/cherry-noble-4.png",
+      "/images/projects/cherry-noble-5.png",
+    ],
+  },
+  {
+    name: "Di-Chies",
+    slug: "di-chies",
+    category: "Web Apps",
+    description:
+      "Brand and product web experience for Di-Chies with multi-screen layouts and polished visual presentation.",
+    tags: ["Next.js", "Tailwind", "Brand Site"],
+    imageUrl: "/images/projects/di-chies-1.png",
+    imagePublicId: "",
+    liveUrl: "",
+    githubUrl: "",
+    featured: false,
+    status: "Live",
+    problem: "Needed a modern web presence that matches the brand quality.",
+    approach: "Clean multi-page layout with strong visuals and clear hierarchy.",
+    decisions: "Screenshot-led case study to show the real UI.",
+    result: "A complete visual package for the Di-Chies web experience.",
+    gallery: ["/images/projects/di-chies-2.png", "/images/projects/di-chies-3.png"],
+  },
+  {
+    name: "Gangster Group Bot",
+    slug: "gangster-group-bot",
+    category: "Web Apps",
+    description:
+      "WhatsApp group bot for games, moderation, XP rankings, and admin tools — built for real Nigerian group chats.",
+    tags: ["Node.js", "whatsapp-web.js", "TypeScript", "Puppeteer"],
+    imageUrl: "",
+    imagePublicId: "",
+    liveUrl: "",
+    githubUrl: "",
+    featured: true,
+    status: "Live",
+    problem: "Group chats needed structured moderation, engagement games, and ranking without manual work.",
+    approach: "A relay + brain architecture with WhatsApp Web client, webhooks, and admin controls.",
+    decisions: "whatsapp-web.js + Puppeteer for session handling; separate services for reliability.",
+    result: "Active bot used in real Nigerian group chats with games, XP, and moderation tools.",
     gallery: [],
   },
 ];

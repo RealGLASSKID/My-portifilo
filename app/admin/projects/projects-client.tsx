@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { Search, Plus, Pencil, Trash2, Star, X, UploadCloud, Loader2, ImageIcon } from "lucide-react";
 import { createProject, updateProject, deleteProject, type Project } from "./actions";
+import { getAdminIdToken } from "@/lib/get-admin-token";
 
 const CATS = ["All", "Web Apps", "Mobile Apps", "E-Commerce", "SaaS", "Music", "UI/UX", "Open Source"] as const;
 const FORM_CATS = CATS.filter((c) => c !== "All");
@@ -28,7 +29,7 @@ type FormState = {
   decisions: string;
   result: string;
   status: string;
-  galleryUrls: string; // one URL per line
+  galleryUrls: string; // one image path or URL per line (extra screenshots)
 };
 
 const EMPTY_FORM: FormState = {
@@ -130,7 +131,12 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const token = await getAdminIdToken();
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: fd,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Upload failed");
       setForm((f) => ({ ...f, imageUrl: data.url, imagePublicId: data.publicId }));
@@ -173,9 +179,10 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
         .filter(Boolean),
     };
 
+    const token = await getAdminIdToken();
     const result = form.id
-      ? await updateProject(form.id, basePayload)
-      : await createProject(basePayload);
+      ? await updateProject(form.id, basePayload, token)
+      : await createProject(basePayload, token);
 
     setSaving(false);
 
@@ -192,7 +199,8 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
     if (!confirm(`Delete "${p.name}"? This also removes its image from Cloudinary. This can't be undone.`)) {
       return;
     }
-    const result = await deleteProject(p.id);
+    const token = await getAdminIdToken();
+    const result = await deleteProject(p.id, token);
     if (!result.success) {
       alert(result.error);
       return;
@@ -203,7 +211,8 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
   async function toggleFeatured(p: Project) {
     // optimistic update so the star feels instant
     setProjects((prev) => prev.map((x) => (x.id === p.id ? { ...x, featured: !x.featured } : x)));
-    const result = await updateProject(p.id, { featured: !p.featured });
+    const token = await getAdminIdToken();
+    const result = await updateProject(p.id, { featured: !p.featured }, token);
     if (!result.success) {
       // revert on failure
       setProjects((prev) => prev.map((x) => (x.id === p.id ? { ...x, featured: p.featured } : x)));
@@ -225,7 +234,8 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
             type="button"
             onClick={async () => {
               const { seedDefaultProjects } = await import("./actions");
-              const r = await seedDefaultProjects();
+              const token = await getAdminIdToken();
+              const r = await seedDefaultProjects(token);
               alert(r.success ? `Added ${r.count} projects` : r.error);
               router.refresh();
             }}

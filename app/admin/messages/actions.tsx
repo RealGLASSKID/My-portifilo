@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/firebase-admin";
+import { requireAdminOrFail } from "@/lib/require-admin";
 
 const COLLECTION = "messages";
 
@@ -49,16 +50,22 @@ export async function getMessages(): Promise<Message[]> {
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Message);
 }
 
-export async function markMessageRead(id: string) {
+export async function markMessageRead(id: string, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   await db.collection(COLLECTION).doc(id).update({ read: true });
   revalidatePath("/admin/messages");
   revalidatePath("/admin");
+  return { success: true as const };
 }
 
-export async function deleteMessage(id: string) {
+export async function deleteMessage(id: string, idToken?: string | null) {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false as const, error: auth.error };
   await db.collection(COLLECTION).doc(id).delete();
   revalidatePath("/admin/messages");
   revalidatePath("/admin");
+  return { success: true as const };
 }
 
 export async function getUnreadMessageCount(): Promise<number> {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { Mail, MailOpen, Phone, Reply, Trash2 } from "lucide-react";
 import { markMessageRead, deleteMessage, type Message } from "./actions";
+import { getAdminIdToken } from "@/lib/get-admin-token";
 
 function timeAgo(ts: number) {
   const s = Math.floor((Date.now() - ts) / 1000);
@@ -29,7 +30,8 @@ export function MessagesClient({ initialMessages }: { initialMessages: Message[]
     const msg = messages.find((m) => m.id === id);
     if (msg && !msg.read) {
       setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, read: true } : m)));
-      await markMessageRead(id);
+      const token = await getAdminIdToken();
+      await markMessageRead(id, token);
       router.refresh();
     }
   }
@@ -37,7 +39,8 @@ export function MessagesClient({ initialMessages }: { initialMessages: Message[]
   async function remove(id: string) {
     if (!confirm("Delete this message?")) return;
     setMessages((prev) => prev.filter((m) => m.id !== id));
-    await deleteMessage(id);
+    const token = await getAdminIdToken();
+    await deleteMessage(id, token);
     router.refresh();
   }
 
