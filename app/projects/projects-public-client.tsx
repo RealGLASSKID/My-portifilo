@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Github, ExternalLink, Search } from "lucide-react";
 import type { Project } from "@/app/admin/projects/actions";
-import { ProjectImageCarousel } from "@/components/ProjectImageCarousel";
+import { BrowserMockupSlideshow } from "@/components/BrowserMockupSlideshow";
 
 const CATS = ["All", "Web Apps", "Mobile Apps", "E-Commerce", "SaaS", "Music", "UI/UX", "Open Source"] as const;
 
@@ -55,27 +55,32 @@ export function ProjectsPublicClient({ projects }: { projects: Project[] }) {
       </section>
 
       <section className="mx-auto mt-8 max-w-6xl px-6 pb-28">
-        {/* Bigger cards for laptop screenshots — 2 cols on md+ */}
         <div className="grid gap-6 md:grid-cols-2">
           {filtered.map((p) => {
             const images = [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[];
             return (
               <article key={p.id} className="glass-card overflow-hidden p-5 sm:p-6">
                 <Link href={`/projects/${p.slug}`} className="block">
-                  <ProjectImageCarousel
-                    name={p.name}
+                  <BrowserMockupSlideshow
                     images={images}
-                    featured={p.featured}
-                    aspect="aspect-[16/9]"
+                    alt={p.name}
                     autoPlayMs={3000}
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    urlLabel={
+                      p.liveUrl ? p.liveUrl.replace(/^https?:\/\//, "") : p.slug
+                    }
                   />
                 </Link>
 
                 <Link href={`/projects/${p.slug}`} className="mt-5 block">
-                  <div className="text-xs uppercase tracking-widest text-primary/80">{p.category}</div>
-                  <h3 className="mt-1 text-xl font-semibold transition hover:text-primary">{p.name}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{p.description}</p>
+                  <div className="text-xs uppercase tracking-widest text-primary/80">
+                    {p.category}
+                  </div>
+                  <h3 className="mt-1 text-xl font-semibold transition hover:text-primary">
+                    {p.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                    {p.description}
+                  </p>
                 </Link>
 
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -124,7 +129,9 @@ export function ProjectsPublicClient({ projects }: { projects: Project[] }) {
 
         {filtered.length === 0 && (
           <div className="glass-card mt-6 p-10 text-center text-muted-foreground">
-            {projects.length === 0 ? "No projects yet." : "No projects match your search."}
+            {projects.length === 0
+              ? "No projects yet."
+              : "No projects match your search."}
           </div>
         )}
       </section>

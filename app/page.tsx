@@ -22,6 +22,8 @@ import { FeaturedProjectsGrid } from "@/components/FeaturedProjectsGrid";
 import { getPublishedMusic, type MusicRelease } from "@/app/admin/music/actions";
 import { TypewriterText } from "@/components/TypewriterText";
 import { Reveal } from "@/components/Reveal";
+import { getGalleryItems } from "@/app/admin/gallery/actions";
+import { HeroGallerySlideshow } from "@/components/HeroGallerySlideshow";
 
 // Always render with fresh data — projects/music are added and edited live
 // through /admin, so this page can never be statically cached.
@@ -76,8 +78,18 @@ const STATS = [
   { k: "15+", v: "Songs Released", Icon: Headphones },
 ];
 
+type ProjectCard = {
+  slug: string;
+  tag: string;
+  name: string;
+  desc: string;
+  stack: string[];
+  imageUrl?: string;
+  liveUrl?: string;
+  images: string[];
+};
+
 // Used only if there's nothing in the database yet, so the section is never empty.
-type ProjectCard = { slug: string; tag: string; name: string; desc: string; stack: string[]; imageUrl?: string; images: string[] };
 const FALLBACK_PROJECTS: ProjectCard[] = [
   {
     slug: "nexora",
@@ -154,27 +166,33 @@ const SOCIALS = [
   },
 ];
 
-export default async function HomePage() {
-  const [dbProjects, dbMusic] = await Promise.all([
-    getProjects().catch(() => [] as Project[]),
-    getPublishedMusic().catch(() => [] as MusicRelease[]),
-  ]);
+const [dbProjects, dbMusic, dbGallery] = await Promise.all([
+  getProjects().catch(() => [] as Project[]),
+  getPublishedMusic().catch(() => [] as MusicRelease[]),
+  getGalleryItems().catch(() => [] as { imageUrl?: string }[]),
+]);
+
+const heroImages = dbGallery
+  .map((g) => g.imageUrl)
+  .filter((url): url is string => Boolean(url));
 
   // Prefer projects/tracks marked "featured" in the admin dashboard; if none
   // are marked, just show the most recent ones instead of an empty section.
-  const featuredProjects = dbProjects.filter((p) => p.featured);
-  const projectsToShow: ProjectCard[] = (featuredProjects.length > 0 ? featuredProjects : dbProjects)
-    .slice(0, 3)
-    .map((p) => ({
-      slug: p.slug,
-      tag: p.category,
-      name: p.name,
-      desc: p.description,
-      stack: p.tags,
-      imageUrl: p.imageUrl,
-      images: [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[],
-    }));
-  const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
+        const featuredProjects = dbProjects.filter((p) => p.featured);
+        const projectsToShow: ProjectCard[] = (featuredProjects.length > 0 ? featuredProjects : dbProjects)
+        .slice(0, 3)
+        .map((p) => ({
+          slug: p.slug,
+          tag: p.category,
+          name: p.name,
+          desc: p.description,
+          stack: p.tags,
+          imageUrl: p.imageUrl,
+          liveUrl: p.liveUrl || "",
+          images: [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[],
+        }));
+
+        const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
 
   const featuredMusic = dbMusic.filter((m) => m.featured);
   const musicToShow = (featuredMusic.length > 0 ? featuredMusic : dbMusic)
@@ -263,14 +281,12 @@ export default async function HomePage() {
           {/* Portrait card */}
           <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
             <div className="glass neon-ring relative overflow-hidden rounded-3xl">
-              <Image
-                src="/images/hero-portrait.png"
-                alt="GLASSKID portrait — Prince Dennis"
-                width={1024}
-                height={1280}
-                className="h-[min(32rem,70vw)] w-full object-cover sm:h-[min(32.5rem,55vw)]"
-                priority
-              />
+            <HeroGallerySlideshow
+                  images={heroImages}
+                  fallbackSrc="/images/hero-portrait.png"
+                  alt="GLASSKID"
+                  autoPlayMs={3500}
+                />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
             </div>
 
@@ -323,14 +339,17 @@ export default async function HomePage() {
             </Link>
           }
         />
-        <FeaturedProjectsGrid projects={PROJECTS.map((p) => ({
-          slug: p.slug,
-          tag: p.tag,
-          name: p.name,
-          desc: p.desc,
-          stack: p.stack,
-          images: p.images?.length ? p.images : (p.imageUrl ? [p.imageUrl] : []),
-        }))} />
+            <FeaturedProjectsGrid
+              projects={PROJECTS.map((p) => ({
+                slug: p.slug,
+                tag: p.tag,
+                name: p.name,
+                desc: p.desc,
+                stack: p.stack,
+                liveUrl: p.liveUrl,
+                images: p.images?.length ? p.images : p.imageUrl ? [p.imageUrl] : [],
+              }))}
+            />
         </Reveal>
       </section>
 
@@ -461,7 +480,6 @@ export default async function HomePage() {
     </>
   );
 }
-
 function SectionHeader({
   eyebrow,
   title,

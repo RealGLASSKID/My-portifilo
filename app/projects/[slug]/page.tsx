@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BrowserMockupSlideshow } from "@/components/BrowserMockupSlideshow";
 import { getProjectBySlug, getProjects } from "@/app/admin/projects/actions";
 import { ImageCarousel } from "@/components/ImageCarousel";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
@@ -103,7 +104,16 @@ export default async function ProjectDetailPage({
       </div>
 
       <div className="mt-10">
-        <ImageCarousel images={slides} alt={project.name} autoPlayMs={3000} />
+        <BrowserMockupSlideshow
+          images={slides}
+          alt={project.name}
+          autoPlayMs={3000}
+          urlLabel={
+            project.liveUrl
+              ? project.liveUrl.replace(/^https?:\/\//, "")
+              : `projects/${project.slug}`
+          }
+        />
       </div>
 
       <div className="mt-14 space-y-12">
