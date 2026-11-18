@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -25,16 +24,16 @@ import { Reveal } from "@/components/Reveal";
 import { getGalleryItems } from "@/app/admin/gallery/actions";
 import { HeroGallerySlideshow } from "@/components/HeroGallerySlideshow";
 
-// Always render with fresh data — projects/music are added and edited live
-// through /admin, so this page can never be statically cached.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript • Lagos, Nigeria",
+  title:
+    "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript • Lagos, Nigeria",
   description:
     "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript and Tailwind.",
   openGraph: {
-    title: "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript",
+    title:
+      "GLASSKID | Full Stack Web Developer • Next.js • React • Javascript • Tailwind CSS • TypeScript",
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria. Building fast, modern, scalable web apps with React, Next.js, TypeScript and Tailwind.",
     type: "website",
@@ -89,7 +88,6 @@ type ProjectCard = {
   images: string[];
 };
 
-// Used only if there's nothing in the database yet, so the section is never empty.
 const FALLBACK_PROJECTS: ProjectCard[] = [
   {
     slug: "nexora",
@@ -118,10 +116,26 @@ const FALLBACK_PROJECTS: ProjectCard[] = [
 ];
 
 const SERVICES = [
-  { Icon: Code2, title: "Web Development", desc: "Building fast, scalable and responsive web applications." },
-  { Icon: Sparkles, title: "Frontend Development", desc: "Creating beautiful, interactive and accessible user interfaces." },
-  { Icon: Palette, title: "UI/UX Design", desc: "Designing intuitive and engaging digital experiences." },
-  { Icon: Music2, title: "Music & Composition", desc: "Creating original songs and producing professional music." },
+  {
+    Icon: Code2,
+    title: "Web Development",
+    desc: "Building fast, scalable and responsive web applications.",
+  },
+  {
+    Icon: Sparkles,
+    title: "Frontend Development",
+    desc: "Creating beautiful, interactive and accessible user interfaces.",
+  },
+  {
+    Icon: Palette,
+    title: "UI/UX Design",
+    desc: "Designing intuitive and engaging digital experiences.",
+  },
+  {
+    Icon: Music2,
+    title: "Music & Composition",
+    desc: "Creating original songs and producing professional music.",
+  },
 ];
 
 const SKILLS = [
@@ -131,12 +145,10 @@ const SKILLS = [
   { name: "Next.js", value: 85 },
   { name: "React Native", value: 80 },
   { name: "UI/UX Design", value: 75 },
-  { name: "React Native", value: 80 },
   { name: "JavaScript", value: 90 },
   { name: "TypeScript", value: 90 },
 ];
 
-// Used only if there's nothing in the database yet, so the section is never empty.
 const FALLBACK_MUSIC = [
   { slug: "adopted-dreams", title: "Adopted", meta: "GLASSKID • Single" },
   { slug: "seperate-ways", title: "Seperate Ways", meta: "GLASSKID • Single" },
@@ -166,33 +178,34 @@ const SOCIALS = [
   },
 ];
 
-const [dbProjects, dbMusic, dbGallery] = await Promise.all([
-  getProjects().catch(() => [] as Project[]),
-  getPublishedMusic().catch(() => [] as MusicRelease[]),
-  getGalleryItems().catch(() => [] as { imageUrl?: string }[]),
-]);
+export default async function HomePage() {
+  const [dbProjects, dbMusic, dbGallery] = await Promise.all([
+    getProjects().catch(() => [] as Project[]),
+    getPublishedMusic().catch(() => [] as MusicRelease[]),
+    getGalleryItems().catch(() => [] as { imageUrl?: string }[]),
+  ]);
 
-const heroImages = dbGallery
-  .map((g) => g.imageUrl)
-  .filter((url): url is string => Boolean(url));
+  const heroImages = dbGallery
+    .map((g) => g.imageUrl)
+    .filter((url): url is string => Boolean(url));
 
-  // Prefer projects/tracks marked "featured" in the admin dashboard; if none
-  // are marked, just show the most recent ones instead of an empty section.
-        const featuredProjects = dbProjects.filter((p) => p.featured);
-        const projectsToShow: ProjectCard[] = (featuredProjects.length > 0 ? featuredProjects : dbProjects)
-        .slice(0, 3)
-        .map((p) => ({
-          slug: p.slug,
-          tag: p.category,
-          name: p.name,
-          desc: p.description,
-          stack: p.tags,
-          imageUrl: p.imageUrl,
-          liveUrl: p.liveUrl || "",
-          images: [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[],
-        }));
+  const featuredProjects = dbProjects.filter((p) => p.featured);
+  const projectsToShow: ProjectCard[] = (
+    featuredProjects.length > 0 ? featuredProjects : dbProjects
+  )
+    .slice(0, 3)
+    .map((p) => ({
+      slug: p.slug,
+      tag: p.category,
+      name: p.name,
+      desc: p.description,
+      stack: p.tags,
+      imageUrl: p.imageUrl,
+      liveUrl: p.liveUrl || "",
+      images: [p.imageUrl, ...(p.gallery || [])].filter(Boolean) as string[],
+    }));
 
-        const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
+  const PROJECTS = projectsToShow.length > 0 ? projectsToShow : FALLBACK_PROJECTS;
 
   const featuredMusic = dbMusic.filter((m) => m.featured);
   const musicToShow = (featuredMusic.length > 0 ? featuredMusic : dbMusic)
@@ -218,7 +231,8 @@ const heroImages = dbGallery
         <div className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr]">
           <div className="animate-fade-up">
             <span className="chip">
-              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" /> Hi, I&apos;m
+              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--neon)]" />{" "}
+              Hi, I&apos;m
             </span>
             <h1 className="mt-5 text-[clamp(2.5rem,6vw,4.25rem)] font-bold leading-[0.95] tracking-tighter">
               <span className="text-gradient animate-gradient">GLASSKID</span>
@@ -237,8 +251,8 @@ const heroImages = dbGallery
               />
             </p>
             <p className="mt-5 max-w-lg text-muted-foreground">
-              I build fast, scalable web applications and create music that tells stories. Turning ideas into
-              digital experiences from Lagos, Nigeria.
+              I build fast, scalable web applications and create music that tells stories.
+              Turning ideas into digital experiences from Lagos, Nigeria.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -278,17 +292,13 @@ const heroImages = dbGallery
             </div>
           </div>
 
-          {/* Portrait card */}
           <div className="relative animate-fade-up" style={{ animationDelay: "120ms" }}>
-            <div className="glass neon-ring relative overflow-hidden rounded-3xl">
             <HeroGallerySlideshow
-                  images={heroImages}
-                  fallbackSrc="/images/hero-portrait.png"
-                  alt="GLASSKID"
-                  autoPlayMs={3500}
-                />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-            </div>
+              images={heroImages}
+              fallbackSrc="/images/hero-portrait.png"
+              alt="GLASSKID"
+              autoPlayMs={3500}
+            />
 
             <div className="absolute -right-4 top-8 hidden flex-col gap-3 md:flex">
               {STATS.map(({ k, v, Icon }, i) => (
@@ -311,7 +321,6 @@ const heroImages = dbGallery
         </div>
       </section>
 
-      {/* Tech marquee — intentionally full-bleed, outside the max-w-6xl container */}
       <div className="glass mt-14 w-full overflow-hidden py-4">
         <div className="animate-marquee flex items-center gap-8 whitespace-nowrap">
           {[...TECH, ...TECH].map((t, i) => (
@@ -323,163 +332,164 @@ const heroImages = dbGallery
         </div>
       </div>
 
-      {/* FEATURED PROJECTS */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
         <Reveal>
-        <SectionHeader
-          eyebrow="Featured Projects"
-          title="Selected"
-          accent="work"
-          action={
-            <Link
-              href="/projects"
-              className="group inline-flex items-center gap-1 text-sm text-primary hover:underline"
-            >
-              View all <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
-            </Link>
-          }
-        />
-            <FeaturedProjectsGrid
-              projects={PROJECTS.map((p) => ({
-                slug: p.slug,
-                tag: p.tag,
-                name: p.name,
-                desc: p.desc,
-                stack: p.stack,
-                liveUrl: p.liveUrl,
-                images: p.images?.length ? p.images : p.imageUrl ? [p.imageUrl] : [],
-              }))}
-            />
+          <SectionHeader
+            eyebrow="Featured Projects"
+            title="Selected"
+            accent="work"
+            action={
+              <Link
+                href="/projects"
+                className="group inline-flex items-center gap-1 text-sm text-primary hover:underline"
+              >
+                View all{" "}
+                <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+              </Link>
+            }
+          />
+          <FeaturedProjectsGrid
+            projects={PROJECTS.map((p) => ({
+              slug: p.slug,
+              tag: p.tag,
+              name: p.name,
+              desc: p.desc,
+              stack: p.stack,
+              liveUrl: p.liveUrl,
+              images: p.images?.length ? p.images : p.imageUrl ? [p.imageUrl] : [],
+            }))}
+          />
         </Reveal>
       </section>
 
-      {/* WHAT I DO */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
         <Reveal>
-        <SectionHeader eyebrow="What I Do" title="Services I" accent="provide" />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {SERVICES.map(({ Icon, title, desc }) => (
-            <div key={title} className="glass-card p-5">
-              <span className="icon-tile mb-4">
-                <Icon className="size-5" />
-              </span>
-              <h3 className="text-base font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-            </div>
-          ))}
-        </div>
+          <SectionHeader eyebrow="What I Do" title="Services I" accent="provide" />
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.map(({ Icon, title, desc }) => (
+              <div key={title} className="glass-card p-5">
+                <span className="icon-tile mb-4">
+                  <Icon className="size-5" />
+                </span>
+                <h3 className="text-base font-semibold">{title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+              </div>
+            ))}
+          </div>
         </Reveal>
       </section>
 
-      {/* SKILLS + MUSIC */}
       <section className="mx-auto mt-28 max-w-6xl px-6">
         <Reveal>
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="glass-card p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div className="glass-card p-6">
+              <div className="mb-5">
                 <div className="chip mb-2">
                   <span className="size-1.5 rounded-full bg-primary" /> My Skills
                 </div>
                 <h3 className="text-xl font-semibold">Toolbox &amp; expertise</h3>
               </div>
-            </div>
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {SKILLS.map((s, i) => (
-                <li key={`${s.name}-${i}`}>
-                  <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="text-foreground/90">{s.name}</span>
-                    <span className="text-muted-foreground">{s.value}%</span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${s.value}%`,
-                        background: "var(--gradient-brand)",
-                        boxShadow: "0 0 12px var(--neon)",
-                      }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <div className="chip mb-2">
-                  <span className="size-1.5 rounded-full bg-primary" /> Latest Music
-                </div>
-                <h3 className="text-xl font-semibold">Now playing</h3>
-              </div>
-              <Link href="/music" className="text-sm text-primary hover:underline">
-                View all
-              </Link>
-            </div>
-            <ul className="divide-y divide-white/5">
-              {MUSIC.map((m, i) => (
-                <li key={m.slug}>
-                  <Link
-                    href={`/music/${m.slug}`}
-                    className="group flex items-center gap-4 py-3 transition hover:opacity-90"
-                  >
-                    <span className="grid size-11 place-items-center rounded-xl bg-white/5 text-sm font-semibold text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="flex-1">
-                      <div className="font-medium transition group-hover:text-primary">{m.title}</div>
-                      <div className="text-xs text-muted-foreground">{m.meta}</div>
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {SKILLS.map((s, i) => (
+                  <li key={`${s.name}-${i}`}>
+                    <div className="mb-1 flex items-center justify-between text-sm">
+                      <span className="text-foreground/90">{s.name}</span>
+                      <span className="text-muted-foreground">{s.value}%</span>
                     </div>
-                    <span
-                      aria-hidden
-                      className="btn-glow grid size-10 place-items-center rounded-full transition group-hover:scale-105"
+                    <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${s.value}%`,
+                          background: "var(--gradient-brand)",
+                          boxShadow: "0 0 12px var(--neon)",
+                        }}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="glass-card p-6">
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <div className="chip mb-2">
+                    <span className="size-1.5 rounded-full bg-primary" /> Latest Music
+                  </div>
+                  <h3 className="text-xl font-semibold">Now playing</h3>
+                </div>
+                <Link href="/music" className="text-sm text-primary hover:underline">
+                  View all
+                </Link>
+              </div>
+              <ul className="divide-y divide-white/5">
+                {MUSIC.map((m, i) => (
+                  <li key={m.slug}>
+                    <Link
+                      href={`/music/${m.slug}`}
+                      className="group flex items-center gap-4 py-3 transition hover:opacity-90"
                     >
-                      <Play className="size-4" />
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      <span className="grid size-11 place-items-center rounded-xl bg-white/5 text-sm font-semibold text-muted-foreground">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="flex-1">
+                        <div className="font-medium transition group-hover:text-primary">
+                          {m.title}
+                        </div>
+                        <div className="text-xs text-muted-foreground">{m.meta}</div>
+                      </div>
+                      <span
+                        aria-hidden
+                        className="btn-glow grid size-10 place-items-center rounded-full transition group-hover:scale-105"
+                      >
+                        <Play className="size-4" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
         </Reveal>
       </section>
 
-      {/* CTA */}
       <section className="mx-auto mt-28 max-w-6xl px-6 pb-28">
         <Reveal>
-        <div className="glass-card relative overflow-hidden p-8 md:p-12">
-          <div
-            className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
-            style={{ background: "var(--gradient-radial-glow)" }}
-          />
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <div className="chip mb-3">
-                <span className="size-1.5 rounded-full bg-primary" /> Let&apos;s work together
+          <div className="glass-card relative overflow-hidden p-8 md:p-12">
+            <div
+              className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
+              style={{ background: "var(--gradient-radial-glow)" }}
+            />
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+              <div>
+                <div className="chip mb-3">
+                  <span className="size-1.5 rounded-full bg-primary" /> Let&apos;s work
+                  together
+                </div>
+                <h3 className="text-3xl font-bold md:text-4xl">
+                  Have a project in mind?{" "}
+                  <span className="text-gradient">Let&apos;s build it.</span>
+                </h3>
+                <p className="mt-2 max-w-lg text-muted-foreground">
+                  Available for freelance projects, collaborations and full-time
+                  opportunities.
+                </p>
               </div>
-              <h3 className="text-3xl font-bold md:text-4xl">
-                Have a project in mind? <span className="text-gradient">Let&apos;s build it.</span>
-              </h3>
-              <p className="mt-2 max-w-lg text-muted-foreground">
-                Available for freelance projects, collaborations and full-time opportunities.
-              </p>
+              <Link
+                href="/contact"
+                className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+              >
+                Get in touch <ArrowRight className="size-4" />
+              </Link>
             </div>
-            <Link
-              href="/contact"
-              className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
-            >
-              Get in touch <ArrowRight className="size-4" />
-            </Link>
           </div>
-        </div>
         </Reveal>
       </section>
     </>
   );
 }
+
 function SectionHeader({
   eyebrow,
   title,
