@@ -137,34 +137,71 @@ export async function deleteProject(
   return { success: true };
 }
 
+/**
+ * Sync seed projects into Firestore:
+ * - Matching slug/name → fill description, case study fields, images, tags (keeps liveUrl/githubUrl if set)
+ * - Missing → creates new project docs
+ * Safe to run anytime.
+ */
 export async function seedDefaultProjects(
   idToken?: string | null
-): Promise<{ success: true; count: number } | { success: false; error: string }> {
+): Promise<{ success: true; count: number; created: number; updated: number } | { success: false; error: string }> {
   const auth = await requireAdminOrFail(idToken);
   if (!auth.ok) return { success: false, error: auth.error };
 
-  const existing = await db.collection(COLLECTION).limit(1).get();
-  if (!existing.empty) {
-    return { success: false, error: "Projects already exist. Delete them first if you want to re-seed." };
-  }
+  const snap = await db.collection(COLLECTION).get();
+  const docs = snap.docs.map((d) => ({ id: d.id, data: d.data() as Record<string, unknown>, ref: d.ref }));
+  const slugMap = new Map(docs.map((d) => [String(d.data.slug || "").toLowerCase(), d]));
+  const nameMap = new Map(docs.map((d) => [String(d.data.name || "").toLowerCase().trim(), d]));
 
   const now = Date.now();
+  let created = 0;
+  let updated = 0;
   const batch = db.batch();
 
-  SEED_PROJECTS.forEach((p, i) => {
-    const ref = db.collection(COLLECTION).doc();
-    batch.set(ref, {
-      ...p,
-      createdAt: now - i * 1000,
-      updatedAt: now - i * 1000,
-    });
+  SEED_PROJECTS.forEach((seed, i) => {
+    const hit =
+      slugMap.get(seed.slug.toLowerCase()) ||
+      nameMap.get(seed.name.toLowerCase().trim());
+
+    if (hit) {
+      const prev = hit.data;
+      batch.update(hit.ref, {
+        name: seed.name,
+        slug: seed.slug,
+        category: seed.category,
+        description: seed.description,
+        tags: seed.tags,
+        imageUrl: seed.imageUrl || prev.imageUrl || "",
+        gallery: seed.gallery?.length ? seed.gallery : prev.gallery || [],
+        featured: typeof prev.featured === "boolean" ? prev.featured : seed.featured,
+        status: seed.status || prev.status || "Live",
+        problem: seed.problem,
+        approach: seed.approach,
+        decisions: seed.decisions,
+        result: seed.result,
+        // preserve admin-set links
+        liveUrl: prev.liveUrl || seed.liveUrl || "",
+        githubUrl: prev.githubUrl || seed.githubUrl || "",
+        updatedAt: now,
+      });
+      updated += 1;
+    } else {
+      const ref = db.collection(COLLECTION).doc();
+      batch.set(ref, {
+        ...seed,
+        createdAt: now - i * 1000,
+        updatedAt: now - i * 1000,
+      });
+      created += 1;
+    }
   });
 
   await batch.commit();
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
   revalidatePath("/");
-  return { success: true, count: SEED_PROJECTS.length };
+  return { success: true, count: created + updated, created, updated };
 }
 
 const SEED_PROJECTS: ProjectInput[] = [
@@ -338,59 +375,3 @@ const SEED_PROJECTS: ProjectInput[] = [
   },
 ];
 
-/**
- * Attach local screenshot paths (imageUrl + gallery) from SEED_PROJECTS
- * onto existing Firestore projects matched by slug or name.
- */
-export async function repairProjectImages(
-  idToken?: string | null
-): Promise<{ success: true; updated: number } | { success: false; error: string }> {
-  const auth = await requireAdminOrFail(idToken);
-  if (!auth.ok) return { success: false, error: auth.error };
-
-  const snap = await db.collection(COLLECTION).get();
-  if (snap.empty) {
-    return { success: false, error: "No projects found. Use Seed default projects first." };
-  }
-
-  const bySlug = new Map(SEED_PROJECTS.map((p) => [p.slug.toLowerCase(), p]));
-  const byName = new Map(SEED_PROJECTS.map((p) => [p.name.toLowerCase().trim(), p]));
-
-  let updated = 0;
-  const batch = db.batch();
-  const now = Date.now();
-
-  snap.docs.forEach((doc) => {
-    const data = doc.data();
-    const slug = String(data.slug || "").toLowerCase();
-    const name = String(data.name || "").toLowerCase().trim();
-    const seed = bySlug.get(slug) || byName.get(name);
-    if (!seed) return;
-    if (!seed.imageUrl && (!seed.gallery || seed.gallery.length === 0)) return;
-
-    batch.update(doc.ref, {
-      imageUrl: seed.imageUrl || data.imageUrl || "",
-      gallery: seed.gallery?.length ? seed.gallery : data.gallery || [],
-      description: data.description || seed.description,
-      tags: Array.isArray(data.tags) && data.tags.length > 0 ? data.tags : seed.tags,
-      category: data.category || seed.category,
-      status: data.status || seed.status,
-      updatedAt: now,
-    });
-    updated += 1;
-  });
-
-  if (updated === 0) {
-    return {
-      success: false,
-      error:
-        "No matching projects found to repair. Check project names/slugs match seed.",
-    };
-  }
-
-  await batch.commit();
-  revalidatePath("/admin/projects");
-  revalidatePath("/projects");
-  revalidatePath("/");
-  return { success: true, updated };
-}

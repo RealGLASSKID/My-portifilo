@@ -17,6 +17,8 @@ const BlogSchema = z.object({
   content: z.array(z.string()).default([]),
   published: z.boolean().default(true),
   coverUrl: z.string().optional().default(""),
+  /** If set, "Read post" opens this external URL (Facebook, YouTube, LinkedIn, etc.) */
+  externalUrl: z.union([z.string().url(), z.literal("")]).optional().default(""),
 });
 
 export type BlogInput = z.infer<typeof BlogSchema>;

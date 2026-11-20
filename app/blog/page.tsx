@@ -19,7 +19,14 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
-  let POSTS: { title: string; cat: string; read: string; date: string; slug: string }[] = [];
+  let POSTS: {
+    title: string;
+    cat: string;
+    read: string;
+    date: string;
+    slug: string;
+    externalUrl?: string;
+  }[] = [];
 
   try {
     const fromDb = await getPublishedBlogPosts();
@@ -30,6 +37,7 @@ export default async function BlogPage() {
         read: p.read,
         date: p.date,
         slug: p.slug,
+        externalUrl: p.externalUrl || "",
       }));
     }
   } catch {
@@ -43,6 +51,7 @@ export default async function BlogPage() {
       read: p.read,
       date: p.date,
       slug: p.slug,
+      externalUrl: "",
     }));
   }
 
@@ -75,10 +84,14 @@ export default async function BlogPage() {
               </div>
               <h3 className="mt-2 text-lg font-semibold leading-snug">{p.title}</h3>
               <a
-                href={`/blog/${p.slug}`}
+                href={p.externalUrl ? p.externalUrl : `/blog/${p.slug}`}
+                {...(p.externalUrl
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
                 className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
               >
-                Read post <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
+                {p.externalUrl ? "Open post" : "Read post"}{" "}
+                <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5" />
               </a>
             </article>
           ))}

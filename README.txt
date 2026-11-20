@@ -1,7 +1,9 @@
-IMPORTANT
+GLASSKID feature pack
 
-The projects PAGE uses: app/projects/public-client.tsx
-NOT projects-public-client.tsx
+1. Copy files into matching paths in your repo
+2. Push to GitHub / wait for Vercel
+3. Admin → Projects → Sync seed projects
+   (fills descriptions, case study fields, images for matching projects)
+4. Admin → Blog → edit a post → External post link
 
-Copy these files into your repo at the same paths, then push.
-Then Admin -> Repair project images
+If download is .aaf rename to .zip

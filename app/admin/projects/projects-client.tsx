@@ -29,7 +29,8 @@ type FormState = {
   decisions: string;
   result: string;
   status: string;
-  galleryUrls: string; // one image path or URL per line (extra screenshots)
+  /** Cover is imageUrl; extra screenshots for carousel */
+  galleryImages: string[];
 };
 
 const EMPTY_FORM: FormState = {
@@ -49,7 +50,7 @@ const EMPTY_FORM: FormState = {
   decisions: "",
   result: "",
   status: "Live",
-  galleryUrls: "",
+  galleryImages: [],
 };
 
 function slugify(value: string) {
@@ -109,7 +110,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
       decisions: p.decisions || "",
       result: p.result || "",
       status: p.status || "Live",
-      galleryUrls: (p.gallery || []).join("\n"),
+      galleryImages: [...(p.gallery || [])],
     });
     setSlugTouched(true); // don't overwrite an existing slug while editing
     setError(null);
@@ -122,30 +123,74 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
     setError(null);
   }
 
+  async function uploadOne(file: File): Promise<{ url: string; publicId: string }> {
+    const fd = new FormData();
+    fd.append("file", file);
+    const token = await getAdminIdToken();
+    const res = await fetch("/api/admin/upload", {
+      method: "POST",
+      body: fd,
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? "Upload failed");
+    return { url: data.url as string, publicId: (data.publicId as string) || "" };
+  }
+
+  /** Multi-image upload: first image becomes cover if empty; rest go to gallery */
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
 
     setUploading(true);
     setError(null);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const token = await getAdminIdToken();
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: fd,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      const uploaded: string[] = [];
+      let firstPublicId = "";
+      for (const file of files) {
+        const { url, publicId } = await uploadOne(file);
+        uploaded.push(url);
+        if (!firstPublicId) firstPublicId = publicId;
+      }
+      setForm((f) => {
+        const nextGallery = [...f.galleryImages];
+        let nextCover = f.imageUrl;
+        let nextPid = f.imagePublicId;
+        for (const url of uploaded) {
+          if (!nextCover) {
+            nextCover = url;
+            nextPid = firstPublicId;
+          } else if (url !== nextCover && !nextGallery.includes(url)) {
+            nextGallery.push(url);
+          }
+        }
+        return { ...f, imageUrl: nextCover, imagePublicId: nextPid, galleryImages: nextGallery };
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Upload failed");
-      setForm((f) => ({ ...f, imageUrl: data.url, imagePublicId: data.publicId }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
-      e.target.value = ""; // allow re-selecting the same file if needed
+      e.target.value = "";
     }
+  }
+
+  function removeGalleryImage(url: string) {
+    setForm((f) => ({
+      ...f,
+      galleryImages: f.galleryImages.filter((u) => u !== url),
+    }));
+  }
+
+  function clearCoverImage() {
+    setForm((f) => {
+      const [next, ...rest] = f.galleryImages;
+      return {
+        ...f,
+        imageUrl: next || "",
+        imagePublicId: next ? f.imagePublicId : "",
+        galleryImages: next ? rest : [],
+      };
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -173,10 +218,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
       decisions: form.decisions.trim(),
       result: form.result.trim(),
       status: form.status || "Live",
-      gallery: form.galleryUrls
-        .split(/\n+/)
-        .map((u) => u.trim())
-        .filter(Boolean),
+      gallery: form.galleryImages.filter(Boolean),
     };
 
     const token = await getAdminIdToken();
@@ -229,33 +271,22 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
         title="Projects"
         description={`${projects.length} projects · showing ${filtered.length} · synced live with Firestore`}
       >
-        {projects.length === 0 && (
-          <button
-            type="button"
-            onClick={async () => {
-              const { seedDefaultProjects } = await import("./actions");
-              const token = await getAdminIdToken();
-              const r = await seedDefaultProjects(token);
-              alert(r.success ? `Added ${r.count} projects` : r.error);
-              router.refresh();
-            }}
-            className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
-          >
-            Seed default projects
-          </button>
-        )}
         <button
           type="button"
           onClick={async () => {
-            const { repairProjectImages } = await import("./actions");
+            const { seedDefaultProjects } = await import("./actions");
             const token = await getAdminIdToken();
-            const r = await repairProjectImages(token);
-            alert(r.success ? `Updated images on ${r.updated} projects` : r.error);
+            const r = await seedDefaultProjects(token);
+            if (r.success) {
+              alert(`Synced ${r.count} projects (${r.created} created, ${r.updated} updated) — descriptions, case study & images filled.`);
+            } else {
+              alert(r.error);
+            }
             router.refresh();
           }}
           className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
         >
-          Repair project images
+          Sync seed projects
         </button>
         <button
           onClick={() => (formOpen ? closeForm() : openCreateForm())}
@@ -268,24 +299,63 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
 
       {formOpen && (
         <form onSubmit={handleSubmit} className="glass-card mb-6 grid gap-3 p-5 sm:grid-cols-2">
-          {/* Image upload */}
+          {/* Multi image upload — cover + gallery */}
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Project image</label>
-            <div className="flex items-center gap-4">
-              <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                {form.imageUrl ? (
-                  <Image src={form.imageUrl} alt="" width={80} height={80} className="size-full object-cover" />
-                ) : uploading ? (
-                  <Loader2 className="size-5 animate-spin text-muted-foreground" />
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              Project images (upload one or many — first becomes cover, rest go to carousel)
+            </label>
+            <div className="flex flex-wrap items-start gap-3">
+              {form.imageUrl ? (
+                <div className="relative size-24 overflow-hidden rounded-xl border border-primary/40 bg-white/5">
+                  <Image src={form.imageUrl} alt="Cover" width={96} height={96} className="size-full object-cover" />
+                  <span className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center text-[9px] font-semibold uppercase text-white">
+                    Cover
+                  </span>
+                  <button
+                    type="button"
+                    onClick={clearCoverImage}
+                    className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-black/70 text-white hover:bg-red-500"
+                    aria-label="Remove cover"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              ) : null}
+              {form.galleryImages.map((url) => (
+                <div key={url} className="relative size-24 overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <Image src={url} alt="" width={96} height={96} className="size-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeGalleryImage(url)}
+                    className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-black/70 text-white hover:bg-red-500"
+                    aria-label="Remove image"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              ))}
+              <label className="btn-ghost-glass flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-muted-foreground">
+                {uploading ? (
+                  <Loader2 className="size-5 animate-spin" />
                 ) : (
-                  <UploadCloud className="size-5 text-muted-foreground" />
+                  <>
+                    <UploadCloud className="size-5" />
+                    <span>Add</span>
+                  </>
                 )}
-              </div>
-              <label className="btn-ghost-glass inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium">
-                {uploading ? "Uploading…" : form.imageUrl ? "Replace image" : "Upload image"}
-                <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" onChange={handleFileChange} disabled={uploading} className="hidden" />
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/avif"
+                  multiple
+                  onChange={handleFileChange}
+                  disabled={uploading}
+                  className="hidden"
+                />
               </label>
             </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">
+              Select multiple files at once. Click × on a thumbnail to remove it.
+            </p>
           </div>
 
           <input
@@ -394,13 +464,6 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
                 placeholder="The result — outcomes and impact"
                 value={form.result}
                 onChange={(e) => setForm((f) => ({ ...f, result: e.target.value }))}
-                rows={3}
-                className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
-              />
-              <textarea
-                placeholder="Gallery image URLs (one per line) — shown in the project carousel"
-                value={form.galleryUrls}
-                onChange={(e) => setForm((f) => ({ ...f, galleryUrls: e.target.value }))}
                 rows={3}
                 className="rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground sm:col-span-2"
               />

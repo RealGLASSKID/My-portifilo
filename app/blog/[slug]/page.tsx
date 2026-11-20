@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Clock } from "lucide-react";
 import { getBlogPostBySlug, getPublishedBlogPosts } from "@/app/admin/blog/actions";
 import { posts as FALLBACK_POSTS } from "@/lib/blog";
 
@@ -38,9 +38,10 @@ export default async function BlogPostPage({ params }: Props) {
         excerpt: dbPost.excerpt,
         content: dbPost.content,
         coverUrl: dbPost.coverUrl,
+        externalUrl: dbPost.externalUrl || "",
       }
     : fallback
-      ? { ...fallback, coverUrl: "" }
+      ? { ...fallback, coverUrl: "", externalUrl: "" }
       : null;
 
   if (!post) notFound();
@@ -65,6 +66,17 @@ export default async function BlogPostPage({ params }: Props) {
         </span>
       </div>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
+
+      {"externalUrl" in post && post.externalUrl ? (
+        <a
+          href={post.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-glow mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold"
+        >
+          Open original post <ArrowUpRight className="size-4" />
+        </a>
+      ) : null}
 
       {post.coverUrl && (
         <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10">

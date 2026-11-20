@@ -18,6 +18,7 @@ type FormState = {
   excerpt: string;
   content: string; // paragraphs separated by a blank line in the UI, split into an array on submit
   coverUrl: string;
+  externalUrl: string;
   published: boolean;
 };
 
@@ -31,6 +32,7 @@ const EMPTY_FORM: FormState = {
   excerpt: "",
   content: "",
   coverUrl: "",
+  externalUrl: "",
   published: true,
 };
 
@@ -83,6 +85,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
       excerpt: p.excerpt,
       content: (p.content || []).join("\n\n"),
       coverUrl: p.coverUrl || "",
+      externalUrl: p.externalUrl || "",
       published: p.published,
     });
     setSlugTouched(true);
@@ -138,6 +141,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
         .map((block) => block.trim())
         .filter(Boolean),
       coverUrl: form.coverUrl.trim(),
+      externalUrl: form.externalUrl.trim(),
       published: form.published,
     };
 
@@ -277,6 +281,22 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
                 />
               </label>
             </div>
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              External post link (optional)
+            </label>
+            <input
+              type="url"
+              placeholder="https://facebook.com/... or YouTube / Instagram / LinkedIn URL"
+              value={form.externalUrl}
+              onChange={(e) => setForm((f) => ({ ...f, externalUrl: e.target.value }))}
+              className="w-full rounded-xl bg-white/5 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
+            />
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              If set, clicking the post takes readers to this URL (Facebook, YouTube, Instagram, LinkedIn, etc.).
+            </p>
           </div>
 
           <div className="sm:col-span-2 mt-2 border-t border-white/5 pt-4">

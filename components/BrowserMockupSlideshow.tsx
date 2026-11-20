@@ -79,7 +79,7 @@ export function BrowserMockupSlideshow({
           </span>
         </div>
 
-        <div className="group relative aspect-[16/10] bg-[#07070c]">
+        <div className="group relative aspect-[16/9] min-h-[220px] bg-[#07070c] sm:min-h-[280px] lg:min-h-[320px]">
           {slides.length > 0 ? (
             <button
               type="button"
@@ -92,7 +92,7 @@ export function BrowserMockupSlideshow({
                 src={slides[i]}
                 alt={`${alt} ${i + 1}`}
                 fill
-                className="object-cover object-top transition-opacity duration-500"
+                className="object-contain object-top transition-opacity duration-500"
                 sizes="(max-width: 768px) 100vw, 55vw"
                 priority={i === 0}
               />
