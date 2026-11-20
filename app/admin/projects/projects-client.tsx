@@ -245,6 +245,19 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
           </button>
         )}
         <button
+          type="button"
+          onClick={async () => {
+            const { repairProjectImages } = await import("./actions");
+            const token = await getAdminIdToken();
+            const r = await repairProjectImages(token);
+            alert(r.success ? `Updated images on ${r.updated} projects` : r.error);
+            router.refresh();
+          }}
+          className="btn-ghost-glass rounded-xl px-4 py-2 text-sm font-semibold"
+        >
+          Repair project images
+        </button>
+        <button
           onClick={() => (formOpen ? closeForm() : openCreateForm())}
           className="btn-glow inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold"
         >

@@ -337,3 +337,60 @@ const SEED_PROJECTS: ProjectInput[] = [
     gallery: [],
   },
 ];
+
+/**
+ * Attach local screenshot paths (imageUrl + gallery) from SEED_PROJECTS
+ * onto existing Firestore projects matched by slug or name.
+ */
+export async function repairProjectImages(
+  idToken?: string | null
+): Promise<{ success: true; updated: number } | { success: false; error: string }> {
+  const auth = await requireAdminOrFail(idToken);
+  if (!auth.ok) return { success: false, error: auth.error };
+
+  const snap = await db.collection(COLLECTION).get();
+  if (snap.empty) {
+    return { success: false, error: "No projects found. Use Seed default projects first." };
+  }
+
+  const bySlug = new Map(SEED_PROJECTS.map((p) => [p.slug.toLowerCase(), p]));
+  const byName = new Map(SEED_PROJECTS.map((p) => [p.name.toLowerCase().trim(), p]));
+
+  let updated = 0;
+  const batch = db.batch();
+  const now = Date.now();
+
+  snap.docs.forEach((doc) => {
+    const data = doc.data();
+    const slug = String(data.slug || "").toLowerCase();
+    const name = String(data.name || "").toLowerCase().trim();
+    const seed = bySlug.get(slug) || byName.get(name);
+    if (!seed) return;
+    if (!seed.imageUrl && (!seed.gallery || seed.gallery.length === 0)) return;
+
+    batch.update(doc.ref, {
+      imageUrl: seed.imageUrl || data.imageUrl || "",
+      gallery: seed.gallery?.length ? seed.gallery : data.gallery || [],
+      description: data.description || seed.description,
+      tags: Array.isArray(data.tags) && data.tags.length > 0 ? data.tags : seed.tags,
+      category: data.category || seed.category,
+      status: data.status || seed.status,
+      updatedAt: now,
+    });
+    updated += 1;
+  });
+
+  if (updated === 0) {
+    return {
+      success: false,
+      error:
+        "No matching projects found to repair. Check project names/slugs match seed.",
+    };
+  }
+
+  await batch.commit();
+  revalidatePath("/admin/projects");
+  revalidatePath("/projects");
+  revalidatePath("/");
+  return { success: true, updated };
+}
