@@ -7,6 +7,7 @@ import Link from "next/link";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { Search, Plus, Pencil, Trash2, X, ExternalLink, UploadCloud, Loader2 } from "lucide-react";
 import { createBlogPost, updateBlogPost, deleteBlogPost, seedBlogPosts, type BlogPost } from "./actions";
+import { getAdminIdToken } from "@/lib/get-admin-token";
 
 type FormState = {
   id: string | null;
@@ -108,7 +109,12 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const token = await getAdminIdToken();
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: fd,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Upload failed");
       setForm((f) => ({ ...f, coverUrl: data.url }));

@@ -19,6 +19,7 @@ import {
   X,
   Images,
   BarChart3,
+  Megaphone,
 } from "lucide-react";
 
 type NavItem = {
@@ -38,6 +39,7 @@ const NAV: NavItem[] = [
   { href: "/admin/streaks", label: "Streaks", Icon: Flame },
   { href: "/admin/links", label: "Links", Icon: LinkIcon },
   { href: "/admin/messages", label: "Messages", Icon: MessageSquare },
+  { href: "/admin/popups", label: "Popup ads", Icon: Megaphone },
   { href: "/admin/settings", label: "Settings", Icon: Settings },
 ];
 

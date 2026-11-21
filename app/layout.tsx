@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MainWrap } from "@/components/MainWrap";
+import { SitePopupsHost } from "@/components/SitePopupsHost";
 import { themeInitScript } from "@/components/ThemeToggle";
 import CustomCursor from "@/components/CustomCursor";
 import PageViewTracker from "@/components/PageViewTracker";
@@ -142,6 +143,7 @@ export default function RootLayout({
         <Header />
         <MainWrap>{children}</MainWrap>
         <Footer />
+        <SitePopupsHost />
         <Analytics />
         <SpeedInsights />
       </body>
