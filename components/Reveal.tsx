@@ -19,6 +19,7 @@ export function Reveal({
   delay?: number;
   y?: number;
   once?: boolean;
+
   className?: string;
 }) {
   const variants: Variants = {
