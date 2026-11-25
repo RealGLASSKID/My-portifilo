@@ -151,7 +151,10 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
       published: form.published,
     };
 
-    const result = form.id ? await updateBlogPost(form.id, payload) : await createBlogPost(payload);
+    const token = await getAdminIdToken();
+    const result = form.id
+      ? await updateBlogPost(form.id, payload, token)
+      : await createBlogPost(payload, token);
 
     setSaving(false);
 
@@ -166,7 +169,8 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
 
   async function handleDelete(p: BlogPost) {
     if (!confirm(`Delete "${p.title}"? This can't be undone.`)) return;
-    const result = await deleteBlogPost(p.id);
+    const token = await getAdminIdToken();
+    const result = await deleteBlogPost(p.id, token);
     if (!result.success) {
       alert("Could not delete this post.");
       return;
@@ -185,7 +189,8 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
           <button
             type="button"
             onClick={async () => {
-              const r = await seedBlogPosts();
+              const token = await getAdminIdToken();
+              const r = await seedBlogPosts(token);
               if (!r.success) alert(r.error);
               router.refresh();
             }}

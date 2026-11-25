@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
-import { getGalleryItems } from "@/app/admin/gallery/actions";
 import { posts as staticPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
@@ -31,12 +29,6 @@ export default async function BlogPage() {
     slug: string;
     externalUrl?: string;
     coverUrl?: string;
-  }[] = [];
-
-  let featuredGallery: {
-    id: string;
-    title: string;
-    imageUrl: string;
   }[] = [];
 
   try {
@@ -68,20 +60,6 @@ export default async function BlogPage() {
     }));
   }
 
-  try {
-    const gallery = await getGalleryItems();
-    featuredGallery = gallery
-      .filter((i) => i.featured && i.imageUrl)
-      .slice(0, 4)
-      .map((i) => ({
-        id: i.id,
-        title: i.title || "Gallery",
-        imageUrl: i.imageUrl,
-      }));
-  } catch {
-    featuredGallery = [];
-  }
-
   return (
     <>
       <PageHero
@@ -90,34 +68,6 @@ export default async function BlogPage() {
         accent="& music."
         description="Notes, tutorials and stories from my journey as a developer, designer and songwriter."
       />
-
-      {featuredGallery.length > 0 && (
-        <section className="mx-auto mb-10 max-w-6xl px-6">
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <h2 className="text-lg font-semibold">Featured moments</h2>
-            <Link href="/gallery" className="text-sm text-primary hover:underline">
-              Gallery
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {featuredGallery.map((item) => (
-              <Link
-                key={item.id}
-                href="/gallery"
-                className="relative aspect-square overflow-hidden rounded-xl border border-white/10"
-              >
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition duration-500 hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       <section className="mx-auto max-w-6xl px-6 pb-28">
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
