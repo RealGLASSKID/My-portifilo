@@ -11,6 +11,7 @@ import {
   Github,
   Instagram,
   Facebook,
+  Linkedin,
   Send,
   Briefcase,
   Headphones,
@@ -23,6 +24,7 @@ import { getPublishedMusic, type MusicRelease } from "@/app/admin/music/actions"
 import { TypewriterText } from "@/components/TypewriterText";
 import { Reveal } from "@/components/Reveal";
 import { getGalleryItems } from "@/app/admin/gallery/actions";
+import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
 import { HeroGallerySlideshow } from "@/components/HeroGallerySlideshow";
 
 export const dynamic = "force-dynamic";
@@ -177,14 +179,33 @@ const SOCIALS = [
     href: "https://wa.me/2349136893921",
     Icon: null as null,
   },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/real-glasskid-9a792a412",
+    Icon: Linkedin,
+  },
 ];
 
 export default async function HomePage() {
-  const [dbProjects, dbMusic, dbGallery] = await Promise.all([
+  const [dbProjects, dbMusic, dbGallery, dbBlog] = await Promise.all([
     getProjects().catch(() => [] as Project[]),
     getPublishedMusic().catch(() => [] as MusicRelease[]),
     getGalleryItems().catch(() => [] as { imageUrl?: string }[]),
+    getPublishedBlogPosts().catch(() => [] as any[]),
   ]);
+
+  const homeBlog = (dbBlog as any[])
+    .filter((p) => p.featuredHome && p.published !== false)
+    .slice(0, 3)
+    .map((p) => ({
+      slug: p.slug as string,
+      title: p.title as string,
+      cat: (p.category as string) || "Blog",
+      date: (p.date as string) || "",
+      read: (p.read as string) || "",
+      coverUrl: (p.coverUrl as string) || "",
+      externalUrl: (p.externalUrl as string) || "",
+    }));
 
   const heroImages = (
     (dbGallery as { featured?: boolean; imageUrl?: string }[]).filter((g) => g.featured).length
@@ -253,6 +274,10 @@ export default async function HomePage() {
                 words={[
                   "a Full Stack Developer",
                   "a Creative Technologist",
+                  "a Graphics Designer (3D)",
+                  "a Video Editor",
+                  "an Artist",
+                  "an AI & Social Media Automation specialist",
                   "a Multi Instrumentalist",
                   "a Songwriter",
                   "GLASSKID",
@@ -506,6 +531,68 @@ export default async function HomePage() {
           </div>
         </Reveal>
       </section>
+
+      {homeBlog.length > 0 && (
+        <section className="mx-auto mt-28 max-w-6xl px-6">
+          <Reveal>
+            <SectionHeader
+              eyebrow="Blog"
+              title="From the"
+              accent="desk."
+              action={
+                <Link href="/blog" className="text-sm text-primary hover:underline">
+                  All posts
+                </Link>
+              }
+            />
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {homeBlog.map((p) => (
+                <article key={p.slug} className="glass-card overflow-hidden p-5">
+                  <div className="relative mb-4 aspect-[16/9] overflow-hidden rounded-xl border border-white/5 bg-white/5">
+                    {p.coverUrl ? (
+                      <Image
+                        src={p.coverUrl}
+                        alt={p.title}
+                        fill
+                        className="object-cover"
+                        sizes="33vw"
+                      />
+                    ) : (
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, rgba(79, 0, 144, 0.7), rgb(10, 7, 31))",
+                        }}
+                      />
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {p.cat}
+                    {p.date ? ` · ${p.date}` : ""}
+                  </p>
+                  <h3 className="mt-1 text-base font-semibold leading-snug">{p.title}</h3>
+                  <div className="mt-3 flex flex-wrap gap-3 text-sm">
+                    <Link href={`/blog/${p.slug}`} className="text-primary hover:underline">
+                      Read post
+                    </Link>
+                    {p.externalUrl ? (
+                      <a
+                        href={p.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        Open post
+                      </a>
+                    ) : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+      )}
 
       <section className="mx-auto mt-28 max-w-6xl px-6 pb-28">
         <Reveal>

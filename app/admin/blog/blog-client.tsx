@@ -21,6 +21,8 @@ type FormState = {
   coverUrl: string;
   externalUrl: string;
   published: boolean;
+  featured: boolean;
+  featuredHome: boolean;
 };
 
 const EMPTY_FORM: FormState = {
@@ -35,6 +37,8 @@ const EMPTY_FORM: FormState = {
   coverUrl: "",
   externalUrl: "",
   published: true,
+  featured: false,
+  featuredHome: false,
 };
 
 function slugify(value: string) {
@@ -88,6 +92,8 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
       coverUrl: p.coverUrl || "",
       externalUrl: p.externalUrl || "",
       published: p.published,
+      featured: !!p.featured,
+      featuredHome: !!p.featuredHome,
     });
     setSlugTouched(true);
     setError(null);
@@ -149,6 +155,8 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
       coverUrl: form.coverUrl.trim(),
       externalUrl: form.externalUrl.trim(),
       published: form.published,
+      featured: form.featured,
+      featuredHome: form.featuredHome,
     };
 
     const token = await getAdminIdToken();
@@ -255,6 +263,22 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
               onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))}
             />
             Published (visible on /blog)
+          </label>
+          <label className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2 text-sm">
+            <input
+              type="checkbox"
+              checked={form.featured}
+              onChange={(e) => setForm((f) => ({ ...f, featured: e.target.checked }))}
+            />
+            Featured on blog page
+          </label>
+          <label className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2 text-sm sm:col-span-2">
+            <input
+              type="checkbox"
+              checked={form.featuredHome}
+              onChange={(e) => setForm((f) => ({ ...f, featuredHome: e.target.checked }))}
+            />
+            Featured on homepage (separate from blog featured)
           </label>
 
           <textarea
@@ -372,6 +396,16 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogPost[] }) {
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="truncate font-medium">{post.title}</span>
+                    {post.featuredHome && (
+                      <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                        HOME
+                      </span>
+                    )}
+                    {post.featured && (
+                      <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                        BLOG
+                      </span>
+                    )}
                     {!post.published && (
                       <span className="shrink-0 rounded-md border border-white/10 px-1.5 py-0.5 text-[10px] text-muted-foreground">
                         Draft

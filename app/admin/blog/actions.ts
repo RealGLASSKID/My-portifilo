@@ -16,8 +16,12 @@ const BlogSchema = z.object({
   excerpt: z.string().default(""),
   content: z.array(z.string()).default([]),
   published: z.boolean().default(true),
+  /** Highlight on the /blog page */
+  featured: z.boolean().default(false),
+  /** Show on the homepage (separate from blog featured) */
+  featuredHome: z.boolean().default(false),
   coverUrl: z.string().optional().default(""),
-  /** If set, "Read post" opens this external URL (Facebook, YouTube, LinkedIn, etc.) */
+  /** External platform URL (YouTube, Facebook, LinkedIn, etc.) */
   externalUrl: z.union([z.string().url(), z.literal("")]).optional().default(""),
 });
 
@@ -55,6 +59,7 @@ export async function createBlogPost(input: BlogInput, idToken?: string | null) 
   const ref = await db.collection(COLLECTION).add({ ...parsed.data, createdAt: now, updatedAt: now });
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
+  revalidatePath("/");
   revalidatePath(`/blog/${parsed.data.slug}`);
   return { success: true as const, id: ref.id };
 }
@@ -67,6 +72,7 @@ export async function updateBlogPost(id: string, input: Partial<BlogInput>, idTo
   await db.collection(COLLECTION).doc(id).update({ ...parsed.data, updatedAt: Date.now() });
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
+  revalidatePath("/");
   if (parsed.data.slug) revalidatePath(`/blog/${parsed.data.slug}`);
   return { success: true as const };
 }
@@ -77,6 +83,7 @@ export async function deleteBlogPost(id: string, idToken?: string | null) {
   await db.collection(COLLECTION).doc(id).delete();
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
+  revalidatePath("/");
   return { success: true as const };
 }
 
@@ -99,5 +106,6 @@ export async function seedBlogPosts(idToken?: string | null) {
   await batch.commit();
   revalidatePath("/admin/blog");
   revalidatePath("/blog");
+  revalidatePath("/");
   return { success: true as const, count: posts.length };
 }
