@@ -141,34 +141,78 @@ export function GalleryClient({ initialItems }: { initialItems: GalleryItem[] })
     }
   }
 
-  const token = await getAdminIdToken();
-  const result = form.id
-    ? await updateGalleryItem(form.id, payload, token)
-    : await createGalleryItem(payload, token);
-    async function handleDelete(item: GalleryItem) {
-      if (!confirm(`Delete "${item.title}"? This can't be undone.`)) return;
-      const token = await getAdminIdToken();
-      const result = await deleteGalleryItem(item.id, token);
-      if (!result.success) {
-        alert(result.error);
-        return;
-      }
-      router.refresh();
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.title.trim()) {
+      setError("Title is required");
+      return;
     }
-    async function toggleFeatured(item: GalleryItem) {
+    if (!form.imageUrl.trim()) {
+      setError("Add an image (upload or paste a URL)");
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    const payload = {
+      title: form.title.trim(),
+      description: form.description.trim(),
+      imageUrl: form.imageUrl.trim(),
+      imagePublicId: form.source === "upload" ? form.imagePublicId : "",
+      category: form.category,
+      location: form.location.trim(),
+      takenAt: form.takenAt.trim(),
+      featured: form.featured,
+      order: Number(form.order) || 0,
+    };
+
+    const token = await getAdminIdToken();
+    const result = form.id
+      ? await updateGalleryItem(form.id, payload, token)
+      : await createGalleryItem(payload, token);
+
+    setSaving(false);
+
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+
+    closeForm();
+    router.refresh();
+  }
+
+  async function handleDelete(item: GalleryItem) {
+    if (!confirm(`Delete "${item.title}"? This can't be undone.`)) return;
+    const token = await getAdminIdToken();
+    const result = await deleteGalleryItem(item.id, token);
+    if (!result.success) {
+      alert(result.error);
+      return;
+    }
+    router.refresh();
+  }
+
+  async function toggleFeatured(item: GalleryItem) {
+    setItems((prev) =>
+      prev.map((x) => (x.id === item.id ? { ...x, featured: !x.featured } : x))
+    );
+    const token = await getAdminIdToken();
+    const result = await updateGalleryItem(
+      item.id,
+      { featured: !item.featured },
+      token
+    );
+    if (!result.success) {
       setItems((prev) =>
-        prev.map((x) => (x.id === item.id ? { ...x, featured: !x.featured } : x))
+        prev.map((x) => (x.id === item.id ? { ...x, featured: item.featured } : x))
       );
-      const token = await getAdminIdToken();
-      const result = await updateGalleryItem(item.id, { featured: !item.featured }, token);
-      if (!result.success) {
-        setItems((prev) =>
-          prev.map((x) => (x.id === item.id ? { ...x, featured: item.featured } : x))
-        );
-        alert(result.error);
-        return;
-      }
+      alert(result.error);
+      return;
     }
+    router.refresh();
+  }
   return (
     <>
       <AdminPageHeader

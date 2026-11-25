@@ -10,12 +10,18 @@ import CustomCursor from "@/components/CustomCursor";
 import PageViewTracker from "@/components/PageViewTracker";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SiteLoader } from "@/components/SiteLoader";
 
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Prince Dennis",
-  alternateName: ["GLASSKID", "RealGlasskid", "RealGLASSKID", "THEREALGLASSKID"],
+  alternateName: [
+    "GLASSKID",
+    "RealGlasskid",
+    "RealGLASSKID",
+    "THEREALGLASSKID",
+  ],
   url: "https://glasskid.vercel.app",
   image: "https://glasskid.vercel.app/images/hero-portrait.png",
   jobTitle: "Full Stack Web Developer",
@@ -50,7 +56,11 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: "GLASSKID",
   url: "https://glasskid.vercel.app",
-  author: { "@type": "Person", name: "Prince Dennis", alternateName: ["GLASSKID", "RealGlasskid"] },
+  author: {
+    "@type": "Person",
+    name: "Prince Dennis",
+    alternateName: ["GLASSKID", "RealGlasskid"],
+  },
 };
 
 const spaceGrotesk = Space_Grotesk({
@@ -96,9 +106,7 @@ export const metadata: Metadata = {
     title: "GLASSKID | Full Stack Developer",
     description:
       "GLASSKID (Prince Dennis) — Full Stack Web Developer, Creative Technologist, Artist & Songwriter from Lagos, Nigeria.",
-    images: [
-      "https://glasskid.vercel.app/images/hero-portrait.png",
-    ],
+    images: ["https://glasskid.vercel.app/images/hero-portrait.png"],
   },
   icons: {
     icon: "https://glasskid.vercel.app/images/GK-icon.svg",
@@ -121,7 +129,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${spaceGrotesk.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark ${spaceGrotesk.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Prevents theme flash on load — sets .dark/.light before paint */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
@@ -135,9 +147,16 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <meta name="google-site-verification" content="OBdEh9gvEkK9PUDhmT5kuD1kpjLytVPI_k5kIlb-Af8" />
+        <meta
+          name="google-site-verification"
+          content="OBdEh9gvEkK9PUDhmT5kuD1kpjLytVPI_k5kIlb-Af8"
+        />
       </head>
-      <body className="relative min-h-dvh font-sans antialiased" suppressHydrationWarning>
+      <body
+        className="relative min-h-dvh font-sans antialiased"
+        suppressHydrationWarning
+      >
+        <SiteLoader />
         <CustomCursor />
         <PageViewTracker />
         <Header />

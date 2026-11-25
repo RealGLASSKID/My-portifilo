@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { getPublishedBlogPosts } from "@/app/admin/blog/actions";
+import { getGalleryItems } from "@/app/admin/gallery/actions";
 import { posts as staticPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog — GLASSKID | Thoughts on code, design & music",
-  description: "Notes, tutorials and stories from GLASSKID on code, design, creativity and music.",
+  description:
+    "Notes, tutorials and stories from GLASSKID on code, design, creativity and music.",
   openGraph: {
     title: "Blog — GLASSKID",
     description: "Notes and stories from GLASSKID.",
@@ -26,6 +30,13 @@ export default async function BlogPage() {
     date: string;
     slug: string;
     externalUrl?: string;
+    coverUrl?: string;
+  }[] = [];
+
+  let featuredGallery: {
+    id: string;
+    title: string;
+    imageUrl: string;
   }[] = [];
 
   try {
@@ -38,6 +49,7 @@ export default async function BlogPage() {
         date: p.date,
         slug: p.slug,
         externalUrl: p.externalUrl || "",
+        coverUrl: p.coverUrl || "",
       }));
     }
   } catch {
@@ -52,7 +64,22 @@ export default async function BlogPage() {
       date: p.date,
       slug: p.slug,
       externalUrl: "",
+      coverUrl: "",
     }));
+  }
+
+  try {
+    const gallery = await getGalleryItems();
+    featuredGallery = gallery
+      .filter((i) => i.featured && i.imageUrl)
+      .slice(0, 4)
+      .map((i) => ({
+        id: i.id,
+        title: i.title || "Gallery",
+        imageUrl: i.imageUrl,
+      }));
+  } catch {
+    featuredGallery = [];
   }
 
   return (
@@ -64,15 +91,56 @@ export default async function BlogPage() {
         description="Notes, tutorials and stories from my journey as a developer, designer and songwriter."
       />
 
+      {featuredGallery.length > 0 && (
+        <section className="mx-auto mb-10 max-w-6xl px-6">
+          <div className="mb-4 flex items-end justify-between gap-3">
+            <h2 className="text-lg font-semibold">Featured moments</h2>
+            <Link href="/gallery" className="text-sm text-primary hover:underline">
+              Gallery
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {featuredGallery.map((item) => (
+              <Link
+                key={item.id}
+                href="/gallery"
+                className="relative aspect-square overflow-hidden rounded-xl border border-white/10"
+              >
+                <Image
+                  src={item.imageUrl}
+                  alt={item.title}
+                  fill
+                  className="object-cover transition duration-500 hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto max-w-6xl px-6 pb-28">
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {POSTS.map((p) => (
             <article key={p.slug} className="glass-card group overflow-hidden p-5">
               <div className="relative mb-5 aspect-[16/9] overflow-hidden rounded-xl border border-white/5">
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, rgba(79, 0, 144, 0.7), rgb(10, 7, 31))" }}
-                />
+                {p.coverUrl ? (
+                  <Image
+                    src={p.coverUrl}
+                    alt={p.title}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(79, 0, 144, 0.7), rgb(10, 7, 31))",
+                    }}
+                  />
+                )}
                 <div className="chip absolute right-3 top-3 !text-[10px]">{p.cat}</div>
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -96,6 +164,12 @@ export default async function BlogPage() {
             </article>
           ))}
         </div>
+
+        {POSTS.length === 0 && (
+          <div className="glass-card p-10 text-center text-muted-foreground">
+            No posts yet. Check back soon.
+          </div>
+        )}
       </section>
     </>
   );

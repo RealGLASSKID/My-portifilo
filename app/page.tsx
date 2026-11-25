@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -185,9 +186,17 @@ export default async function HomePage() {
     getGalleryItems().catch(() => [] as { imageUrl?: string }[]),
   ]);
 
-  const heroImages = dbGallery
+  const heroImages = (
+    (dbGallery as { featured?: boolean; imageUrl?: string }[]).filter((g) => g.featured).length
+      ? (dbGallery as { featured?: boolean; imageUrl?: string }[]).filter((g) => g.featured)
+      : (dbGallery as { imageUrl?: string }[])
+  )
     .map((g) => g.imageUrl)
     .filter((url): url is string => Boolean(url));
+
+  const featuredGallery = (dbGallery as { id?: string; featured?: boolean; imageUrl?: string; title?: string }[])
+    .filter((g) => g.featured && g.imageUrl)
+    .slice(0, 6);
 
   const featuredProjects = dbProjects.filter((p) => p.featured);
   const projectsToShow: ProjectCard[] = (
@@ -361,6 +370,50 @@ export default async function HomePage() {
           />
         </Reveal>
       </section>
+
+      {featuredGallery.length > 0 && (
+        <section className="mx-auto mt-28 max-w-6xl px-6">
+          <Reveal>
+            <SectionHeader
+              eyebrow="Gallery"
+              title="Featured"
+              accent="moments."
+              action={
+                <Link
+                  href="/gallery"
+                  className="group inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                >
+                  View gallery
+                </Link>
+              }
+            />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredGallery.map((item) => (
+                <Link
+                  key={item.id || item.imageUrl}
+                  href="/gallery"
+                  className="glass-card group overflow-hidden"
+                >
+                  <div className="relative aspect-[4/5] bg-white/5">
+                    <Image
+                      src={item.imageUrl!}
+                      alt={item.title || "Gallery"}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                  {item.title ? (
+                    <div className="p-3">
+                      <p className="text-sm font-medium">{item.title}</p>
+                    </div>
+                  ) : null}
+                </Link>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+      )}
 
       <section className="mx-auto mt-28 max-w-6xl px-6">
         <Reveal>
