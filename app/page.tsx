@@ -596,14 +596,15 @@ export default async function HomePage() {
 
       <section className="mx-auto mt-28 max-w-6xl px-6 pb-28">
         <Reveal>
-          <div className="glass-card relative overflow-hidden p-8 md:p-12">
+          <div className="glass-card relative overflow-hidden">
             <div
               className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full blur-3xl"
               style={{ background: "var(--gradient-radial-glow)" }}
             />
-            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-              <div>
-                <div className="chip mb-3">
+            <div className="grid items-stretch md:grid-cols-2">
+              {/* Text */}
+              <div className="flex flex-col justify-center p-8 md:p-12">
+                <div className="chip mb-3 w-fit">
                   <span className="size-1.5 rounded-full bg-primary" /> Let&apos;s work
                   together
                 </div>
@@ -611,17 +612,30 @@ export default async function HomePage() {
                   Have a project in mind?{" "}
                   <span className="text-gradient">Let&apos;s build it.</span>
                 </h3>
-                <p className="mt-2 max-w-lg text-muted-foreground">
+                <p className="mt-3 max-w-lg text-muted-foreground">
                   Available for freelance projects, collaborations and full-time
                   opportunities.
                 </p>
+                <Link
+                  href="/contact"
+                  className="btn-glow mt-6 inline-flex w-fit items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+                >
+                  Get in touch <ArrowRight className="size-4" />
+                </Link>
               </div>
-              <Link
-                href="/contact"
-                className="btn-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
-              >
-                Get in touch <ArrowRight className="size-4" />
-              </Link>
+
+              {/* Video — put file at public/videos/cta-hire.mp4 */}
+              <div className="relative min-h-[220px] bg-black/40 md:min-h-full">
+                <video
+                  className="absolute inset-0 h-full w-full object-cover"
+                  src="/videos/cta-hire.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              </div>
             </div>
           </div>
         </Reveal>
